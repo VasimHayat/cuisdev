@@ -1,0 +1,158 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-uuid-generator"
+  data-tool="uuid-generator"
+  aria-labelledby="uuid-generator-heading"
+>
+  <h2 id="uuid-generator-heading" class="visually-hidden">UUID generator</h2>
+
+  <div class="tool__options">
+    <fieldset class="segmented" data-version>
+      <legend class="visually-hidden">UUID version</legend>
+      <label class="segmented__option">
+        <input type="radio" name="uuid-version" value="v4" checked />
+        <span>v4 random</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="uuid-version" value="v7" />
+        <span>v7 time-ordered</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="uuid-version" value="nil" />
+        <span>Nil</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="uuid-version" value="max" />
+        <span>Max</span>
+      </label>
+    </fieldset>
+
+    <label class="tool-uuid-generator__count">
+      <span>Count</span>
+      <input
+        type="number"
+        class="field__input"
+        min="1"
+        max="1000"
+        step="1"
+        value="5"
+        inputmode="numeric"
+        data-opt="count"
+      />
+    </label>
+
+    <label class="tool-uuid-generator__format">
+      <span>Format</span>
+      <select class="field__select" data-opt="format">
+        <option value="lines" selected>One per line</option>
+        <option value="comma">Comma-separated</option>
+        <option value="json">JSON array</option>
+        <option value="ts">TypeScript array</option>
+      </select>
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="uppercase" />
+      Uppercase
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="hyphens" />
+      Remove hyphens
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="quotes" />
+      Wrap in quotes
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="uuid-generator-output">Generated UUIDs</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy all</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download .txt</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="clear">
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="uuid-generator-output"
+        class="field__textarea"
+        placeholder="Click Generate to create UUIDs"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="uuid-generator-inspect">Parse / inspect a UUID</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="inspect-last">
+            <Icon name="corner-down-left" /><span>Use first result</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="inspect-clear"
+            aria-label="Clear inspector"
+          >
+            <Icon name="x" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <input
+        id="uuid-generator-inspect"
+        class="field__input tool-uuid-generator__inspect-input"
+        type="text"
+        placeholder="Paste a UUID, e.g. 017f22e2-79b0-7cc3-98c4-dc0c0c07398f"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-inspect
+      />
+      <dl class="tool-uuid-generator__details" data-details hidden>
+        <div>
+          <dt>Canonical</dt>
+          <dd data-detail="uuid"></dd>
+        </div>
+        <div>
+          <dt>Version</dt>
+          <dd data-detail="version"></dd>
+        </div>
+        <div>
+          <dt>Variant</dt>
+          <dd data-detail="variant"></dd>
+        </div>
+        <div data-detail-row="timestamp">
+          <dt>Timestamp</dt>
+          <dd data-detail="timestamp"></dd>
+        </div>
+      </dl>
+      <p class="tool__status" aria-live="polite" data-inspect-status></p>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn btn--primary" data-action="generate">
+      <Icon name="refresh-cw" /><span>Generate</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
