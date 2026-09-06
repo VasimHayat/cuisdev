@@ -1,0 +1,69 @@
+// Markdown Preview & Editor — tool-specific styles.
+// Shared chrome lives in styles/components/_tool.scss.
+.tool-markdown-preview {
+  // The rendered preview: .prose does the typography, this box does the frame.
+  &__preview {
+    max-width: none;
+    min-height: var(--editor-min-height, 14rem);
+    max-height: var(--editor-max-height, 70dvh);
+    padding: var(--space-4);
+    overflow: auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 0;
+    }
+
+    // First child keeps the box from starting with a big heading margin.
+    > :first-child {
+      margin-top: 0;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    // Tables scroll inside the preview rather than widening the page.
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    // Task lists come from GFM as disabled checkboxes; drop the bullet like GitHub does.
+    li:has(> input[type='checkbox']) {
+      list-style: none;
+      margin-left: calc(var(--space-6) * -1);
+    }
+
+    input[type='checkbox'] {
+      margin-right: var(--space-2);
+      accent-color: var(--color-accent);
+    }
+  }
+
+  &__source {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__html {
+    min-height: var(--editor-min-height, 14rem);
+  }
+
+  .tool__status {
+    flex: 1;
+    margin: 0;
+  }
+}

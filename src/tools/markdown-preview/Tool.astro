@@ -1,0 +1,110 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-markdown-preview"
+  data-tool="markdown-preview"
+  aria-labelledby="markdown-preview-heading"
+>
+  <h2 id="markdown-preview-heading" class="visually-hidden">Markdown editor and preview</h2>
+
+  <div class="tool__options">
+    <label class="choice">
+      <input type="checkbox" data-opt="gfm" checked />
+      GitHub Flavored Markdown
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="breaks" />
+      Line breaks
+    </label>
+
+    <div class="cluster cluster--sm">
+      <span class="tool__pane-title" id="markdown-preview-view-label">Show</span>
+      <fieldset class="segmented" aria-labelledby="markdown-preview-view-label" data-view>
+        <legend class="visually-hidden">Output view</legend>
+        <label class="segmented__option">
+          <input type="radio" name="markdown-view" value="preview" checked />
+          <span>Preview</span>
+        </label>
+        <label class="segmented__option">
+          <input type="radio" name="markdown-view" value="html" />
+          <span>HTML source</span>
+        </label>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="markdown-preview-input">Markdown</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download-md">
+            <Icon name="download" /><span>.md</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="clear">
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="markdown-preview-input"
+        class="field__textarea tool-markdown-preview__editor"
+        placeholder="# Start typing Markdown…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" data-output-title>Preview</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy-html">
+            <Icon name="copy" /><span data-label>Copy HTML</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download-html">
+            <Icon name="download" /><span>.html</span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="prose tool-markdown-preview__preview"
+        role="region"
+        aria-label="Rendered preview"
+        tabindex="0"
+        data-preview
+      >
+      </div>
+
+      <div class="tool-markdown-preview__source" data-source hidden>
+        <label class="tool__pane-title" for="markdown-preview-html">Sanitised HTML</label>
+        <textarea
+          id="markdown-preview-html"
+          class="field__textarea tool-markdown-preview__html"
+          placeholder="The HTML behind the preview appears here"
+          readonly
+          spellcheck="false"
+          data-html></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
