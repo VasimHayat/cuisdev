@@ -1,0 +1,348 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-qr-code-generator"
+  data-tool="qr-code-generator"
+  aria-labelledby="qr-code-generator-heading"
+>
+  <h2 id="qr-code-generator-heading" class="visually-hidden">QR code generator</h2>
+
+  <div class="tool__options">
+    <div class="field tool-qr-code-generator__field">
+      <label class="field__label" for="qr-code-generator-preset">Content type</label>
+      <select id="qr-code-generator-preset" class="field__select" data-opt="preset">
+        <option value="text" selected>Text or URL</option>
+        <option value="wifi">Wi-Fi network</option>
+        <option value="email">Email</option>
+        <option value="phone">Phone number</option>
+        <option value="sms">SMS message</option>
+        <option value="vcard">Contact (vCard)</option>
+      </select>
+    </div>
+
+    <fieldset class="segmented" data-output-format>
+      <legend class="visually-hidden">Output format</legend>
+      <label class="segmented__option">
+        <input type="radio" name="qr-output-format" value="png" checked />
+        <span>PNG</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="qr-output-format" value="svg" />
+        <span>SVG</span>
+      </label>
+    </fieldset>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" data-input-title>Content</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear content"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="tool-qr-code-generator__form" data-form="text">
+        <label class="visually-hidden" for="qr-code-generator-input">Text or URL</label>
+        <textarea
+          id="qr-code-generator-input"
+          class="field__textarea tool-qr-code-generator__textarea"
+          placeholder="Type or paste a URL, text, or anything else to encode…"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          data-field="text"></textarea>
+      </div>
+
+      <div class="tool-qr-code-generator__form" data-form="wifi" hidden>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-wifi-ssid">Network name (SSID)</label>
+          <input
+            id="qr-code-generator-wifi-ssid"
+            class="field__input"
+            type="text"
+            autocomplete="off"
+            data-field="ssid"
+          />
+        </div>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-wifi-password">Wi-Fi password</label>
+          <input
+            id="qr-code-generator-wifi-password"
+            class="field__input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            data-field="password"
+          />
+        </div>
+        <div class="tool-qr-code-generator__row">
+          <div class="field">
+            <label class="field__label" for="qr-code-generator-wifi-encryption">Security</label>
+            <select
+              id="qr-code-generator-wifi-encryption"
+              class="field__select"
+              data-field="encryption"
+            >
+              <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None (open network)</option>
+            </select>
+          </div>
+          <label class="choice tool-qr-code-generator__choice">
+            <input type="checkbox" data-field="hidden" />
+            Hidden network
+          </label>
+        </div>
+      </div>
+
+      <div class="tool-qr-code-generator__form" data-form="email" hidden>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-email-to">Email address</label>
+          <input
+            id="qr-code-generator-email-to"
+            class="field__input"
+            type="email"
+            autocomplete="off"
+            placeholder="name@example.com"
+            data-field="to"
+          />
+        </div>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-email-subject">Subject</label>
+          <input
+            id="qr-code-generator-email-subject"
+            class="field__input"
+            type="text"
+            autocomplete="off"
+            data-field="subject"
+          />
+        </div>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-email-body">Message body</label>
+          <textarea
+            id="qr-code-generator-email-body"
+            class="field__textarea tool-qr-code-generator__textarea--short"
+            data-field="body"></textarea>
+        </div>
+      </div>
+
+      <div class="tool-qr-code-generator__form" data-form="phone" hidden>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-phone">Phone number</label>
+          <input
+            id="qr-code-generator-phone"
+            class="field__input"
+            type="tel"
+            autocomplete="off"
+            placeholder="+1 555 123 4567"
+            data-field="phone"
+          />
+        </div>
+      </div>
+
+      <div class="tool-qr-code-generator__form" data-form="sms" hidden>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-sms-phone">SMS recipient</label>
+          <input
+            id="qr-code-generator-sms-phone"
+            class="field__input"
+            type="tel"
+            autocomplete="off"
+            placeholder="+1 555 123 4567"
+            data-field="phone"
+          />
+        </div>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-sms-message">SMS message</label>
+          <textarea
+            id="qr-code-generator-sms-message"
+            class="field__textarea tool-qr-code-generator__textarea--short"
+            data-field="message"></textarea>
+        </div>
+      </div>
+
+      <div class="tool-qr-code-generator__form" data-form="vcard" hidden>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-vcard-name">Full name</label>
+          <input
+            id="qr-code-generator-vcard-name"
+            class="field__input"
+            type="text"
+            autocomplete="off"
+            placeholder="Ada Lovelace"
+            data-field="name"
+          />
+        </div>
+        <div class="tool-qr-code-generator__row">
+          <div class="field">
+            <label class="field__label" for="qr-code-generator-vcard-phone">Contact phone</label>
+            <input
+              id="qr-code-generator-vcard-phone"
+              class="field__input"
+              type="tel"
+              autocomplete="off"
+              data-field="phone"
+            />
+          </div>
+          <div class="field">
+            <label class="field__label" for="qr-code-generator-vcard-email">Contact email</label>
+            <input
+              id="qr-code-generator-vcard-email"
+              class="field__input"
+              type="email"
+              autocomplete="off"
+              data-field="email"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label" for="qr-code-generator-vcard-org">Organisation</label>
+          <input
+            id="qr-code-generator-vcard-org"
+            class="field__input"
+            type="text"
+            autocomplete="off"
+            data-field="org"
+          />
+        </div>
+      </div>
+
+      <div class="field" data-payload-wrap hidden>
+        <label class="field__label" for="qr-code-generator-payload">Encoded content</label>
+        <textarea
+          id="qr-code-generator-payload"
+          class="field__textarea tool-qr-code-generator__payload"
+          readonly
+          spellcheck="false"
+          aria-describedby="qr-code-generator-payload-hint"
+          data-payload></textarea>
+        <p class="field__hint" id="qr-code-generator-payload-hint">
+          This is the exact text stored in the QR code.
+        </p>
+      </div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title">QR code</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy" disabled>
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download-png" disabled>
+            <Icon name="download" /><span>Download PNG</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download-svg" disabled>
+            <Icon name="download" /><span>Download SVG</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="tool-qr-code-generator__preview" data-preview>
+        <canvas
+          class="tool-qr-code-generator__image"
+          width="256"
+          height="256"
+          role="img"
+          aria-label="QR code preview"
+          data-canvas
+          hidden></canvas>
+        <div
+          class="tool-qr-code-generator__svg"
+          role="img"
+          aria-label="QR code preview"
+          data-svg
+          hidden
+        >
+        </div>
+        <p class="tool-qr-code-generator__placeholder" data-placeholder>
+          Your QR code appears here as you type.
+        </p>
+      </div>
+      <div class="tool__stats" data-stats aria-live="off"></div>
+
+      <div class="tool__options tool-qr-code-generator__appearance">
+        <div class="field tool-qr-code-generator__field tool-qr-code-generator__field--num">
+          <label class="field__label" for="qr-code-generator-size">Size (px)</label>
+          <input
+            id="qr-code-generator-size"
+            class="field__input"
+            type="number"
+            inputmode="numeric"
+            min="128"
+            max="1024"
+            step="1"
+            value="256"
+            data-opt="size"
+          />
+        </div>
+        <div class="field tool-qr-code-generator__field">
+          <label class="field__label" for="qr-code-generator-ec">Error correction</label>
+          <select id="qr-code-generator-ec" class="field__select" data-opt="ec">
+            <option value="L">L — 7%</option>
+            <option value="M" selected>M — 15%</option>
+            <option value="Q">Q — 25%</option>
+            <option value="H">H — 30%</option>
+          </select>
+        </div>
+        <div class="field tool-qr-code-generator__field tool-qr-code-generator__field--num">
+          <label class="field__label" for="qr-code-generator-margin">Margin (modules)</label>
+          <input
+            id="qr-code-generator-margin"
+            class="field__input"
+            type="number"
+            inputmode="numeric"
+            min="0"
+            max="8"
+            step="1"
+            value="4"
+            data-opt="margin"
+          />
+        </div>
+        <div class="field tool-qr-code-generator__field tool-qr-code-generator__field--color">
+          <label class="field__label" for="qr-code-generator-fg">Foreground colour</label>
+          <input
+            id="qr-code-generator-fg"
+            class="field__input tool-qr-code-generator__color"
+            type="color"
+            value="#000000"
+            data-opt="fg"
+          />
+        </div>
+        <div class="field tool-qr-code-generator__field tool-qr-code-generator__field--color">
+          <label class="field__label" for="qr-code-generator-bg">Background colour</label>
+          <input
+            id="qr-code-generator-bg"
+            class="field__input tool-qr-code-generator__color"
+            type="color"
+            value="#ffffff"
+            data-opt="bg"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
