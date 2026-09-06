@@ -1,0 +1,153 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-jwt-decoder"
+  data-tool="jwt-decoder"
+  aria-labelledby="jwt-decoder-heading"
+>
+  <h2 id="jwt-decoder-heading" class="visually-hidden">JWT decoder</h2>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="jwt-decoder-input">Encoded JWT</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="jwt-decoder-input"
+        class="field__textarea tool-jwt-decoder__token"
+        placeholder="Paste a token (eyJhbGciOi…) or a whole Authorization: Bearer header"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+
+      <div class="field tool-jwt-decoder__secret">
+        <label class="field__label" for="jwt-decoder-secret">
+          <span>Secret</span>
+          <span class="field__hint">optional — checks HS256 / HS384 / HS512 locally</span>
+        </label>
+        <input
+          id="jwt-decoder-secret"
+          class="field__input"
+          type="text"
+          placeholder="Shared secret used to sign the token"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          data-secret
+        />
+      </div>
+    </div>
+
+    <div class="tool__pane tool-jwt-decoder__parts">
+      <div class="tool-jwt-decoder__part" data-part="header">
+        <div class="tool__pane-header">
+          <label class="tool__pane-title" for="jwt-decoder-header">Header</label>
+          <div class="tool__pane-actions">
+            <button
+              type="button"
+              class="btn btn--ghost btn--sm"
+              data-action="copy"
+              data-copy="header"
+              aria-label="Copy header"
+            >
+              <Icon name="copy" /><span data-label>Copy</span>
+            </button>
+          </div>
+        </div>
+        <textarea
+          id="jwt-decoder-header"
+          class="field__textarea tool-jwt-decoder__json"
+          placeholder="Algorithm and token type"
+          readonly
+          spellcheck="false"
+          data-header></textarea>
+      </div>
+
+      <div class="tool-jwt-decoder__part" data-part="payload">
+        <div class="tool__pane-header">
+          <label class="tool__pane-title" for="jwt-decoder-payload">Payload</label>
+          <div class="tool__pane-actions">
+            <button
+              type="button"
+              class="btn btn--ghost btn--sm"
+              data-action="copy"
+              data-copy="payload"
+              aria-label="Copy payload"
+            >
+              <Icon name="copy" /><span data-label>Copy</span>
+            </button>
+          </div>
+        </div>
+        <textarea
+          id="jwt-decoder-payload"
+          class="field__textarea tool-jwt-decoder__json"
+          placeholder="Claims"
+          readonly
+          spellcheck="false"
+          data-payload></textarea>
+      </div>
+
+      <div class="tool-jwt-decoder__part" data-part="signature">
+        <div class="tool__pane-header">
+          <span class="tool__pane-title">Signature</span>
+          <span class="badge" data-signature-badge hidden></span>
+        </div>
+        <p class="tool-jwt-decoder__signature" data-signature>
+          The base64url signature appears here
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+
+  <section
+    class="tool-jwt-decoder__claims"
+    data-claims
+    hidden
+    aria-labelledby="jwt-decoder-claims-heading"
+  >
+    <div class="tool-jwt-decoder__claims-header">
+      <h3 id="jwt-decoder-claims-heading" class="tool-jwt-decoder__claims-title">Claims</h3>
+      <span class="badge badge--warning" data-expiry-badge hidden></span>
+    </div>
+    <div class="tool-jwt-decoder__scroll">
+      <table class="tool-jwt-decoder__table">
+        <caption class="visually-hidden">Payload claims</caption>
+        <thead>
+          <tr>
+            <th scope="col">Claim</th>
+            <th scope="col">Value</th>
+            <th scope="col">Meaning</th>
+          </tr>
+        </thead>
+        <tbody data-claims-body></tbody>
+      </table>
+    </div>
+  </section>
+</section>
+
+<script>
+  import './client';
+</script>

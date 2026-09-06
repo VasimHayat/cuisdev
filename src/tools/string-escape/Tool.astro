@@ -1,0 +1,105 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import { TARGETS } from './logic';
+import './tool.scss';
+---
+
+<section
+  class="tool tool-string-escape"
+  data-tool="string-escape"
+  aria-labelledby="string-escape-heading"
+>
+  <h2 id="string-escape-heading" class="visually-hidden">String escape and unescape</h2>
+
+  <div class="tool__options">
+    <fieldset class="segmented" data-mode>
+      <legend class="visually-hidden">Mode</legend>
+      <label class="segmented__option">
+        <input type="radio" name="escape-mode" value="escape" checked />
+        <span>Escape</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="escape-mode" value="unescape" data-unescape-radio />
+        <span>Unescape</span>
+      </label>
+    </fieldset>
+
+    <label class="tool-string-escape__select">
+      <span>Target</span>
+      <select class="field__select" data-opt="target">
+        {
+          TARGETS.map((t) => (
+            <option value={t.id} selected={t.id === 'json'}>
+              {t.canUnescape ? t.label : `${t.label} (escape only)`}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+  </div>
+
+  <p class="tool-string-escape__hint" data-hint>{TARGETS[0]?.hint}</p>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="string-escape-input" data-input-label
+          >Text to escape</label
+        >
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="string-escape-input"
+        class="field__textarea"
+        placeholder="Type or paste text…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="string-escape-output" data-output-label>Escaped</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="string-escape-output"
+        class="field__textarea"
+        placeholder="Output appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats aria-live="off"></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn" data-action="swap">
+      <Icon name="swap" /><span>Swap: use output as input</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
