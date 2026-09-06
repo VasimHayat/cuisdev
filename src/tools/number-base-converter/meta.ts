@@ -69,7 +69,7 @@ export const meta: ToolMeta = {
         'No. The conversions happen entirely in your browser; nothing is sent to a server, logged or stored.',
     },
   ],
-  related: ['color-converter'],
+  related: ['color-converter', 'hash-generator'],
   status: 'stable',
   added: '2026-09-07',
 };

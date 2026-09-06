@@ -72,7 +72,7 @@ export const meta: ToolMeta = {
         'No. Parsing, sanitising and rendering all happen in this tab, and the downloads are generated in the browser. You can go offline after the page loads and keep working.',
     },
   ],
-  related: ['regex-tester'],
+  related: ['regex-tester', 'html-entity-encoder'],
   status: 'stable',
   added: '2026-09-07',
 };

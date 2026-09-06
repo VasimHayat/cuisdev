@@ -75,7 +75,7 @@ export const meta: ToolMeta = {
         'No. The pattern is compiled and run by your own browser, and the results are rendered from text nodes on the page. Nothing is uploaded, stored or logged, so it is safe to paste log lines, tokens or customer data while you debug.',
     },
   ],
-  related: ['markdown-preview'],
+  related: ['markdown-preview', 'string-escape'],
   status: 'stable',
   added: '2026-09-07',
 };

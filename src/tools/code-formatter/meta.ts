@@ -74,7 +74,7 @@ export const meta: ToolMeta = {
         'No. Prettier, terser and csso are downloaded once as static files and then run locally on your machine. Your code never leaves the tab, and the tool keeps working with the network disconnected.',
     },
   ],
-  related: ['sql-formatter'],
+  related: ['sql-formatter', 'json-formatter'],
   status: 'stable',
   added: '2026-09-07',
 };

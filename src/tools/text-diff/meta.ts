@@ -72,7 +72,7 @@ export const meta: ToolMeta = {
         'No. The comparison runs entirely in your browser with a JavaScript diff implementation. You can disconnect from the internet after the page loads and the tool keeps working.',
     },
   ],
-  related: ['case-converter', 'word-counter'],
+  related: ['case-converter', 'word-counter', 'json-formatter'],
   status: 'stable',
   added: '2026-09-07',
 };

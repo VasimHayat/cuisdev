@@ -81,6 +81,7 @@ export const meta: ToolMeta = {
     'jsonpath-tester',
     'json-to-csv',
     'json-to-xml',
+    'code-formatter',
   ],
   status: 'stable',
   added: '2026-09-06',

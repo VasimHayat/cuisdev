@@ -70,7 +70,7 @@ export const meta: ToolMeta = {
         'No. Every conversion happens in your browser; nothing is uploaded, logged or stored. The page keeps working with the network disconnected once it has loaded.',
     },
   ],
-  related: ['number-base-converter'],
+  related: ['number-base-converter', 'image-converter'],
   status: 'stable',
   added: '2026-09-07',
 };
