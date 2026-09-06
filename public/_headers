@@ -1,0 +1,23 @@
+# Cloudflare Pages custom headers. The Content-Security-Policy itself is emitted
+# by Astro as a <meta> tag with per-page hashes (see astro.config.ts); these
+# headers cover what a <meta> CSP cannot express.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# Hashed, immutable build assets
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/icons/*
+  Cache-Control: public, max-age=604800
+
+/og/*
+  Cache-Control: public, max-age=86400
+  Cross-Origin-Resource-Policy: cross-origin

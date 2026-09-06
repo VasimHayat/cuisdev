@@ -1,0 +1,68 @@
+// Mixins & functions (no CSS output). Import with `@use 'tools/mixins' as *;`
+@use 'sass:map';
+@use '../settings/tokens';
+
+/// Min-width media query by breakpoint name.
+@mixin from($bp) {
+  $value: map.get(tokens.$breakpoints, $bp);
+
+  @if not $value {
+    @error 'Unknown breakpoint `#{$bp}`.';
+  }
+
+  @media (min-width: $value) {
+    @content;
+  }
+}
+
+/// Max-width media query (exclusive) by breakpoint name.
+@mixin until($bp) {
+  $value: map.get(tokens.$breakpoints, $bp);
+
+  @if not $value {
+    @error 'Unknown breakpoint `#{$bp}`.';
+  }
+
+  @media (width <= calc(#{$value} - 0.01em)) {
+    @content;
+  }
+}
+
+/// Accessible focus ring (keyboard only).
+@mixin focus-ring($offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: $offset;
+  }
+}
+
+/// Visually hide content while keeping it available to assistive tech.
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/// Truncate a single line with an ellipsis.
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/// Reset button styling so it can be restyled from scratch.
+@mixin button-reset {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  appearance: none;
+}

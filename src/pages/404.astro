@@ -1,0 +1,28 @@
+---
+import Icon from '@/components/Icon.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page Not Found" description="That page does not exist on Cuisdev." noindex>
+  <div class="stack stack--lg not-found">
+    <p class="section__eyebrow">404</p>
+    <h1>We couldn't find that page</h1>
+    <p class="section__lead">
+      The link may be outdated, or the tool may have moved. Try searching, or browse the full list.
+    </p>
+    <div class="cluster">
+      <button type="button" class="btn btn--primary" data-palette-open>
+        <Icon name="search" /> Search tools
+      </button>
+      <a class="btn" href="/tools/">All tools</a>
+      <a class="btn btn--ghost" href="/">Home</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  .not-found {
+    max-width: 40rem;
+    padding-block: var(--space-16);
+  }
+</style>

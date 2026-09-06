@@ -1,0 +1,82 @@
+// Emits design tokens as CSS custom properties so themes can switch at runtime.
+@use 'sass:map';
+@use 'tokens';
+
+@mixin emit-palette($palette) {
+  @each $name, $value in $palette {
+    --color-#{$name}: #{$value};
+  }
+}
+
+:root {
+  color-scheme: light;
+
+  @include emit-palette(tokens.$palette-light);
+
+  // Typography
+  --font-sans: #{tokens.$font-sans};
+  --font-mono: #{tokens.$font-mono};
+
+  @each $name, $value in tokens.$type-scale {
+    --text-#{$name}: #{$value};
+  }
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+  --tracking-tight: -0.02em;
+
+  // Spacing
+  @each $name, $value in tokens.$space-scale {
+    --space-#{$name}: #{$value};
+  }
+
+  // Radii
+  @each $name, $value in tokens.$radius-scale {
+    --radius-#{$name}: #{$value};
+  }
+
+  // Elevation
+  --shadow-sm: 0 1px 2px var(--color-shadow);
+  --shadow-md: 0 4px 12px var(--color-shadow);
+  --shadow-lg: 0 12px 32px var(--color-shadow-strong);
+
+  // Motion
+  --duration-fast: #{tokens.$duration-fast};
+  --duration-base: #{tokens.$duration-base};
+  --ease-out: #{tokens.$ease-out};
+
+  // Layout
+  --container-max: #{tokens.$container-max};
+  --container-wide: #{tokens.$container-wide};
+  --header-height: #{tokens.$header-height};
+  --gutter: clamp(var(--space-4), 4vw, var(--space-8));
+
+  // Z-index scale
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-dialog: 1000;
+}
+
+// Explicit dark theme (set by theme-init.js / ThemeToggle)
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  @include emit-palette(tokens.$palette-dark);
+}
+
+// System preference fallback when JS has not set a theme
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    @include emit-palette(tokens.$palette-dark);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}

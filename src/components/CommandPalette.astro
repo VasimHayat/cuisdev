@@ -1,0 +1,201 @@
+---
+/**
+ * Global tool search (Ctrl/⌘+K). The tool index is embedded as a JSON data
+ * block so opening the palette costs zero network requests; Fuse.js is
+ * dynamically imported on first open.
+ */
+import { getSearchIndex } from '@/lib/registry';
+
+import Icon from './Icon.astro';
+
+// Escape "<" so the JSON can never terminate the <script> block.
+const index = JSON.stringify(getSearchIndex()).replaceAll('<', '\\u003c');
+---
+
+<dialog class="palette" id="command-palette" aria-label="Search tools">
+  <div class="palette__header">
+    <Icon name="search" />
+    <input
+      class="palette__input"
+      type="search"
+      placeholder="Search tools…"
+      autocomplete="off"
+      spellcheck="false"
+      aria-label="Search tools"
+      aria-controls="palette-results"
+      aria-autocomplete="list"
+      role="combobox"
+      aria-expanded="true"
+      data-palette-input
+    />
+    <button type="button" class="btn btn--ghost btn--sm" data-palette-close>Esc</button>
+  </div>
+  <ul class="palette__list" id="palette-results" role="listbox" data-palette-list></ul>
+  <div class="palette__footer">
+    <span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+    <span><kbd>↵</kbd> to open</span>
+    <span><kbd>Esc</kbd> to close</span>
+  </div>
+</dialog>
+
+<script is:inline type="application/json" id="tool-index" set:html={index} />
+
+<script>
+  import type Fuse from 'fuse.js';
+
+  import type { SearchEntry } from '@/lib/registry';
+
+  import { icons } from './icons';
+
+  const dialog = document.getElementById('command-palette') as HTMLDialogElement | null;
+  const indexEl = document.getElementById('tool-index');
+  const paletteInput = dialog?.querySelector<HTMLInputElement>('[data-palette-input]');
+  const paletteList = dialog?.querySelector<HTMLUListElement>('[data-palette-list]');
+  if (dialog && indexEl && paletteInput && paletteList) {
+    init(
+      dialog,
+      paletteInput,
+      paletteList,
+      JSON.parse(indexEl.textContent ?? '[]') as SearchEntry[],
+    );
+  }
+
+  function init(
+    dialog: HTMLDialogElement,
+    input: HTMLInputElement,
+    list: HTMLUListElement,
+    entries: SearchEntry[],
+  ) {
+    let fuse: Fuse<SearchEntry> | undefined;
+    let results: SearchEntry[] = entries;
+    let selected = 0;
+
+    const escape = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+    function render() {
+      if (results.length === 0) {
+        list.innerHTML = `<li class="palette__empty" role="presentation">No tools match “${escape(input.value)}”.</li>`;
+        input.removeAttribute('aria-activedescendant');
+        return;
+      }
+      const grouped = input.value.trim() === '';
+      let html = '';
+      let lastCategory = '';
+      results.forEach((entry, i) => {
+        if (grouped && entry.categoryName !== lastCategory) {
+          lastCategory = entry.categoryName;
+          html += `<li class="palette__group" role="presentation">${escape(lastCategory)}</li>`;
+        }
+        html += `<li role="presentation"><a class="palette__item" role="option" id="palette-opt-${i}" href="${entry.url}" aria-selected="${i === selected}" data-index="${i}">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[entry.icon]}</svg>
+          <span><span class="palette__item-title">${escape(entry.name)}</span><br><span class="palette__item-desc">${escape(entry.tagline)}</span></span>
+        </a></li>`;
+      });
+      list.innerHTML = html;
+      input.setAttribute('aria-activedescendant', `palette-opt-${selected}`);
+      list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+    }
+
+    function select(i: number) {
+      if (results.length === 0) return;
+      selected = (i + results.length) % results.length;
+      list.querySelectorAll<HTMLElement>('[role="option"]').forEach((el) => {
+        el.setAttribute('aria-selected', String(Number(el.dataset.index) === selected));
+      });
+      input.setAttribute('aria-activedescendant', `palette-opt-${selected}`);
+      list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+    }
+
+    async function search(query: string) {
+      const q = query.trim();
+      if (q === '') {
+        results = entries;
+      } else {
+        fuse ??= new (await import('fuse.js')).default(entries, {
+          keys: [
+            { name: 'name', weight: 3 },
+            { name: 'keywords', weight: 2 },
+            { name: 'tagline', weight: 1 },
+            { name: 'categoryName', weight: 1 },
+          ],
+          threshold: 0.35,
+          ignoreLocation: true,
+        });
+        results = fuse.search(q, { limit: 12 }).map((r) => r.item);
+      }
+      selected = 0;
+      render();
+    }
+
+    function open() {
+      if (dialog.open) return;
+      dialog.showModal();
+      input.value = '';
+      void search('');
+      input.focus();
+    }
+
+    function close() {
+      if (dialog.open) dialog.close();
+    }
+
+    document
+      .querySelectorAll('[data-palette-open]')
+      .forEach((el) => el.addEventListener('click', open));
+    dialog.querySelector('[data-palette-close]')?.addEventListener('click', close);
+
+    // Click on the backdrop closes
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) close();
+    });
+
+    input.addEventListener('input', () => void search(input.value));
+
+    input.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          select(selected + 1);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          select(selected - 1);
+          break;
+        case 'Home':
+          e.preventDefault();
+          select(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          select(results.length - 1);
+          break;
+        case 'Enter': {
+          e.preventDefault();
+          const target = results[selected];
+          if (target) window.location.assign(target.url);
+          break;
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const isMod = e.ctrlKey || e.metaKey;
+      if (isMod && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (dialog.open) close();
+        else open();
+        return;
+      }
+      if (
+        e.key === '/' &&
+        !dialog.open &&
+        !(e.target instanceof HTMLInputElement) &&
+        !(e.target instanceof HTMLTextAreaElement) &&
+        !(e.target instanceof HTMLElement && e.target.isContentEditable)
+      ) {
+        e.preventDefault();
+        open();
+      }
+    });
+  }
+</script>

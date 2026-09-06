@@ -1,0 +1,72 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ToolCard from '@/components/ToolCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { categoryUrl, getPopulatedCategories, getToolsByCategory, tools } from '@/lib/registry';
+import { breadcrumbs } from '@/lib/seo';
+
+const categories = getPopulatedCategories();
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Tools', href: '/tools/' },
+];
+---
+
+<BaseLayout
+  title="All Developer Tools"
+  description="Browse every free developer tool on Cuisdev: JSON, encoding, generators, text, web and image utilities. All run privately in your browser with no sign-up."
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <div class="stack stack--lg">
+    <Breadcrumbs crumbs={crumbs} />
+
+    <header class="stack stack--sm">
+      <h1>All developer tools</h1>
+      <p class="section__lead">
+        {tools.length} tools across {categories.length}
+        {categories.length === 1 ? 'category' : 'categories'}. Press <kbd>Ctrl</kbd>
+        <kbd>K</kbd> anywhere to search.
+      </p>
+      <nav class="cluster cluster--sm" aria-label="Categories">
+        {
+          categories.map((category) => (
+            <a class="badge badge--accent" href={categoryUrl(category.id)}>
+              {category.name}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    {
+      categories.map((category) => (
+        <section class="stack" aria-labelledby={`cat-${category.id}`}>
+          <div>
+            <h2 id={`cat-${category.id}`}>
+              <a class="category-link" href={categoryUrl(category.id)}>
+                {category.name}
+              </a>
+            </h2>
+            <p class="text-muted">{category.description}</p>
+          </div>
+          <div class="grid">
+            {getToolsByCategory(category.id).map((tool) => (
+              <ToolCard tool={tool} hideCategory />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  .category-link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+</style>

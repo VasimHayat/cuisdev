@@ -1,0 +1,30 @@
+---
+import { getCategory, toolUrl } from '@/lib/registry';
+import type { ToolMeta } from '@/tools/_types';
+
+import Icon from './Icon.astro';
+
+interface Props {
+  tool: ToolMeta;
+  /** Hide the category badge when the card is already inside its category. */
+  hideCategory?: boolean;
+  /** Heading level so the document outline stays sequential (h1 → h2 → h3). */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { tool, hideCategory = false, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const category = getCategory(tool.category);
+---
+
+<article class="card card--link">
+  <div class="card__icon"><Icon name={tool.icon} /></div>
+  <Heading class="card__title">
+    <a class="card__link" href={toolUrl(tool.slug)}>{tool.name}</a>
+  </Heading>
+  <p class="card__desc">{tool.tagline}</p>
+  <div class="card__meta">
+    {!hideCategory && <span class="badge">{category.shortName}</span>}
+    {tool.status === 'beta' && <span class="badge badge--warning">Beta</span>}
+  </div>
+</article>

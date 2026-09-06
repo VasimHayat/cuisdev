@@ -1,0 +1,97 @@
+# Architecture
+
+## Principles
+
+1. **Static first.** Every URL is a pre-rendered HTML file. Google, social crawlers and users with
+   slow connections all get complete content with zero JavaScript.
+2. **A tool is a folder.** `src/tools/<slug>/` contains everything about one tool. A registry
+   discovers folders at build time; nothing central needs editing.
+3. **Islands of vanilla TypeScript.** Each tool page ships only its own `client.ts` bundle (plus a
+   ~3 KB shared shell script for theme + command palette). No framework runtime.
+4. **Privacy is structural.** There is no backend. The CSP blocks connections to any origin but
+   our own, so a tool cannot leak data even by mistake.
+
+## Directory map
+
+```
+src/
+├─ styles/            ITCSS SCSS design system → one global stylesheet
+│  ├─ settings/       tokens (SCSS maps) and theme (emits CSS custom properties)
+│  ├─ tools/          mixins (breakpoints, focus-ring, visually-hidden…)
+│  ├─ generic/        reset
+│  ├─ elements/       bare HTML element defaults
+│  ├─ objects/        layout primitives: .container .stack .cluster .grid .switcher
+│  ├─ components/     .btn .card .badge .field .header .footer .palette .prose .tool
+│  └─ utilities/      .visually-hidden .skip-link .icon …
+├─ layouts/
+│  ├─ BaseLayout.astro    <head> (SEO, OG, JSON-LD, CSP-hashed theme script), header, footer, palette
+│  └─ ToolLayout.astro    breadcrumbs, H1, <slot/> for the tool, long-form content, related tools
+├─ components/        Header, Footer, ThemeToggle, CommandPalette, ToolCard, Icon, Breadcrumbs, FAQ…
+├─ lib/
+│  ├─ registry.ts     discovers + validates src/tools/*/meta.ts; category data; related-tools logic
+│  ├─ seo.ts          JSON-LD builders (Organization, WebSite, SoftwareApplication, FAQPage, HowTo, BreadcrumbList)
+│  ├─ site.ts         site constants (name, URL, nav)
+│  ├─ theme-init.js   pre-paint theme script (inlined, CSP-hashed in astro.config.ts)
+│  ├─ theme.ts        runtime theme toggle
+│  └─ dom.ts          $, debounce, copy, download, file-drop, status helpers
+├─ tools/
+│  ├─ _types.ts       ToolMeta contract
+│  └─ <slug>/         meta.ts · logic.ts · logic.test.ts · Tool.astro · client.ts · tool.scss
+└─ pages/
+   ├─ index.astro                 home
+   ├─ tools/index.astro           all tools
+   ├─ tools/[slug].astro          one route per tool (getStaticPaths from the registry)
+   ├─ tools/category/[category]   hub pages
+   ├─ og/[slug].png.ts            build-time Open Graph images (SVG → PNG via resvg)
+   └─ about / privacy / terms / 404
+```
+
+## Request → page lifecycle
+
+1. **Build.** `registry.ts` globs `src/tools/*/meta.ts`, validates each (slug = folder, description
+   length, FAQ count…). `pages/tools/[slug].astro` maps every tool to a route and renders its
+   `Tool.astro` inside `ToolLayout`. `@astrojs/sitemap` emits `sitemap-index.xml`. `og/[slug].png.ts`
+   renders a card per tool. Astro computes CSP hashes for every inline script/style.
+2. **Serve.** Cloudflare Pages serves `dist/` from the edge with `_headers` (security + caching) and
+   `_redirects` (legacy URLs).
+3. **Hydrate.** The browser runs `theme-init.js` inline before paint, then loads the tiny shared
+   bundle (theme toggle, command palette) and the page's `client.ts`. Fuse.js for search is
+   dynamically imported the first time the palette opens.
+
+## Theming
+
+Tokens live in `settings/_tokens.scss` as SCSS maps and are emitted by `settings/_theme.scss` as
+CSS custom properties on `:root` (light) and `:root[data-theme='dark']`. A `prefers-color-scheme`
+fallback covers no-JS. Components only ever reference `var(--color-*)`, never raw values.
+
+## Content Security Policy
+
+Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<style>` it emits;
+`'self'` allows bundled assets. The one hand-inlined script (theme init) is hashed in
+`astro.config.ts` from the exact file bytes. Consequences for tool authors:
+
+- No inline `style=""` attributes — toggle classes or `data-*` attributes instead.
+- No `eval`, no `new Function`, no remote scripts.
+- Workers must be same-origin (`worker-src 'self' blob:`).
+
+## Performance budgets (enforced in CI by Lighthouse CI)
+
+| Page type  | JS (transfer) | CSS   | Scores                              |
+| ---------- | ------------- | ----- | ----------------------------------- |
+| Home/About | ≤ 60 KB       | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100        |
+| Tool page  | ≤ 250 KB      | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
+
+## Testing pyramid
+
+- **Vitest** — `logic.ts` of every tool and `lib/*`. Coverage thresholds in `vitest.config.ts`.
+- **Playwright** — `tests/e2e/smoke.spec.ts` (navigation, palette, theme, one happy path per tool)
+  and `tests/e2e/a11y.spec.ts` (axe, WCAG 2.2 AA, light and dark).
+- **Lighthouse CI** — budgets above, on the built `dist/`.
+
+## Roadmap hooks already in place
+
+- `ToolMeta.related` for hand-curated cross-links; category fallback is automatic.
+- `site.github` — set it and GitHub links appear in header/footer/schema.
+- Blog: add `src/content.config.ts` with a `glob()` loader and an `ArticleLayout`; `prose` styles
+  are ready.
+- PWA: `manifest.webmanifest` and icons exist; add `@vite-pwa/astro` for offline support.

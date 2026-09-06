@@ -1,0 +1,15 @@
+---
+/**
+ * Whitespace-exact <pre><code> block. Rendered with set:html so formatters can
+ * never introduce stray whitespace inside the <pre>.
+ */
+interface Props {
+  code: string;
+  class?: string;
+}
+
+const { code, class: className } = Astro.props;
+const escaped = code.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] ?? c);
+---
+
+<pre class={className} set:html={`<code>${escaped}</code>`} />

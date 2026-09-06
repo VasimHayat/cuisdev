@@ -1,0 +1,101 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section class="tool tool-base64" data-tool="base64" aria-labelledby="base64-heading">
+  <h2 id="base64-heading" class="visually-hidden">Base64 encoder and decoder</h2>
+
+  <div class="tool__options">
+    <fieldset class="segmented" data-mode>
+      <legend class="visually-hidden">Mode</legend>
+      <label class="segmented__option">
+        <input type="radio" name="mode" value="encode" checked />
+        <span>Encode</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="mode" value="decode" />
+        <span>Decode</span>
+      </label>
+    </fieldset>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="urlsafe" />
+      URL-safe (<code>-</code>
+      <code>_</code>, no padding)
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="wrap" />
+      Wrap at 76 characters
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="base64-input" data-input-label>Text to encode</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <label class="btn btn--ghost btn--sm tool-base64__upload">
+            <Icon name="upload" /><span>File</span>
+            <input type="file" class="visually-hidden" data-file />
+          </label>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="base64-input"
+        class="field__textarea"
+        placeholder="Type or paste here, or drop a file anywhere on this panel…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="base64-output" data-output-label>Base64</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="base64-output"
+        class="field__textarea"
+        placeholder="Output appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats aria-live="off"></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn" data-action="swap">
+      <Icon name="swap" /><span>Swap: use output as input</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

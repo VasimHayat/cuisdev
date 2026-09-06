@@ -1,0 +1,117 @@
+// Layout primitives (Every Layout style). Content-agnostic.
+@use 'tools/mixins' as *;
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+
+  &--wide {
+    max-width: var(--container-wide);
+  }
+
+  &--narrow {
+    max-width: 48rem;
+  }
+}
+
+// Vertical rhythm between children
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-4));
+
+  &--sm {
+    --stack-gap: var(--space-2);
+  }
+
+  &--lg {
+    --stack-gap: var(--space-8);
+  }
+
+  &--xl {
+    --stack-gap: var(--space-12);
+  }
+}
+
+// Horizontal wrapping group
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--space-3));
+  align-items: center;
+
+  &--between {
+    justify-content: space-between;
+  }
+
+  &--end {
+    justify-content: flex-end;
+  }
+
+  &--sm {
+    --cluster-gap: var(--space-2);
+  }
+}
+
+// Auto-fitting responsive grid
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 16rem), 100%), 1fr));
+  gap: var(--grid-gap, var(--space-4));
+
+  &--sm {
+    --grid-min: 12rem;
+  }
+
+  &--lg {
+    --grid-min: 20rem;
+  }
+}
+
+// Side-by-side that stacks when narrow
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--switcher-gap, var(--space-4));
+
+  > * {
+    flex-basis: calc((var(--switcher-threshold, 40rem) - 100%) * 999);
+    flex-grow: 1;
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+
+  &__main {
+    flex: 1;
+    padding-block: var(--space-8) var(--space-16);
+  }
+}
+
+.section {
+  padding-block: var(--space-12);
+
+  &__header {
+    margin-bottom: var(--space-6);
+  }
+
+  &__eyebrow {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__lead {
+    margin-top: var(--space-2);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+}

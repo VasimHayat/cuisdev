@@ -1,0 +1,9 @@
+# Cloudflare Pages redirects. One rule per line: <from> <to> <status>
+#
+# Legacy URLs from the v1 site. The JSON formatter ships in Phase 1; this site
+# does not go to production before that, so the target will exist at launch.
+/jsoneditor       /tools/json-formatter/  301
+/jsoneditor/*     /tools/json-formatter/  301
+
+# Apex -> www canonicalisation is done with a Cloudflare Redirect Rule on the
+# zone (Rules > Redirect Rules), not here: Pages _redirects cannot match hosts.

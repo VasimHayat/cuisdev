@@ -1,0 +1,61 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { breadcrumbs } from '@/lib/seo';
+import { site } from '@/lib/site';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about/' },
+];
+---
+
+<BaseLayout
+  title="About Cuisdev"
+  description="Cuisdev builds free developer tools that run entirely in your browser. Learn why we built it, how it stays private, and what is coming next."
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <div class="stack stack--lg">
+    <Breadcrumbs crumbs={crumbs} />
+    <article class="prose">
+      <h1>About {site.name}</h1>
+      <p class="prose--lead">
+        Cuisdev is a collection of small, fast developer utilities that run entirely in your
+        browser. No accounts, no uploads, no ads chasing you around the page.
+      </p>
+
+      <h2>Why we built it</h2>
+      <p>
+        Every developer has pasted a JSON blob, a JWT or a Base64 string into some random website to
+        inspect it. Most of those sites are slow, buried in ads, and quietly send your data to a
+        server you know nothing about. That is a strange thing to accept for data that is often
+        sensitive.
+      </p>
+      <p>
+        Cuisdev exists to be the tool site you can recommend without a caveat: quick to load,
+        pleasant to use, and incapable of leaking your data because it never leaves your machine.
+      </p>
+
+      <h2>How privacy works here</h2>
+      <p>
+        Every page is static HTML. The tools are small TypeScript programs that run in your browser
+        using standard Web APIs. There is no backend that receives your input, so there is nothing
+        to log, store or breach. You can load a tool, disconnect from the internet, and keep
+        working.
+      </p>
+      <p>
+        We do not use tracking cookies or third-party advertising scripts. See the
+        <a href="/privacy/">privacy policy</a> for the details.
+      </p>
+
+      <h2>What is next</h2>
+      <p>
+        We are rebuilding Cuisdev from the ground up and shipping tools in clusters: JSON and data
+        conversion, encoding and decoding, generators, text utilities, web and code helpers, and
+        image tools. New tools are added regularly. If there is a utility you wish existed, tell us
+        at
+        <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

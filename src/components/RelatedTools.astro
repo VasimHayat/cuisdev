@@ -1,0 +1,33 @@
+---
+import { getRelatedTools, toolUrl } from '@/lib/registry';
+import type { ToolMeta } from '@/tools/_types';
+
+import Icon from './Icon.astro';
+
+interface Props {
+  tool: ToolMeta;
+}
+
+const { tool } = Astro.props;
+const related = getRelatedTools(tool);
+---
+
+{
+  related.length > 0 && (
+    <nav class="related" aria-labelledby="related-heading">
+      <h2 class="footer__heading" id="related-heading">
+        Related tools
+      </h2>
+      <ul class="related__list" role="list">
+        {related.map((r) => (
+          <li>
+            <a class="related__link" href={toolUrl(r.slug)}>
+              <Icon name={r.icon} />
+              <span>{r.shortName ?? r.name}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

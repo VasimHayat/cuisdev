@@ -1,0 +1,26 @@
+---
+import type { Crumb } from '@/lib/seo';
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+const last = crumbs.length - 1;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol role="list">
+    {
+      crumbs.map((crumb, i) => (
+        <li>
+          {i === last ? (
+            <span aria-current="page">{crumb.name}</span>
+          ) : (
+            <a href={crumb.href}>{crumb.name}</a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

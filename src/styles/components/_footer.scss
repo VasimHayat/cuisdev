@@ -1,0 +1,65 @@
+@use 'tools/mixins' as *;
+
+.footer {
+  padding-block: var(--space-12) var(--space-8);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  background: var(--color-bg-subtle);
+  border-top: 1px solid var(--color-border);
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+
+    @include from('sm') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include from('lg') {
+      grid-template-columns: 2fr repeat(3, 1fr);
+    }
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 28rem;
+  }
+
+  &__heading {
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 650;
+    color: var(--color-text);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text);
+      text-decoration: underline;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: space-between;
+    padding-top: var(--space-6);
+    margin-top: var(--space-10);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    border-top: 1px solid var(--color-border);
+  }
+}

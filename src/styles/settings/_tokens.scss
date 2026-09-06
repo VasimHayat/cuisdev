@@ -1,0 +1,130 @@
+// Design tokens (SCSS-only, no CSS output). Consumed by settings/_theme.scss,
+// which emits them as CSS custom properties, and by tools/_mixins.scss.
+
+// ---------------------------------------------------------------------------
+// Colour palettes
+// ---------------------------------------------------------------------------
+$palette-light: (
+  'bg': #fff,
+  'bg-subtle': #f6f8fa,
+  'bg-muted': #eef1f5,
+  'surface': #fff,
+  'surface-raised': #fff,
+  'border': #d9dee5,
+  'border-strong': #b3bcc9,
+  'text': #0f172a,
+  'text-muted': #4b5872,
+  'text-faint': #5b667a,
+  'accent': #0369a1,
+  'accent-hover': #075985,
+  'accent-contrast': #fff,
+  'accent-soft': #e0f2fe,
+  'success': #15803d,
+  'warning': #a16207,
+  'danger': #b91c1c,
+  'danger-soft': #fee2e2,
+  'code-bg': #f6f8fa,
+  'focus': #0369a1,
+  'shadow': rgb(15 23 42 / 0.08),
+  'shadow-strong': rgb(15 23 42 / 0.16),
+  'backdrop': rgb(15 23 42 / 0.45),
+);
+$palette-dark: (
+  'bg': #0b1220,
+  'bg-subtle': #0f1829,
+  'bg-muted': #162037,
+  'surface': #111a2b,
+  'surface-raised': #172136,
+  'border': #253247,
+  'border-strong': #3a4b6b,
+  'text': #e6edf7,
+  'text-muted': #a3b1c6,
+  'text-faint': #8494ad,
+  'accent': #38bdf8,
+  'accent-hover': #7dd3fc,
+  'accent-contrast': #06121f,
+  'accent-soft': #0f2a3f,
+  'success': #4ade80,
+  'warning': #fbbf24,
+  'danger': #f87171,
+  'danger-soft': #3b1a1a,
+  'code-bg': #0d1526,
+  'focus': #38bdf8,
+  'shadow': rgb(0 0 0 / 0.35),
+  'shadow-strong': rgb(0 0 0 / 0.55),
+  'backdrop': rgb(2 6 16 / 0.65),
+);
+
+// ---------------------------------------------------------------------------
+// Typography
+// ---------------------------------------------------------------------------
+$font-sans:
+  'Inter Variable',
+  ui-sans-serif,
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  roboto,
+  'Helvetica Neue',
+  arial,
+  sans-serif;
+$font-mono:
+  'JetBrains Mono Variable', ui-monospace, sfmono-regular, menlo, consolas, 'Liberation Mono',
+  monospace;
+$type-scale: (
+  'xs': 0.75rem,
+  'sm': 0.875rem,
+  'base': 1rem,
+  'lg': 1.125rem,
+  'xl': 1.25rem,
+  '2xl': 1.5rem,
+  '3xl': 1.875rem,
+  '4xl': 2.25rem,
+  '5xl': 3rem,
+);
+
+// ---------------------------------------------------------------------------
+// Spacing (4px base)
+// ---------------------------------------------------------------------------
+$space-scale: (
+  '0': 0,
+  'px': 1px,
+  '1': 0.25rem,
+  '2': 0.5rem,
+  '3': 0.75rem,
+  '4': 1rem,
+  '5': 1.25rem,
+  '6': 1.5rem,
+  '8': 2rem,
+  '10': 2.5rem,
+  '12': 3rem,
+  '16': 4rem,
+  '20': 5rem,
+  '24': 6rem,
+);
+
+// ---------------------------------------------------------------------------
+// Radii, shadows, motion, layout
+// ---------------------------------------------------------------------------
+$radius-scale: (
+  'sm': 0.25rem,
+  'md': 0.5rem,
+  'lg': 0.75rem,
+  'xl': 1rem,
+  '2xl': 1.5rem,
+  'full': 9999px,
+);
+$duration-fast: 120ms;
+$duration-base: 200ms;
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$container-max: 80rem;
+$container-wide: 96rem;
+$header-height: 3.75rem;
+
+// Breakpoints (em so they respect user zoom)
+$breakpoints: (
+  'sm': 40em,
+  'md': 48em,
+  'lg': 64em,
+  'xl': 80em,
+);

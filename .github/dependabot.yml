@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      astro:
+        patterns: ['astro', '@astrojs/*']
+      lint:
+        patterns: ['eslint*', '@eslint/*', 'typescript-eslint', 'stylelint*', 'prettier*']
+      test:
+        patterns: ['vitest', '@vitest/*', '@playwright/*', '@axe-core/*', '@lhci/*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

@@ -1,0 +1,26 @@
+---
+import { icons, type IconName } from './icons';
+
+interface Props {
+  name: IconName;
+  /** Accessible label. Omit for purely decorative icons. */
+  label?: string;
+  class?: string;
+}
+
+const { name, label, class: className } = Astro.props;
+const paths = icons[name];
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  class:list={['icon', className]}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+  set:html={paths}
+/>

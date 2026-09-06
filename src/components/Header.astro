@@ -1,0 +1,53 @@
+---
+import { nav, site } from '@/lib/site';
+
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="header">
+  <div class="container container--wide header__inner">
+    <Logo />
+
+    <nav class="header__nav" aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a
+            class="header__link"
+            href={item.href}
+            aria-current={isCurrent(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header__actions">
+      <button type="button" class="header__search" data-palette-open aria-label="Search tools">
+        <Icon name="search" />
+        <span>Search tools…</span>
+        <kbd aria-hidden="true">Ctrl K</kbd>
+      </button>
+
+      {
+        site.github && (
+          <a
+            class="btn btn--ghost btn--icon"
+            href={site.github}
+            rel="noopener"
+            aria-label="Cuisdev on GitHub"
+          >
+            <Icon name="github" />
+          </a>
+        )
+      }
+
+      <ThemeToggle />
+    </div>
+  </div>
+</header>

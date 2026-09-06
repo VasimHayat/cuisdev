@@ -1,0 +1,66 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { breadcrumbs } from '@/lib/seo';
+import { site } from '@/lib/site';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Terms', href: '/terms/' },
+];
+const updated = '2026-09-06';
+---
+
+<BaseLayout
+  title="Terms of Service"
+  description="Terms of service for using Cuisdev's free, browser-based developer tools."
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <div class="stack stack--lg">
+    <Breadcrumbs crumbs={crumbs} />
+    <article class="prose">
+      <h1>Terms of service</h1>
+      <p class="text-muted text-sm">Last updated {updated}</p>
+
+      <h2>Use of the tools</h2>
+      <p>
+        {site.name} provides free, browser-based developer utilities. You may use them for any lawful
+        purpose, personal or commercial, without creating an account.
+      </p>
+
+      <h2>No warranty</h2>
+      <p>
+        The tools are provided "as is", without warranty of any kind. We work hard to make them
+        correct, but you are responsible for verifying results before relying on them, especially
+        for security-sensitive operations such as hashing, encoding credentials or generating
+        passwords.
+      </p>
+
+      <h2>Limitation of liability</h2>
+      <p>
+        To the maximum extent permitted by law, {site.name} and its contributors are not liable for any
+        damages arising from your use of, or inability to use, the site.
+      </p>
+
+      <h2>Acceptable use</h2>
+      <p>
+        Do not attempt to disrupt the service, scrape it at abusive rates, or use it to violate the
+        rights of others.
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        The site's source code is released under an open-source licence as noted in the repository.
+        The Cuisdev name and logo are not covered by that licence.
+      </p>
+
+      <h2>Changes</h2>
+      <p>We may update these terms; changes take effect when posted on this page.</p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions? Email <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

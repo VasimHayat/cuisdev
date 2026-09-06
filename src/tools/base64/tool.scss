@@ -1,0 +1,21 @@
+// Base64-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-base64 {
+  &__upload {
+    cursor: pointer;
+
+    &:focus-within {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  .tool__actions {
+    justify-content: space-between;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}

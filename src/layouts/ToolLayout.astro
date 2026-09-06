@@ -1,0 +1,88 @@
+---
+/**
+ * Shared page chrome for every tool: SEO head, breadcrumbs, heading, the tool
+ * itself (slot), then the long-form content that makes the page rank.
+ */
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import CodeBlock from '@/components/CodeBlock.astro';
+import FaqList from '@/components/FaqList.astro';
+import RelatedTools from '@/components/RelatedTools.astro';
+import TrustBlock from '@/components/TrustBlock.astro';
+import { categoryUrl, getCategory } from '@/lib/registry';
+import { toolCrumbs, toolJsonLd } from '@/lib/seo';
+import type { ToolMeta } from '@/tools/_types';
+
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  tool: ToolMeta;
+}
+
+const { tool } = Astro.props;
+const category = getCategory(tool.category);
+---
+
+<BaseLayout
+  title={tool.seoTitle}
+  description={tool.description}
+  image={`/og/${tool.slug}.png`}
+  imageAlt={`${tool.name} — ${tool.tagline}`}
+  jsonLd={toolJsonLd(tool)}
+  wide
+>
+  <div class="stack stack--lg">
+    <Breadcrumbs crumbs={toolCrumbs(tool)} />
+
+    <header class="tool-header">
+      <div class="tool-header__title-row">
+        <h1>{tool.name}</h1>
+        <a class="badge badge--accent" href={categoryUrl(category.id)}>{category.shortName}</a>
+        {tool.status === 'beta' && <span class="badge badge--warning">Beta</span>}
+      </div>
+      <p class="tool-header__tagline">{tool.tagline}</p>
+    </header>
+
+    <slot />
+
+    <div class="tool-content">
+      <div class="tool-content__grid">
+        <article class="prose">
+          <h2 id="about">About the {tool.name}</h2>
+          {tool.intro.map((paragraph) => <p>{paragraph}</p>)}
+
+          <h2 id="how-to">How to use it</h2>
+          <ol>
+            {tool.howTo.map((step) => <li>{step}</li>)}
+          </ol>
+
+          {
+            tool.example && (
+              <>
+                <h2 id="example">Example</h2>
+                <div class="example">
+                  <div>
+                    <div class="example__label">Input</div>
+                    <CodeBlock code={tool.example.input} />
+                  </div>
+                  <div>
+                    <div class="example__label">Output</div>
+                    <CodeBlock code={tool.example.output} />
+                  </div>
+                </div>
+                {tool.example.note && <p class="text-muted text-sm">{tool.example.note}</p>}
+              </>
+            )
+          }
+
+          <h2 id="faq">Frequently asked questions</h2>
+          <FaqList items={tool.faq} />
+        </article>
+
+        <aside class="tool-content__aside">
+          <TrustBlock />
+          <RelatedTools tool={tool} />
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+
+import ToolLayout from '@/layouts/ToolLayout.astro';
+import { getTool, tools } from '@/lib/registry';
+
+export function getStaticPaths() {
+  return tools.map((tool) => ({ params: { slug: tool.slug } }));
+}
+
+const { slug } = Astro.params;
+const tool = slug ? getTool(slug) : undefined;
+if (!tool) throw new Error(`Unknown tool "${slug}"`);
+
+const components = import.meta.glob<{ default: AstroComponentFactory }>(
+  '../../tools/*/Tool.astro',
+  { eager: true },
+);
+const Tool = components[`../../tools/${tool.slug}/Tool.astro`]?.default;
+if (!Tool) throw new Error(`Tool "${tool.slug}" has no Tool.astro`);
+---
+
+<ToolLayout tool={tool}>
+  <Tool />
+</ToolLayout>

@@ -1,0 +1,77 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { breadcrumbs } from '@/lib/seo';
+import { site } from '@/lib/site';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Privacy', href: '/privacy/' },
+];
+const updated = '2026-09-06';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="Cuisdev's privacy policy: our tools run in your browser and never upload your data. Learn what little we do collect and how to contact us."
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <div class="stack stack--lg">
+    <Breadcrumbs crumbs={crumbs} />
+    <article class="prose">
+      <h1>Privacy policy</h1>
+      <p class="text-muted text-sm">Last updated {updated}</p>
+
+      <h2>The short version</h2>
+      <p>
+        Everything you type, paste or drop into a Cuisdev tool is processed inside your own browser.
+        It is never transmitted to us or to anyone else. We have no accounts, no databases of user
+        content, and no advertising trackers.
+      </p>
+
+      <h2>Data processed by the tools</h2>
+      <p>
+        Tools on {site.name} are static web pages with client-side JavaScript. Input is handled in memory
+        on your device and discarded when you leave the page, unless a tool explicitly offers to remember
+        something locally (for example, your theme preference). Such data is stored in your browser's
+        local storage and never leaves it.
+      </p>
+
+      <h2>Server logs and analytics</h2>
+      <p>
+        Our hosting provider (Cloudflare) may record standard, short-lived request logs — such as
+        the requested URL, timestamp, and truncated IP address — for security and operational
+        purposes. If we enable web analytics, we will use a privacy-preserving, cookie-free service
+        that collects only aggregate page-view counts and never identifies individual visitors. This
+        page will be updated before any such change.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        We do not set tracking cookies. Because we use no non-essential cookies, we do not show a
+        cookie banner.
+      </p>
+
+      <h2>Third parties</h2>
+      <p>
+        Our pages do not load third-party advertising or social media scripts. Fonts and all other
+        assets are served from our own domain.
+      </p>
+
+      <h2>Children</h2>
+      <p>
+        Cuisdev does not knowingly collect any personal information from anyone, including children.
+      </p>
+
+      <h2>Changes</h2>
+      <p>We will post any changes to this policy on this page and update the date above.</p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about privacy? Email <a href={`mailto:${site.contactEmail}`}
+          >{site.contactEmail}</a
+        >.
+      </p>
+    </article>
+  </div>
+</BaseLayout>

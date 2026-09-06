@@ -1,0 +1,77 @@
+---
+import { categoryUrl, getPopulatedCategories, getToolsByCategory, toolUrl } from '@/lib/registry';
+import { legalNav, site } from '@/lib/site';
+
+import Logo from './Logo.astro';
+
+const categories = getPopulatedCategories();
+const year = new Date().getFullYear();
+const copyrightYears = year > site.foundedYear ? `${site.foundedYear}–${year}` : `${year}`;
+---
+
+<footer class="footer">
+  <div class="container container--wide">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <Logo static />
+        <p>
+          {site.tagline} Everything runs in your browser — nothing you paste is ever uploaded.
+        </p>
+      </div>
+
+      {
+        categories.slice(0, 2).map((category) => (
+          <nav aria-label={`${category.name} tools`}>
+            <h2 class="footer__heading">
+              <a class="footer__link" href={categoryUrl(category.id)}>
+                {category.name}
+              </a>
+            </h2>
+            <ul class="footer__list" role="list">
+              {getToolsByCategory(category.id)
+                .slice(0, 6)
+                .map((tool) => (
+                  <li>
+                    <a class="footer__link" href={toolUrl(tool.slug)}>
+                      {tool.shortName ?? tool.name}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+        ))
+      }
+
+      <nav aria-label="Company">
+        <h2 class="footer__heading">Cuisdev</h2>
+        <ul class="footer__list" role="list">
+          <li><a class="footer__link" href="/tools/">All tools</a></li>
+          <li><a class="footer__link" href="/about/">About</a></li>
+          {
+            legalNav.map((item) => (
+              <li>
+                <a class="footer__link" href={item.href}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          {
+            site.github && (
+              <li>
+                <a class="footer__link" href={site.github} rel="noopener">
+                  GitHub
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© {copyrightYears} {site.name}. Free to use, forever.</span>
+      <span>No accounts. No cookies. No uploads.</span>
+    </div>
+  </div>
+</footer>

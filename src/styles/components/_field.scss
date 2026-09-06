@@ -1,0 +1,129 @@
+@use 'tools/mixins' as *;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  &__label {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  &__hint {
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--color-text-faint);
+  }
+
+  &__input,
+  &__textarea,
+  &__select {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    transition: border-color var(--duration-fast);
+
+    &:hover {
+      border-color: var(--color-text-faint);
+    }
+
+    &:focus-visible {
+      border-color: var(--color-accent);
+      outline: 2px solid var(--color-focus);
+      outline-offset: 0;
+    }
+
+    &::placeholder {
+      color: var(--color-text-faint);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--color-danger);
+    }
+  }
+
+  &__textarea {
+    min-height: 12rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    resize: vertical;
+    tab-size: 2;
+
+    &[readonly] {
+      background: var(--color-code-bg);
+    }
+  }
+
+  &__error {
+    font-size: var(--text-sm);
+    color: var(--color-danger);
+  }
+}
+
+// Inline choice controls
+.choice {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--color-accent);
+  }
+}
+
+// Segmented control (radio group)
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-md);
+
+  &__option {
+    position: relative;
+
+    input {
+      @include visually-hidden;
+    }
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: 0 var(--space-3);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border-radius: calc(var(--radius-md) - 2px);
+      transition:
+        background-color var(--duration-fast),
+        color var(--duration-fast);
+    }
+
+    input:checked + span {
+      color: var(--color-text);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    input:focus-visible + span {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 1px;
+    }
+  }
+}
