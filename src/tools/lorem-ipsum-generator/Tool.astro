@@ -1,0 +1,97 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-lorem-ipsum-generator"
+  data-tool="lorem-ipsum-generator"
+  aria-labelledby="lorem-ipsum-generator-heading"
+>
+  <h2 id="lorem-ipsum-generator-heading" class="visually-hidden">Lorem ipsum generator</h2>
+
+  <div class="tool__options">
+    <div class="field tool-lorem-ipsum-generator__field">
+      <label class="field__label" for="lorem-ipsum-generator-unit">Generate</label>
+      <select id="lorem-ipsum-generator-unit" class="field__select" data-opt="unit">
+        <option value="paragraphs" selected>Paragraphs</option>
+        <option value="sentences">Sentences</option>
+        <option value="words">Words</option>
+      </select>
+    </div>
+
+    <div class="field tool-lorem-ipsum-generator__field tool-lorem-ipsum-generator__field--count">
+      <label class="field__label" for="lorem-ipsum-generator-count">Count</label>
+      <input
+        id="lorem-ipsum-generator-count"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="100"
+        step="1"
+        value="3"
+        data-opt="count"
+      />
+    </div>
+
+    <div class="field tool-lorem-ipsum-generator__field">
+      <label class="field__label" for="lorem-ipsum-generator-format">Format</label>
+      <select id="lorem-ipsum-generator-format" class="field__select" data-opt="format">
+        <option value="plain" selected>Plain text</option>
+        <option value="html">HTML &lt;p&gt;</option>
+        <option value="markdown">Markdown</option>
+        <option value="json">JSON array</option>
+      </select>
+    </div>
+
+    <label class="choice">
+      <input type="checkbox" checked data-opt="start" />
+      Start with “Lorem ipsum dolor sit amet…”
+    </label>
+  </div>
+
+  <div class="tool__panes tool-lorem-ipsum-generator__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="lorem-ipsum-generator-output">Generated text</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear output"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="lorem-ipsum-generator-output"
+        class="field__textarea tool-lorem-ipsum-generator__output"
+        placeholder="Generated text appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-stats aria-live="off"></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn btn--primary" data-action="generate">
+      <Icon name="refresh-cw" /><span>Regenerate</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

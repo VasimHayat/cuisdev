@@ -1,0 +1,117 @@
+// QR Code Generator — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-qr-code-generator {
+  // Compact labelled controls inside the options rows.
+  &__field {
+    flex: 0 1 auto;
+    gap: var(--space-1);
+    min-width: 9rem;
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    &--num {
+      min-width: 6rem;
+      max-width: 7.5rem;
+    }
+
+    &--color {
+      min-width: 0;
+    }
+  }
+
+  // A preset's stacked fields.
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: flex-end;
+
+    .field {
+      flex: 1 1 12rem;
+    }
+  }
+
+  &__choice {
+    min-height: 2.5rem;
+  }
+
+  &__textarea {
+    min-height: 10rem;
+
+    &--short {
+      min-height: 5rem;
+    }
+  }
+
+  &__payload {
+    min-height: 4.5rem;
+    font-size: var(--text-xs);
+    overflow-wrap: anywhere;
+  }
+
+  // Native colour swatches: keep them square and easy to hit.
+  &__color {
+    width: 3.25rem;
+    height: 2.5rem;
+    padding: 0.2rem;
+    cursor: pointer;
+  }
+
+  &__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 16rem;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  // The canvas keeps its intrinsic width/height attributes; CSS only scales it down to fit.
+  &__image {
+    max-width: 100%;
+    height: auto;
+
+    // The global reset gives canvas/svg `display: block`, which would beat the UA [hidden] rule.
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__svg {
+    width: 100%;
+    max-width: 24rem;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__placeholder {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-faint);
+    text-align: center;
+  }
+
+  .tool__pane-actions {
+    flex-wrap: wrap;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}
