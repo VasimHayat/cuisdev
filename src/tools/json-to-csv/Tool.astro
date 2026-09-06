@@ -1,0 +1,136 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-json-to-csv"
+  data-tool="json-to-csv"
+  aria-labelledby="json-to-csv-heading"
+>
+  <h2 id="json-to-csv-heading" class="visually-hidden">JSON and CSV converter</h2>
+
+  <div class="tool__options">
+    <fieldset class="segmented" data-direction>
+      <legend class="visually-hidden">Direction</legend>
+      <label class="segmented__option">
+        <input type="radio" name="direction" value="json-csv" checked />
+        <span>JSON → CSV</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="direction" value="csv-json" />
+        <span>CSV → JSON</span>
+      </label>
+    </fieldset>
+
+    <label class="choice" data-only="json-csv">
+      Output delimiter
+      <select class="field__select" data-opt="out-delimiter">
+        <option value="," selected>Comma (,)</option>
+        <option value=";">Semicolon (;)</option>
+        <option value="tab">Tab</option>
+        <option value="|">Pipe (|)</option>
+      </select>
+    </label>
+
+    <label class="choice" data-only="json-csv">
+      <input type="checkbox" data-opt="out-header" checked />
+      Header row
+    </label>
+
+    <label class="choice" data-only="json-csv">
+      <input type="checkbox" data-opt="quote-all" />
+      Quote all fields
+    </label>
+
+    <label class="choice" data-only="csv-json" hidden>
+      Input delimiter
+      <select class="field__select" data-opt="in-delimiter">
+        <option value="auto" selected>Auto-detect</option>
+        <option value=",">Comma (,)</option>
+        <option value=";">Semicolon (;)</option>
+        <option value="tab">Tab</option>
+        <option value="|">Pipe (|)</option>
+      </select>
+    </label>
+
+    <label class="choice" data-only="csv-json" hidden>
+      <input type="checkbox" data-opt="in-header" checked />
+      First row is header
+    </label>
+
+    <label class="choice" data-only="csv-json" hidden>
+      <input type="checkbox" data-opt="typing" />
+      Detect numbers and booleans
+    </label>
+
+    <label class="choice" data-only="csv-json" hidden>
+      <input type="checkbox" data-opt="minify" />
+      Minified JSON
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="json-to-csv-input" data-input-label>JSON</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="json-to-csv-input"
+        class="field__textarea"
+        placeholder="Paste a JSON array of objects or CSV here — the output updates as you type."
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="json-to-csv-output" data-output-label>CSV</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="json-to-csv-output"
+        class="field__textarea"
+        placeholder="Output appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats aria-live="off"></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn" data-action="swap">
+      <Icon name="swap" /><span>Swap: use output as input</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

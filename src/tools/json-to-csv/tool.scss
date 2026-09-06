@@ -1,0 +1,21 @@
+// JSON ↔ CSV — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-json-to-csv {
+  // A <select> inside an inline .choice label should size to its content.
+  .choice .field__select {
+    width: auto;
+    min-height: 2rem;
+    padding-block: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  .tool__actions {
+    justify-content: space-between;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
