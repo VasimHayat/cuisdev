@@ -7,7 +7,9 @@
         "http://localhost/tools/",
         "http://localhost/tools/base64/",
         "http://localhost/about/",
-        "http://localhost/tools/json-formatter/"
+        "http://localhost/tools/json-formatter/",
+        "http://localhost/blog/",
+        "http://localhost/blog/is-base64-encryption/"
       ],
       "numberOfRuns": 3,
       "settings": {
@@ -62,6 +64,17 @@
               }
             ],
             "resource-summary:stylesheet:size": [
+              "error",
+              {
+                "maxNumericValue": 61440
+              }
+            ]
+          }
+        },
+        {
+          "matchingUrlPattern": "^http://localhost/blog/",
+          "assertions": {
+            "resource-summary:script:size": [
               "error",
               {
                 "maxNumericValue": 61440

@@ -75,7 +75,7 @@ try {
         )?.items ?? [];
       const js = items.find((i) => i.resourceType === 'script')?.transferSize ?? 0;
       const css = items.find((i) => i.resourceType === 'stylesheet')?.transferSize ?? 0;
-      const jsBudget = path.startsWith('/tools/') ? 614_400 : 61_440;
+      const jsBudget = path.startsWith('/tools/') ? 614_400 : 61_440; // blog + marketing pages ship no tool JS
       const problems: string[] = [];
       if ((cats.performance ?? 0) < 98) problems.push(`performance ${cats.performance}`);
       for (const c of ['accessibility', 'best-practices', 'seo'])

@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = Number(process.env.PW_PORT ?? 4321);
+// Not 4321: that is `astro dev`'s port, and `reuseExistingServer` would silently
+// test a running dev server (with stale content collections) instead of `dist/`.
+const PORT = Number(process.env.PW_PORT ?? 4329);
 const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({

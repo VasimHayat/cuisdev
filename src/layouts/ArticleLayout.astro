@@ -1,0 +1,186 @@
+---
+/**
+ * Blog / guide page: article header, prose body, "try the tool" cards, and
+ * BlogPosting + BreadcrumbList structured data.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ToolCard from '@/components/ToolCard.astro';
+import { getTool } from '@/lib/registry';
+import { absolute, breadcrumbs, type JsonLd } from '@/lib/seo';
+import { site } from '@/lib/site';
+import type { ToolMeta } from '@/tools/_types';
+
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, description, pubDate, updatedDate, tags } = entry.data;
+
+const tools = entry.data.tools.map((slug) => {
+  const tool = getTool(slug);
+  if (!tool) throw new Error(`Guide "${entry.id}" references unknown tool "${slug}"`);
+  return tool;
+}) as ToolMeta[];
+
+const words = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.round(words / 220));
+const path = `/blog/${entry.id}/`;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Guides', href: '/blog/' },
+  { name: title, href: path },
+];
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const article: JsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: pubDate.toISOString(),
+  dateModified: (updatedDate ?? pubDate).toISOString(),
+  author: { '@type': 'Organization', name: site.name, url: site.url },
+  publisher: { '@type': 'Organization', name: site.name, url: site.url },
+  mainEntityOfPage: absolute(path),
+  image: absolute(`/og/blog-${entry.id}.png`),
+  keywords: tags.join(', '),
+  wordCount: words,
+  inLanguage: site.language,
+};
+const tocHeadings = headings.filter((h) => h.depth === 2);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  image={`/og/blog-${entry.id}.png`}
+  imageAlt={title}
+  jsonLd={[article, breadcrumbs(crumbs)]}
+>
+  <div class="stack stack--lg article">
+    <Breadcrumbs crumbs={crumbs} />
+
+    <header class="article__header stack stack--sm">
+      <h1>{title}</h1>
+      <p class="section__lead">{description}</p>
+      <p class="article__meta">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        {
+          updatedDate && (
+            <>
+              {' · Updated '}
+              <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time>
+            </>
+          )
+        }
+        {' · '}{readingMinutes} min read
+      </p>
+      {
+        tags.length > 0 && (
+          <ul class="cluster cluster--sm" role="list" aria-label="Tags">
+            {tags.map((tag) => (
+              <li class="badge">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="article__grid">
+      <article class="prose">
+        <Content />
+      </article>
+
+      <aside class="article__aside">
+        {
+          tocHeadings.length > 1 && (
+            <nav class="article__toc" aria-labelledby="toc-heading">
+              <h2 class="footer__heading" id="toc-heading">
+                On this page
+              </h2>
+              <ol role="list">
+                {tocHeadings.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+        {
+          tools.length > 0 && (
+            <section aria-labelledby="try-heading" class="stack stack--sm">
+              <h2 class="footer__heading" id="try-heading">
+                Try it now
+              </h2>
+              {tools.map((tool) => (
+                <ToolCard tool={tool} headingLevel="h3" />
+              ))}
+            </section>
+          )
+        }
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  @use 'tools/mixins' as *;
+
+  .article {
+    &__meta {
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+
+      @include from('lg') {
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        gap: var(--space-12);
+      }
+    }
+
+    &__aside {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+
+      @include from('lg') {
+        position: sticky;
+        top: calc(var(--header-height) + var(--space-6));
+        align-self: start;
+      }
+    }
+
+    &__toc ol {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+
+      a {
+        color: var(--color-text-muted);
+        text-decoration: none;
+
+        &:hover {
+          color: var(--color-text);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+</style>

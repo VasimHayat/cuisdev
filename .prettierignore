@@ -7,3 +7,4 @@ test-results/
 .lighthouseci/
 package-lock.json
 public/icons/
+src/content/blog/

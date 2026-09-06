@@ -6,13 +6,22 @@
 import { Resvg } from '@resvg/resvg-js';
 import type { APIRoute, GetStaticPaths } from 'astro';
 
+import { getCollection } from 'astro:content';
+
 import { getCategory, getTool, tools } from '@/lib/registry';
 import { site } from '@/lib/site';
 
-export const getStaticPaths = (() => [
-  { params: { slug: 'default' } },
-  ...tools.map((t) => ({ params: { slug: t.slug } })),
-]) satisfies GetStaticPaths;
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return [
+    { params: { slug: 'default' } },
+    ...tools.map((t) => ({ params: { slug: t.slug } })),
+    ...posts.map((p) => ({
+      params: { slug: `blog-${p.id}` },
+      props: { eyebrow: 'Guide', title: p.data.title, subtitle: p.data.description },
+    })),
+  ];
+}) satisfies GetStaticPaths;
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -96,16 +105,19 @@ function template(opts: { eyebrow: string; title: string; subtitle: string }): s
 </svg>`;
 }
 
-export const GET: APIRoute = ({ params }) => {
+export const GET: APIRoute = ({ params, props }) => {
+  const custom = props as { eyebrow?: string; title?: string; subtitle?: string };
   const tool = params.slug === 'default' ? undefined : getTool(params.slug ?? '');
   const svg = template(
-    tool
-      ? { eyebrow: getCategory(tool.category).name, title: tool.name, subtitle: tool.tagline }
-      : {
-          eyebrow: 'Developer tools',
-          title: site.tagline,
-          subtitle: 'Nothing you paste ever leaves your browser.',
-        },
+    custom.title
+      ? { eyebrow: custom.eyebrow ?? 'Guide', title: custom.title, subtitle: custom.subtitle ?? '' }
+      : tool
+        ? { eyebrow: getCategory(tool.category).name, title: tool.name, subtitle: tool.tagline }
+        : {
+            eyebrow: 'Developer tools',
+            title: site.tagline,
+            subtitle: 'Nothing you paste ever leaves your browser.',
+          },
   );
 
   const png = new Resvg(svg, {

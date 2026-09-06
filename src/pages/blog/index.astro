@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { breadcrumbs } from '@/lib/seo';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Guides', href: '/blog/' },
+];
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+
+<BaseLayout
+  title="Developer Guides"
+  description="Short, practical guides on JSON, encoding, hashing, JWTs and the other things developers look up every day — each paired with a free tool that runs in your browser."
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <div class="stack stack--lg">
+    <Breadcrumbs crumbs={crumbs} />
+    <header class="stack stack--sm">
+      <h1>Developer guides</h1>
+      <p class="section__lead">
+        Practical explanations of the formats and problems behind our tools. No fluff, no sign-up.
+        <a href="/rss.xml">RSS feed</a>.
+      </p>
+    </header>
+
+    <ol class="grid grid--lg" role="list">
+      {
+        posts.map((post) => (
+          <li class="card card--link">
+            <h2 class="card__title">
+              <a class="card__link" href={`/blog/${post.id}/`}>
+                {post.data.title}
+              </a>
+            </h2>
+            <p class="card__desc">{post.data.description}</p>
+            <div class="card__meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {formatDate(post.data.pubDate)}
+              </time>
+              {post.data.tags.slice(0, 2).map((tag) => (
+                <span class="badge">{tag}</span>
+              ))}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</BaseLayout>

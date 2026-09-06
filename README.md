@@ -43,7 +43,8 @@ npm run dev          # http://localhost:4321
 | `npm run new-tool -- …` | Scaffold a new tool (see below)                        |
 | `npm run icons`         | Regenerate PNG icons from `public/favicon.svg`         |
 
-First time running e2e tests: `npx playwright install chromium`. If the download is blocked on your
+First time running e2e tests: `npx playwright install chromium`. The suite builds to `dist/` and
+serves it on port 4329 (override with `PW_PORT`). If the download is blocked on your
 network, run against your installed browser instead: `PLAYWRIGHT_CHANNEL=chrome npm run test:e2e`
 (or `msedge`).
 

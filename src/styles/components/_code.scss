@@ -1,0 +1,74 @@
+// Syntax highlighting for Markdown code blocks (Prism token classes emitted at
+// build time). Colours come from the design tokens so dark mode is automatic.
+.prose pre {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+
+  code {
+    color: var(--color-text);
+  }
+}
+
+.token {
+  &.comment,
+  &.prolog,
+  &.doctype,
+  &.cdata {
+    color: var(--color-text-faint);
+    font-style: italic;
+  }
+
+  &.punctuation {
+    color: var(--color-text-muted);
+  }
+
+  &.property,
+  &.tag,
+  &.constant,
+  &.symbol,
+  &.deleted {
+    color: var(--color-danger);
+  }
+
+  &.boolean,
+  &.number {
+    color: var(--color-warning);
+  }
+
+  &.selector,
+  &.attr-name,
+  &.string,
+  &.char,
+  &.builtin,
+  &.inserted {
+    color: var(--color-success);
+  }
+
+  &.operator,
+  &.entity,
+  &.url {
+    color: var(--color-text-muted);
+  }
+
+  &.atrule,
+  &.attr-value,
+  &.keyword {
+    color: var(--color-accent);
+  }
+
+  &.function,
+  &.class-name {
+    color: var(--color-accent-hover);
+  }
+
+  &.regex,
+  &.important,
+  &.variable {
+    color: var(--color-warning);
+  }
+
+  &.important,
+  &.bold {
+    font-weight: 600;
+  }
+}
