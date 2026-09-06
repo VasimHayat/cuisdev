@@ -24,7 +24,7 @@ export const meta: ToolMeta = {
   ],
   intro: [
     'A diff shows what changed between two versions of a text: which lines were added, which were removed and which were edited. Developers use it to review a change before committing it, writers use it to spot edits in a revised draft, and anyone can use it to answer "what is different between these two files?" without reading both line by line.',
-    'This checker compares by line, by word or by character. Word and character mode also highlight the exact part of a line that changed, so a one-character typo does not look like a whole rewritten line. You can ignore case and ignore whitespace, switch between a two-column side-by-side view and a unified inline view, swap the two sides, and copy or download the result as a standard unified diff that <code>git apply</code> and <code>patch</code> understand.',
+    'This checker compares by line, by word or by character. Word and character mode also highlight the exact part of a line that changed, so a one-character typo does not look like a whole rewritten line. You can ignore case and ignore whitespace, switch between a two-column side-by-side view and a unified inline view, swap the two sides, and copy or download the result as a standard unified diff that git apply and patch understand.',
     'Both texts stay in your browser. The comparison runs in JavaScript on your machine — nothing is uploaded, stored or logged, so you can safely diff configuration files, logs or anything else you would not paste into a server-side tool.',
   ],
   howTo: [
