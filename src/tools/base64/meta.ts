@@ -71,6 +71,7 @@ export const meta: ToolMeta = {
         'No. Encoding and decoding run in your browser with the built-in <code>btoa</code>/<code>atob</code> and <code>TextEncoder</code> APIs. You can disconnect from the internet after the page loads and the tool keeps working.',
     },
   ],
+  related: ['url-encoder', 'html-entity-encoder', 'jwt-decoder', 'string-escape', 'hash-generator'],
   status: 'stable',
   added: '2026-09-06',
 };

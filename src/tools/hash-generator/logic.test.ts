@@ -17,6 +17,7 @@ import {
   guessAlgorithmByLength,
   hashOne,
   hexToBase64,
+  EMPTY_DIGESTS,
 } from './logic';
 
 const FOX = 'The quick brown fox jumps over the lazy dog';
@@ -263,5 +264,14 @@ describe('helpers', () => {
     expect(guessAlgorithmByLength('a'.repeat(64)).map((a) => a.id)).toEqual(['sha256', 'sha3-256']);
     expect(guessAlgorithmByLength('zz')).toEqual([]);
     expect(guessAlgorithmByLength('a'.repeat(7))).toEqual([]);
+  });
+});
+
+describe('EMPTY_DIGESTS', () => {
+  it('matches the real digests of the empty string', async () => {
+    const table = await digestText('');
+    for (const [id, expected] of Object.entries(EMPTY_DIGESTS)) {
+      expect(table[id as keyof typeof table]).toBe(expected);
+    }
   });
 });

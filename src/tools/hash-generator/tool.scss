@@ -81,8 +81,8 @@
     min-height: 1.5em;
     font-family: var(--font-mono);
     line-height: 1.5;
+
     overflow-wrap: anywhere;
-    word-break: break-all;
 
     &[data-state='na'] {
       font-family: inherit;

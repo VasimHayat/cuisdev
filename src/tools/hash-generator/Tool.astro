@@ -1,7 +1,7 @@
 ---
 import Icon from '@/components/Icon.astro';
 
-import { ALGORITHMS } from './logic';
+import { ALGORITHMS, EMPTY_DIGESTS } from './logic';
 
 import './tool.scss';
 ---
@@ -96,8 +96,11 @@ import './tool.scss';
                     <output
                       class="tool-hash-generator__digest"
                       data-digest={algo.id}
+                      data-state="ready"
                       aria-label={`${algo.label} digest`}
-                    />
+                    >
+                      {EMPTY_DIGESTS[algo.id]}
+                    </output>
                   </td>
                   <td>
                     <button

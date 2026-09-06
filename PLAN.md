@@ -266,6 +266,13 @@ No phase is marked complete until every tool in it has **unit tests** (Vitest, `
 **browser tests** (Playwright e2e + axe, light/dark, desktop/mobile) and the whole suite is green in CI.
 Phase 0 baseline: 24 unit tests, 29 browser tests, Lighthouse 100/100/100/100.
 
+### 8.2 Status log
+
+| Date       | Milestone                                                                                                                                                                                                                                                                  |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-06 | Phase 0 complete (foundation, Base64).                                                                                                                                                                                                                                     |
+| 2026-09-06 | Phase 1 complete: 16 tools — JSON (formatter, ↔YAML, ↔CSV, ↔XML, schema validator, JSONPath), Encoding (Base64, URL, HTML entities, JWT, string escape), Generators (UUID, hash, password, lorem ipsum, QR). Shared CodeMirror editor in a shadow root for the strict CSP. |
+
 ---
 
 ## 9. KPIs

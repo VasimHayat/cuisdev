@@ -75,6 +75,13 @@ export const meta: ToolMeta = {
         'Yes. Parsing and formatting happen in your browser with the built-in <code>JSON.parse</code> and <code>JSON.stringify</code> functions. Nothing is sent to a server; you can disconnect from the network and the tool keeps working.',
     },
   ],
+  related: [
+    'json-to-yaml',
+    'json-schema-validator',
+    'jsonpath-tester',
+    'json-to-csv',
+    'json-to-xml',
+  ],
   status: 'stable',
   added: '2026-09-06',
 };
