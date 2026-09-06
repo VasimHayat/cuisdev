@@ -1,0 +1,237 @@
+// Regex Tester — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+@use 'tools/mixins' as *;
+
+.tool-regex-tester {
+  &__controls {
+    display: grid;
+    gap: var(--space-4);
+
+    @include from('lg') {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  &__code-input {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  &__flags {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  &__legend {
+    padding: 0;
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  &__flag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    align-items: center;
+
+    code {
+      font-weight: 650;
+    }
+  }
+
+  &__test {
+    min-height: 10rem;
+  }
+
+  // The rendered test string with <mark>ed matches.
+  &__highlight {
+    max-height: 22rem;
+    min-height: 10rem;
+    padding: var(--space-3);
+    margin: 0;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 0;
+    }
+  }
+
+  &__placeholder {
+    color: var(--color-text-faint);
+  }
+
+  // Two tints so two matches that touch stay visually separate.
+  .regex__match {
+    padding: 0.05em 0;
+    color: var(--color-text);
+    background: var(--color-accent-soft);
+    border-bottom: 2px solid var(--color-accent);
+    border-radius: 2px;
+
+    &--alt {
+      background: color-mix(in srgb, var(--color-warning) 22%, transparent);
+      border-bottom-color: var(--color-warning);
+    }
+  }
+
+  // The table scrolls inside its own box; the page never scrolls sideways.
+  &__scroll {
+    max-height: 22rem;
+    overflow: auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  &__table {
+    width: 100%;
+    font-size: var(--text-sm);
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      font-weight: 650;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+      background: var(--color-surface);
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody th {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      font-weight: 400;
+      color: var(--color-text-faint);
+    }
+
+    td {
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  &__muted {
+    color: var(--color-text-faint);
+  }
+
+  &__groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      align-items: baseline;
+    }
+  }
+
+  &__group-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  &__replace {
+    display: grid;
+    gap: var(--space-4);
+
+    @include from('lg') {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: end;
+    }
+  }
+
+  &__replaced {
+    min-height: 7rem;
+  }
+
+  &__cheatsheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__cheat-title {
+    margin: 0;
+    font-size: var(--text-base);
+  }
+
+  &__sheet {
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    summary {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: 2px;
+      }
+    }
+
+    &[open] summary {
+      margin-bottom: var(--space-2);
+    }
+  }
+
+  &__cheat-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    list-style: none;
+
+    code {
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+  }
+
+  .tool__status {
+    flex: 1;
+    margin: 0;
+  }
+}

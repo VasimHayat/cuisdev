@@ -1,0 +1,273 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+
+/** Flag toggles: value, label and what the flag actually does. */
+const FLAGS = [
+  { value: 'g', name: 'global', hint: 'find every match, not just the first', checked: true },
+  { value: 'i', name: 'ignore case', hint: 'match regardless of case', checked: false },
+  { value: 'm', name: 'multiline', hint: '^ and $ match at every line', checked: false },
+  { value: 's', name: 'dot all', hint: '. also matches newlines', checked: false },
+  { value: 'u', name: 'unicode', hint: 'treat the pattern as Unicode code points', checked: false },
+  {
+    value: 'v',
+    name: 'unicode sets',
+    hint: 'newer Unicode mode with set notation',
+    checked: false,
+  },
+  { value: 'y', name: 'sticky', hint: 'match only from the last index', checked: false },
+] as const;
+---
+
+<section
+  class="tool tool-regex-tester"
+  data-tool="regex-tester"
+  aria-labelledby="regex-tester-heading"
+>
+  <h2 id="regex-tester-heading" class="visually-hidden">Regular expression tester</h2>
+
+  <div class="tool-regex-tester__controls">
+    <div class="field tool-regex-tester__pattern">
+      <label class="field__label" for="regex-tester-pattern">
+        <span>Regular expression</span>
+        <span class="field__hint">no surrounding slashes needed</span>
+      </label>
+      <input
+        id="regex-tester-pattern"
+        class="field__input tool-regex-tester__code-input"
+        type="text"
+        placeholder="[a-z]+@example\.com"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        data-pattern
+      />
+    </div>
+
+    <fieldset class="tool-regex-tester__flags" data-flags>
+      <legend class="tool-regex-tester__legend">Flags</legend>
+      <div class="tool-regex-tester__flag-list">
+        {
+          FLAGS.map((flag) => (
+            <label class="choice" title={flag.hint}>
+              <input type="checkbox" value={flag.value} checked={flag.checked} data-flag />
+              <code>{flag.value}</code>
+              <span>{flag.name}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="regex-tester-input">Test string</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="clear">
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="regex-tester-input"
+        class="field__textarea tool-regex-tester__test"
+        placeholder="Paste the text you want to match against…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title">Matches</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy-matches">
+            <Icon name="copy" /><span data-label>Copy matches</span>
+          </button>
+        </div>
+      </div>
+
+      <pre
+        class="tool-regex-tester__highlight"
+        tabindex="0"
+        role="region"
+        aria-label="Test string with matches highlighted"
+        data-highlight><span class="tool-regex-tester__placeholder">Matches are highlighted here as you type.</span></pre>
+
+      <div class="tool__stats" data-count>No matches</div>
+
+      <div class="tool-regex-tester__scroll" data-table-wrap hidden>
+        <table class="tool-regex-tester__table">
+          <caption class="visually-hidden">Every match with its position and capture groups</caption
+          >
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Match</th>
+              <th scope="col">Range</th>
+              <th scope="col">Groups</th>
+            </tr>
+          </thead>
+          <tbody data-rows></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-regex-tester__replace">
+    <div class="field">
+      <label class="field__label" for="regex-tester-replacement">
+        <span>Replacement</span>
+        <span class="field__hint">
+          <code>$1</code>
+          <code>$&lt;name&gt;</code>
+          <code>$&amp;</code> are expanded
+        </span>
+      </label>
+      <input
+        id="regex-tester-replacement"
+        class="field__input tool-regex-tester__code-input"
+        type="text"
+        placeholder="Leave empty to skip replacing"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        data-replacement
+      />
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="regex-tester-replaced">Replaced text</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy-replaced">
+            <Icon name="copy" /><span data-label>Copy result</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="regex-tester-replaced"
+        class="field__textarea tool-regex-tester__replaced"
+        placeholder="The test string with every match replaced appears here"
+        readonly
+        spellcheck="false"
+        data-replaced></textarea>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+
+  <div class="tool-regex-tester__cheatsheet">
+    <h3 class="tool-regex-tester__cheat-title">Regex cheat sheet</h3>
+
+    <details class="tool-regex-tester__sheet">
+      <summary>Character classes</summary>
+      <ul class="tool-regex-tester__cheat-list">
+        <li>
+          <code>.</code> any character except a newline (any character with the <code>s</code> flag)
+        </li>
+        <li><code>\d</code> a digit, <code>\D</code> anything but a digit</li>
+        <li>
+          <code>\w</code> a word character <code>[A-Za-z0-9_]</code>, <code>\W</code> the opposite
+        </li>
+        <li><code>\s</code> whitespace, <code>\S</code> anything but whitespace</li>
+        <li><code>[abc]</code> one of a, b or c &middot; <code>[^abc]</code> anything else</li>
+        <li>
+          <code>[a-z0-9]</code> a range &middot; <code>[\]\-]</code> escape <code>]</code> and <code
+            >-</code
+          > inside a class
+        </li>
+        <li>
+          <code>\p&#123;L&#125;</code> a Unicode letter (needs the <code>u</code> or <code>v</code> flag)
+        </li>
+      </ul>
+    </details>
+
+    <details class="tool-regex-tester__sheet">
+      <summary>Anchors and boundaries</summary>
+      <ul class="tool-regex-tester__cheat-list">
+        <li><code>^</code> start of the string, or of a line with the <code>m</code> flag</li>
+        <li><code>$</code> end of the string, or of a line with the <code>m</code> flag</li>
+        <li><code>\b</code> word boundary &middot; <code>\B</code> not a word boundary</li>
+        <li><code>\B</code> is handy for finding a substring inside longer words</li>
+      </ul>
+    </details>
+
+    <details class="tool-regex-tester__sheet">
+      <summary>Quantifiers</summary>
+      <ul class="tool-regex-tester__cheat-list">
+        <li>
+          <code>*</code> zero or more &middot; <code>+</code> one or more &middot; <code>?</code> zero
+          or one
+        </li>
+        <li>
+          <code>&#123;3&#125;</code> exactly three &middot; <code>&#123;2,&#125;</code> two or more &middot;
+          <code>&#123;2,5&#125;</code> two to five
+        </li>
+        <li><code>*?</code> <code>+?</code> <code>??</code> lazy — match as little as possible</li>
+        <li>
+          Nesting quantifiers, as in <code>(a+)+</code>, is what causes catastrophic backtracking
+        </li>
+      </ul>
+    </details>
+
+    <details class="tool-regex-tester__sheet">
+      <summary>Groups, references and alternation</summary>
+      <ul class="tool-regex-tester__cheat-list">
+        <li><code>(abc)</code> capturing group, referenced as <code>$1</code> when replacing</li>
+        <li>
+          <code>(?&lt;name&gt;abc)</code> named group, referenced as <code>$&lt;name&gt;</code>
+        </li>
+        <li><code>(?:abc)</code> group without capturing — cheaper and keeps numbering tidy</li>
+        <li><code>a|b</code> alternation &middot; <code>\1</code> backreference to group 1</li>
+      </ul>
+    </details>
+
+    <details class="tool-regex-tester__sheet">
+      <summary>Lookarounds</summary>
+      <ul class="tool-regex-tester__cheat-list">
+        <li><code>(?=abc)</code> lookahead — the next text is <em>abc</em>, but is not consumed</li>
+        <li><code>(?!abc)</code> negative lookahead — the next text is not <em>abc</em></li>
+        <li>
+          <code>(?&lt;=abc)</code> lookbehind &middot; <code>(?&lt;!abc)</code> negative lookbehind
+        </li>
+        <li>Example: <code>\d+(?= USD)</code> matches the number in <em>42 USD</em> only</li>
+      </ul>
+    </details>
+
+    <details class="tool-regex-tester__sheet">
+      <summary>Flags</summary>
+      <ul class="tool-regex-tester__cheat-list">
+        <li><code>g</code> global — keep searching after the first match</li>
+        <li>
+          <code>i</code> case-insensitive &middot; <code>m</code> multiline <code>^</code>/<code
+            >$</code
+          >
+        </li>
+        <li>
+          <code>s</code> dot matches newlines &middot; <code>y</code> sticky, match only at the last index
+        </li>
+        <li>
+          <code>u</code> Unicode mode &middot; <code>v</code> the newer Unicode-sets mode (they are mutually
+          exclusive)
+        </li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
