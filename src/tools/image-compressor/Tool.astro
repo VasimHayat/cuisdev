@@ -1,0 +1,128 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-image-compressor"
+  data-tool="image-compressor"
+  aria-labelledby="image-compressor-heading"
+>
+  <h2 id="image-compressor-heading" class="visually-hidden">Image compressor</h2>
+
+  <div class="tool__options">
+    <div class="field tool-image-compressor__field tool-image-compressor__field--slider">
+      <label class="field__label" for="image-compressor-quality">Quality</label>
+      <div class="tool-image-compressor__slider">
+        <input
+          id="image-compressor-quality"
+          class="tool-image-compressor__range"
+          type="range"
+          min="10"
+          max="100"
+          step="1"
+          value="80"
+          data-opt="quality"
+        />
+        <span class="tool-image-compressor__value" aria-hidden="true" data-quality>80</span>
+      </div>
+    </div>
+
+    <div class="field tool-image-compressor__field">
+      <label class="field__label" for="image-compressor-format">Output format</label>
+      <select id="image-compressor-format" class="field__select" data-opt="format">
+        <option value="original" selected>Keep original</option>
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/webp">WebP</option>
+        <option value="image/png">PNG</option>
+      </select>
+    </div>
+
+    <div class="field tool-image-compressor__field tool-image-compressor__field--num">
+      <label class="field__label" for="image-compressor-max-width">Max width (px)</label>
+      <input
+        id="image-compressor-max-width"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20000"
+        step="1"
+        placeholder="no limit"
+        data-opt="max-width"
+      />
+    </div>
+
+    <div class="field tool-image-compressor__field tool-image-compressor__field--num">
+      <label class="field__label" for="image-compressor-max-height">Max height (px)</label>
+      <input
+        id="image-compressor-max-height"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20000"
+        step="1"
+        placeholder="no limit"
+        data-opt="max-height"
+      />
+    </div>
+  </div>
+
+  <div class="tool-image-compressor__drop" data-dropzone>
+    <Icon name="image-down" class="tool-image-compressor__drop-icon" />
+    <p class="tool-image-compressor__drop-text">
+      Drop images here — JPEG, PNG, WebP, GIF, BMP or AVIF, up to 50 MB each.
+    </p>
+    <label class="btn tool-image-compressor__pick">
+      <Icon name="upload" /><span>Choose images</span>
+      <input
+        type="file"
+        class="visually-hidden"
+        accept="image/*"
+        multiple
+        aria-label="Choose images to compress"
+        data-file
+      />
+    </label>
+  </div>
+
+  <div class="tool__pane">
+    <div class="tool__pane-header">
+      <span class="tool__pane-title">Results</span>
+      <div class="tool__pane-actions">
+        <button type="button" class="btn btn--ghost btn--sm" data-action="download-all" disabled>
+          <Icon name="download" /><span>Download all</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn--ghost btn--sm"
+          data-action="clear"
+          aria-label="Clear results"
+          disabled
+        >
+          <Icon name="trash" /><span>Clear</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tool-image-compressor__results">
+      <p class="tool-image-compressor__empty" data-empty>
+        Compressed images appear here, with the size saved for each one.
+      </p>
+      <ol class="tool-image-compressor__list" data-results></ol>
+    </div>
+    <div class="tool__stats" data-totals aria-live="off"></div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status>
+      Images are compressed on your device and never leave your browser.
+    </p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
