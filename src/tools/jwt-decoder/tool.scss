@@ -1,0 +1,123 @@
+// JWT Decoder — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-jwt-decoder {
+  &__token {
+    min-height: 8rem;
+    overflow-wrap: anywhere;
+  }
+
+  &__secret {
+    margin-top: var(--space-2);
+
+    .field__label {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+
+  &__parts {
+    gap: var(--space-3);
+  }
+
+  &__part {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  &__json {
+    min-height: 5rem;
+  }
+
+  [data-part='payload'] &__json {
+    min-height: 9rem;
+  }
+
+  &__signature {
+    min-height: 2.5rem;
+    padding: var(--space-2) var(--space-3);
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .tool__status {
+    flex: 1;
+    margin: 0;
+  }
+
+  &__claims-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+
+  &__claims-title {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 650;
+  }
+
+  // The table scrolls inside its own box; the page never scrolls sideways.
+  &__scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  &__table {
+    width: 100%;
+    font-size: var(--text-sm);
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    tr:last-child td,
+    tr:last-child th {
+      border-bottom: 0;
+    }
+
+    thead th {
+      font-weight: 650;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+
+    tbody th {
+      font-weight: 650;
+    }
+
+    td {
+      min-width: 8rem;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  &__date {
+    display: block;
+    margin-top: var(--space-1);
+    font-family: var(--font-sans);
+    color: var(--color-text-muted);
+  }
+}
