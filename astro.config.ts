@@ -67,6 +67,10 @@ export default defineConfig({
   ],
 
   vite: {
+    build: {
+      // Never inline assets as data: URLs — the CSP only allows 'self' for fonts.
+      assetsInlineLimit: 0,
+    },
     css: {
       preprocessorOptions: {
         scss: {

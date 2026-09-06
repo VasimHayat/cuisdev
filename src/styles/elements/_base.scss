@@ -1,5 +1,15 @@
 @use 'tools/mixins' as *;
 
+// Fallback face with Inter's metrics (Arial-based) — avoids layout shift while the webfont loads.
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+
 html {
   scroll-behavior: smooth;
 }

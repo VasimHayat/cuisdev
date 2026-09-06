@@ -13,22 +13,6 @@ import Icon from './Icon.astro';
   <Icon name="sun" class="theme-toggle__sun" />
 </button>
 
-<style lang="scss">
-  .theme-toggle__sun {
-    display: none;
-  }
-
-  :global([data-theme='dark']) .theme-toggle {
-    .theme-toggle__moon {
-      display: none;
-    }
-
-    .theme-toggle__sun {
-      display: block;
-    }
-  }
-</style>
-
 <script>
   import { getTheme, toggleTheme, watchSystemTheme } from '@/lib/theme';
 
