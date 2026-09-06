@@ -130,22 +130,39 @@ const theme = EditorView.theme({
  * removed) so its <label for> keeps working via aria-labelledby, and forms or
  * tests that fall back to it still function.
  */
-export function mountEditor(textarea: HTMLTextAreaElement, options: EditorOptions = {}): Editor {
+export function mountEditor(
+  textarea: HTMLTextAreaElement,
+  initialOptions: EditorOptions = {},
+): Editor {
+  let options = initialOptions;
   const languageCompartment = new Compartment();
   const readOnlyCompartment = new Compartment();
   const wrapCompartment = new Compartment();
 
-  const label = textarea.id ? document.querySelector(`label[for="${textarea.id}"]`) : null;
-  if (label && !label.id) label.id = `${textarea.id}-label`;
+  const attrsCompartment = new Compartment();
 
+  const label = textarea.id ? document.querySelector(`label[for="${textarea.id}"]`) : null;
+
+  // The editor lives in a shadow root: CodeMirror then injects its styles as
+  // adopted stylesheets instead of <style> tags, which the strict CSP blocks.
+  // CSS custom properties inherit through the boundary, so theming still works.
   const wrapper = document.createElement('div');
   wrapper.className = 'editor';
   textarea.insertAdjacentElement('afterend', wrapper);
   textarea.hidden = true;
   textarea.tabIndex = -1;
+  const shadow = wrapper.attachShadow({ mode: 'open' });
+
+  // aria-labelledby cannot cross the shadow boundary, so mirror the label text.
+  const contentAttrs = (): Record<string, string> => ({
+    'aria-label': label?.textContent?.trim() || textarea.getAttribute('aria-label') || 'Editor',
+    'aria-readonly': String(options.readOnly ?? false),
+    'data-editor-for': textarea.id,
+  });
 
   const view = new EditorView({
-    parent: wrapper,
+    parent: shadow,
+    root: shadow,
     state: EditorState.create({
       doc: textarea.value,
       extensions: [
@@ -180,11 +197,7 @@ export function mountEditor(textarea: HTMLTextAreaElement, options: EditorOption
         ]),
         wrapCompartment.of(options.lineWrapping === false ? [] : EditorView.lineWrapping),
         placeholderExt(options.placeholder ?? textarea.placeholder ?? ''),
-        EditorView.contentAttributes.of({
-          'aria-labelledby': label?.id ?? '',
-          'aria-readonly': String(options.readOnly ?? false),
-          'data-editor-for': textarea.id,
-        }),
+        attrsCompartment.of(EditorView.contentAttributes.of(contentAttrs())),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             const value = update.state.doc.toString();
@@ -197,7 +210,24 @@ export function mountEditor(textarea: HTMLTextAreaElement, options: EditorOption
   });
   view.dom.setAttribute('aria-readonly', String(options.readOnly ?? false));
 
-  return {
+  // Keep the accessible name in sync when a tool renames its label (e.g. on Swap).
+  let labelObserver: MutationObserver | undefined;
+  if (label) {
+    labelObserver = new MutationObserver(() => {
+      view.dispatch({
+        effects: attrsCompartment.reconfigure(EditorView.contentAttributes.of(contentAttrs())),
+      });
+    });
+    labelObserver.observe(label, { childList: true, characterData: true, subtree: true });
+  }
+
+  // Clicking the <label> should focus the editor like it would the textarea.
+  label?.addEventListener('click', (e) => {
+    e.preventDefault();
+    view.focus();
+  });
+
+  const api: Editor = {
     view,
     getValue: () => view.state.doc.toString(),
     setValue(value) {
@@ -209,11 +239,15 @@ export function mountEditor(textarea: HTMLTextAreaElement, options: EditorOption
       view.dispatch({ effects: languageCompartment.reconfigure(languageExtensions[language]()) });
     },
     setReadOnly(readOnly) {
+      options = { ...options, readOnly };
       view.dispatch({
-        effects: readOnlyCompartment.reconfigure([
-          EditorState.readOnly.of(readOnly),
-          EditorView.editable.of(!readOnly),
-        ]),
+        effects: [
+          readOnlyCompartment.reconfigure([
+            EditorState.readOnly.of(readOnly),
+            EditorView.editable.of(!readOnly),
+          ]),
+          attrsCompartment.reconfigure(EditorView.contentAttributes.of(contentAttrs())),
+        ],
       });
       view.dom.setAttribute('aria-readonly', String(readOnly));
     },
@@ -234,29 +268,19 @@ export function mountEditor(textarea: HTMLTextAreaElement, options: EditorOption
     },
     focus: () => view.focus(),
     destroy() {
+      labelObserver?.disconnect();
       view.destroy();
       wrapper.remove();
       textarea.hidden = false;
       textarea.tabIndex = 0;
     },
   };
+
+  // Expose the API on the editor element so browser tests can set content
+  // without simulating keystrokes into a contenteditable (which mangles whitespace).
+  (view.dom as HTMLElement & { cuisdevEditor?: Editor }).cuisdevEditor = api;
+  (wrapper as HTMLElement & { cuisdevEditor?: Editor }).cuisdevEditor = api;
+  return api;
 }
 
-/**
- * Convert a JSON.parse error message into a document offset. Chromium/Node
- * report "at position N" or "(line L column C)"; Firefox reports "line L column C".
- */
-export function parseErrorOffset(message: string, source: string): number | undefined {
-  const pos = /position (\d+)/.exec(message);
-  if (pos) return Number(pos[1]);
-  const lc = /line (\d+) column (\d+)/i.exec(message);
-  if (lc) {
-    const line = Number(lc[1]);
-    const col = Number(lc[2]);
-    const lines = source.split('\n');
-    let offset = 0;
-    for (let i = 0; i < line - 1 && i < lines.length; i++) offset += (lines[i]?.length ?? 0) + 1;
-    return offset + col - 1;
-  }
-  return undefined;
-}
+export { parseErrorOffset } from './json-errors';

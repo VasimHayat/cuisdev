@@ -7,11 +7,6 @@
   flex-direction: column;
   min-width: 0;
 
-  .cm-editor {
-    flex: 1;
-    width: 100%;
-  }
-
   &--tall {
     --editor-min-height: 22rem;
   }

@@ -1,0 +1,144 @@
+@use 'tools/mixins' as *;
+
+.tool-json-formatter {
+  &__upload {
+    cursor: pointer;
+
+    &:focus-within {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  &__view {
+    margin-left: auto;
+  }
+
+  &__tree {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-height: var(--editor-min-height, 14rem);
+    max-height: var(--editor-max-height, 70dvh);
+  }
+
+  &__tree-actions {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  .tool__actions {
+    justify-content: space-between;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+
+  [data-action='minify'][aria-pressed='true'] {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+}
+
+// Collapsible tree built from <details>
+.json-tree {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+
+  &__node {
+    > summary {
+      cursor: pointer;
+      list-style: none;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        display: inline-block;
+        width: 1em;
+        color: var(--color-text-faint);
+        content: '▸';
+        transition: transform var(--duration-fast);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-focus);
+        outline-offset: -2px;
+        border-radius: var(--radius-sm);
+      }
+    }
+
+    &[open] > summary::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  &__children {
+    padding-left: 1.25em;
+    margin-left: 0.4em;
+    border-left: 1px solid var(--color-border);
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-1);
+    align-items: baseline;
+    min-width: 0;
+  }
+
+  &__leaf {
+    padding-left: 1em;
+  }
+
+  &__key {
+    color: var(--color-accent);
+    overflow-wrap: anywhere;
+  }
+
+  &__colon {
+    color: var(--color-text-faint);
+  }
+
+  &__meta {
+    color: var(--color-text-faint);
+  }
+
+  &__value {
+    overflow-wrap: anywhere;
+
+    &--string {
+      color: var(--color-success);
+    }
+
+    &--number {
+      color: var(--color-warning);
+    }
+
+    &--boolean {
+      color: var(--color-danger);
+    }
+
+    &--null {
+      color: var(--color-text-faint);
+      font-style: italic;
+    }
+  }
+
+  &__note {
+    padding-top: var(--space-3);
+    font-family: var(--font-sans);
+    color: var(--color-text-muted);
+  }
+}

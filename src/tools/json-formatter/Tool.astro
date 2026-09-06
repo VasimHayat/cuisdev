@@ -1,0 +1,138 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-json-formatter"
+  data-tool="json-formatter"
+  aria-labelledby="json-formatter-heading"
+>
+  <h2 id="json-formatter-heading" class="visually-hidden">JSON formatter</h2>
+
+  <div class="tool__options">
+    <div class="cluster cluster--sm">
+      <span class="tool__pane-title" id="json-indent-label">Indent</span>
+      <fieldset class="segmented" aria-labelledby="json-indent-label" data-indent>
+        <label class="segmented__option">
+          <input type="radio" name="indent" value="2" checked />
+          <span>2 spaces</span>
+        </label>
+        <label class="segmented__option">
+          <input type="radio" name="indent" value="4" />
+          <span>4 spaces</span>
+        </label>
+        <label class="segmented__option">
+          <input type="radio" name="indent" value="tab" />
+          <span>Tabs</span>
+        </label>
+      </fieldset>
+    </div>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="sort" />
+      Sort keys
+    </label>
+
+    <div class="cluster cluster--sm tool-json-formatter__view">
+      <span class="tool__pane-title" id="json-view-label">Output</span>
+      <fieldset class="segmented" aria-labelledby="json-view-label" data-view>
+        <label class="segmented__option">
+          <input type="radio" name="view" value="code" checked />
+          <span>Code</span>
+        </label>
+        <label class="segmented__option">
+          <input type="radio" name="view" value="tree" />
+          <span>Tree</span>
+        </label>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="json-formatter-input">JSON input</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <label class="btn btn--ghost btn--sm tool-json-formatter__upload">
+            <Icon name="upload" /><span>File</span>
+            <input
+              type="file"
+              class="visually-hidden"
+              accept=".json,application/json,text/plain"
+              data-file
+            />
+          </label>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="clear">
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="json-formatter-input"
+        class="field__textarea"
+        placeholder='Paste JSON here, e.g. {"hello": "world"}'
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="json-formatter-output">Formatted JSON</label>
+        <div class="tool__pane-actions">
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="minify"
+            title="Minify output"
+          >
+            <Icon name="minimize" /><span>Minify</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="json-formatter-output"
+        class="field__textarea"
+        placeholder="Formatted output appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool-json-formatter__tree" data-tree hidden>
+        <div class="tool-json-formatter__tree-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="expand-all"
+            >Expand all</button
+          >
+          <button type="button" class="btn btn--ghost btn--sm" data-action="collapse-all"
+            >Collapse all</button
+          >
+        </div>
+        <div class="json-tree" role="tree" aria-label="JSON tree view" data-tree-root></div>
+      </div>
+      <div class="tool__stats" data-output-stats></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn" data-action="repair" hidden>
+      <Icon name="wand" /><span>Fix common mistakes</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

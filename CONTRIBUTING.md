@@ -81,7 +81,9 @@ output.setValue(result);
 ```
 
 The textarea stays in the DOM (hidden) and mirrors the editor's value, so `<label>`s, no-JS
-fallback and tests keep working. Simple single-line or short inputs should stay plain
+fallback and tests keep working. The editor itself renders inside a **shadow root** (so its
+styles bypass the strict CSP); style it only through the CSS custom properties in
+`src/lib/editor.ts`, never with page CSS selectors. Playwright locators pierce shadow roots. Simple single-line or short inputs should stay plain
 `<input>`/`<textarea>` — do not mount CodeMirror for a URL field.
 
 ### Browser tests
