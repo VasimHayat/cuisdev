@@ -289,6 +289,7 @@ const reprocess = debounce(() => void processAll(), 200);
 
 function addFiles(files: File[]): void {
   const rejected: string[] = [];
+  let added = 0;
   for (const file of files) {
     try {
       assertUsableFile(file);
@@ -297,11 +298,12 @@ function addFiles(files: File[]): void {
       continue;
     }
     entries.push(createRow({ id: nextId++, file }));
+    added++;
   }
   updateChrome();
   if (rejected.length > 0) {
     setStatus(status, rejected.join(' '), 'error');
-    if (entries.length === 0) return;
+    if (added === 0) return;
     // Still compress whatever was valid, then the run's own status takes over.
   }
   void processAll();

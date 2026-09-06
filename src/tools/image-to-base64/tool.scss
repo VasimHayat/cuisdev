@@ -1,0 +1,218 @@
+// Image to Base64 — tool-specific styles. Shared chrome: styles/components/_tool.scss.
+.tool-image-to-base64 {
+  &__hint {
+    flex: 1 1 16rem;
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  &__drop {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-6) var(--space-4);
+    margin-bottom: var(--space-4);
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  &__drop-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-accent);
+  }
+
+  &__drop-text {
+    max-width: 34rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__drop-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+  }
+
+  &__pick {
+    cursor: pointer;
+
+    &:focus-within {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  &__results {
+    min-height: 5rem;
+  }
+
+  &__empty {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-faint);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    &[data-selected='true'] {
+      border-color: var(--color-accent);
+      box-shadow: inset 3px 0 0 var(--color-accent);
+    }
+
+    &[data-state='error'] {
+      border-color: var(--color-danger);
+    }
+  }
+
+  &__row-actions {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  &__thumb {
+    flex: 0 0 auto;
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    background: var(--color-bg-muted);
+    border-radius: var(--radius-sm);
+  }
+
+  &__info {
+    flex: 1 1 10rem;
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  // Right-hand column: five copyable snippets.
+  &__snippets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  &__snippet {
+    gap: var(--space-1);
+  }
+
+  &__snippet-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2rem;
+  }
+
+  // A short, scrollable code box — deliberately not .field__textarea, whose
+  // shared 14rem minimum inside .tool__pane would make five of these enormous.
+  &__code {
+    width: 100%;
+    min-height: 4.5rem;
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.55;
+    color: var(--color-text);
+    resize: vertical;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    overflow-wrap: anywhere;
+
+    &:focus-visible {
+      border-color: var(--color-accent);
+      outline: 2px solid var(--color-focus);
+      outline-offset: 0;
+    }
+
+    &::placeholder {
+      color: var(--color-text-faint);
+    }
+  }
+
+  &__warning {
+    margin: 0;
+    padding: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    background: var(--color-danger-soft);
+    border-radius: var(--radius-md);
+  }
+
+  &__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 14rem;
+    padding: var(--space-4);
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  &__decoded {
+    max-width: 100%;
+    max-height: 18rem;
+    object-fit: contain;
+  }
+
+  &__placeholder {
+    max-width: 24rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-faint);
+    text-align: center;
+  }
+
+  .tool__pane-actions {
+    flex-wrap: wrap;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}

@@ -482,6 +482,7 @@ async function loadPreview(file: File): Promise<void> {
 
 function addFiles(files: File[]): void {
   const rejected: string[] = [];
+  let added = 0;
   const before = entries.length;
   for (const file of files) {
     try {
@@ -491,11 +492,12 @@ function addFiles(files: File[]): void {
       continue;
     }
     entries.push(createRow({ id: nextId++, file }));
+    added++;
   }
   updateChrome();
   if (rejected.length > 0) {
     setStatus(status, rejected.join(' '), 'error');
-    if (entries.length === 0) return;
+    if (added === 0) return;
   }
   const first = entries[before];
   if (before === 0 && first) void loadPreview(first.file);
