@@ -1,0 +1,42 @@
+// Lorem Ipsum Generator — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-lorem-ipsum-generator {
+  // Single output pane: never split into two columns.
+  &__panes {
+    grid-template-columns: 1fr;
+  }
+
+  // Compact labelled controls inside the options row.
+  &__field {
+    flex: 0 1 auto;
+    gap: var(--space-1);
+    min-width: 8rem;
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    &--count {
+      min-width: 5.5rem;
+      max-width: 6.5rem;
+    }
+  }
+
+  &__output {
+    min-height: 18rem;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .tool__actions {
+    justify-content: space-between;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}
