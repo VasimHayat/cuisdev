@@ -59,6 +59,11 @@ export interface ToolMeta {
   faq: ToolFaq[];
   /** Slugs of hand-picked related tools. Same-category tools are added automatically. */
   related?: string[];
+  /**
+   * Extra `script-src` sources this tool's page needs, e.g. `"'unsafe-eval'"` for libraries
+   * that compile with `new Function` (Ajv). Every other page keeps the strict policy.
+   */
+  scriptSources?: string[];
   status?: 'stable' | 'beta';
   /** ISO dates — surfaced as dateCreated/dateModified. */
   added: string;

@@ -1,0 +1,103 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+
+// Ajv compiles every schema into a JavaScript function with `new Function`,
+// which the site-wide CSP (script-src 'self') forbids. `meta.scriptSources`
+// adds 'unsafe-eval' to this page's policy only (applied by pages/tools/[slug].astro,
+// before the layout renders <head>); every other page keeps the strict policy.
+---
+
+<section
+  class="tool tool-json-schema-validator"
+  data-tool="json-schema-validator"
+  aria-labelledby="json-schema-validator-heading"
+>
+  <h2 id="json-schema-validator-heading" class="visually-hidden">JSON Schema Validator</h2>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="json-schema-validator-schema">Schema</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="generate">
+            <Icon name="wand" /><span>Generate from data</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="json-schema-validator-schema"
+        class="field__textarea"
+        placeholder='{ "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", … }'
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-schema></textarea>
+      <div class="tool__stats" data-schema-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="json-schema-validator-data">JSON data</label>
+      </div>
+      <textarea
+        id="json-schema-validator-data"
+        class="field__textarea"
+        placeholder="Paste the JSON document to validate…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-data></textarea>
+      <div class="tool__stats" data-data-stats aria-live="off"></div>
+    </div>
+  </div>
+
+  <div class="tool__pane tool-json-schema-validator__results">
+    <div class="tool__pane-header">
+      <h3 class="tool__pane-title" id="json-schema-validator-results-label">Results</h3>
+      <div class="tool__pane-actions">
+        <button type="button" class="btn btn--ghost btn--sm" data-action="copy-errors">
+          <Icon name="copy" /><span data-label>Copy errors as JSON</span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="tool-json-schema-validator__output"
+      role="region"
+      aria-labelledby="json-schema-validator-results-label"
+      data-results
+    >
+      <p class="tool-json-schema-validator__empty" data-view="empty">
+        Paste a schema and some JSON data — validation runs as you type.
+      </p>
+
+      <p class="tool-json-schema-validator__valid" data-view="valid" hidden>
+        <Icon name="check-circle" />
+        <span data-valid-text>Valid</span>
+      </p>
+
+      <div class="tool-json-schema-validator__problem" data-view="problem" hidden>
+        <strong data-problem-title>Schema problem</strong>
+        <p data-problem-text></p>
+      </div>
+
+      <ul class="tool-json-schema-validator__list" data-view="errors" data-error-list hidden></ul>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn" data-action="sample">
+      <Icon name="play" /><span>Sample</span>
+    </button>
+    <button type="button" class="btn" data-action="clear">
+      <Icon name="trash" /><span>Clear</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
