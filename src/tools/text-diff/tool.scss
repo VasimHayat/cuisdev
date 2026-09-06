@@ -1,0 +1,149 @@
+// Text Diff Checker — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+@use 'tools/mixins' as *;
+
+.tool-text-diff {
+  --diff-added: color-mix(in srgb, var(--color-success) 14%, var(--color-bg));
+  --diff-added-strong: color-mix(in srgb, var(--color-success) 30%, var(--color-bg));
+  --diff-removed: color-mix(in srgb, var(--color-danger) 14%, var(--color-bg));
+  --diff-removed-strong: color-mix(in srgb, var(--color-danger) 32%, var(--color-bg));
+
+  &__field {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  &__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .field__select {
+    width: auto;
+    min-height: 2.25rem;
+    padding-block: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__view {
+    max-height: 32rem;
+    min-height: 10rem;
+    overflow: auto;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    @include focus-ring(-2px);
+  }
+
+  &__empty,
+  &__notice {
+    margin: 0;
+    padding: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__notice {
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__summary {
+    min-height: 1.25rem;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+
+  // --- the diff table -------------------------------------------------------
+  .diff {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    thead th {
+      padding: var(--space-1) var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--color-text-faint);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+
+  .diff__num {
+    width: 3.5rem;
+    padding: 0 var(--space-2);
+    color: var(--color-text-faint);
+    text-align: right;
+    vertical-align: top;
+    user-select: none;
+  }
+
+  .diff__sign {
+    width: 1.25rem;
+    padding: 0;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: top;
+    user-select: none;
+  }
+
+  .diff__cell {
+    padding: 0 var(--space-2);
+    vertical-align: top;
+  }
+
+  .diff__text {
+    display: block;
+    min-height: 1.6em;
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+  }
+
+  .diff__line--added {
+    background: var(--diff-added);
+  }
+
+  .diff__line--removed {
+    background: var(--diff-removed);
+  }
+
+  .diff__line--changed {
+    background: var(--diff-added);
+
+    td:nth-child(-n + 3) {
+      background: var(--diff-removed);
+    }
+  }
+
+  .diff__seg--added {
+    background: var(--diff-added-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  .diff__seg--removed {
+    background: var(--diff-removed-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  @include from('lg') {
+    .diff {
+      font-size: var(--text-sm);
+    }
+  }
+}

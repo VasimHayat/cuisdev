@@ -1,0 +1,91 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import { CASES } from './logic';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-case-converter"
+  data-tool="case-converter"
+  aria-labelledby="case-converter-heading"
+>
+  <h2 id="case-converter-heading" class="visually-hidden">Case converter</h2>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="case-converter-input">Text to convert</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="case-converter-input"
+        class="field__textarea"
+        placeholder="Type or paste text here — every case updates as you type…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off">0 characters · 0 words</div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="case-converter-output-label">Converted text</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy-all">
+            <Icon name="copy" /><span data-label>Copy all</span>
+          </button>
+        </div>
+      </div>
+
+      <ul class="tool-case-converter__list" aria-labelledby="case-converter-output-label">
+        {
+          CASES.map((item) => (
+            <li class="tool-case-converter__row">
+              <div class="tool-case-converter__meta">
+                <span class="tool-case-converter__label">{item.label}</span>
+                <span class="tool-case-converter__hint">{item.hint}</span>
+              </div>
+              <output
+                class="tool-case-converter__value"
+                data-value={item.id}
+                aria-label={item.label}
+                aria-live="off"
+              />
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm tool-case-converter__copy"
+                data-action="copy-row"
+                data-case={item.id}
+                aria-label={`Copy ${item.label}`}
+              >
+                <Icon name="copy" />
+                <span data-label>Copy</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>

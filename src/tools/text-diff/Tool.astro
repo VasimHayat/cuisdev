@@ -1,0 +1,121 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section class="tool tool-text-diff" data-tool="text-diff" aria-labelledby="text-diff-heading">
+  <h2 id="text-diff-heading" class="visually-hidden">Text diff checker</h2>
+
+  <div class="tool__options">
+    <span class="tool-text-diff__field">
+      <label class="tool-text-diff__label" for="text-diff-granularity">Compare by</label>
+      <select id="text-diff-granularity" class="field__select" data-opt="granularity">
+        <option value="lines" selected>Lines</option>
+        <option value="words">Words</option>
+        <option value="chars">Characters</option>
+      </select>
+    </span>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="ignore-case" />
+      Ignore case
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="ignore-whitespace" />
+      Ignore whitespace
+    </label>
+
+    <fieldset class="segmented" data-view-mode>
+      <legend class="visually-hidden">Diff view</legend>
+      <label class="segmented__option">
+        <input type="radio" name="text-diff-view" value="split" checked />
+        <span>Side by side</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="text-diff-view" value="inline" />
+        <span>Inline</span>
+      </label>
+    </fieldset>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="text-diff-original">Original</label>
+        <span class="tool__stats" data-original-stats aria-live="off">0 lines</span>
+      </div>
+      <textarea
+        id="text-diff-original"
+        class="field__textarea"
+        placeholder="Paste the original version here…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-original></textarea>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="text-diff-changed">Changed</label>
+        <span class="tool__stats" data-changed-stats aria-live="off">0 lines</span>
+      </div>
+      <textarea
+        id="text-diff-changed"
+        class="field__textarea"
+        placeholder="Paste the new version here…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-changed></textarea>
+    </div>
+  </div>
+
+  <div class="tool-text-diff__result">
+    <div class="tool__pane-header">
+      <span class="tool__pane-title" id="text-diff-output-label">Differences</span>
+      <div class="tool__pane-actions">
+        <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+          <Icon name="copy" /><span data-label>Copy</span>
+        </button>
+        <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+          <Icon name="download" /><span>Download</span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="tool-text-diff__view"
+      data-view
+      tabindex="0"
+      role="group"
+      aria-labelledby="text-diff-output-label"
+    >
+      <p class="tool-text-diff__empty" data-empty>
+        Paste or type both versions above — the differences appear here as you type.
+      </p>
+    </div>
+
+    <p class="tool__stats tool-text-diff__summary" data-stats>
+      0 additions · 0 deletions · 0 unchanged lines
+    </p>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn" data-action="swap">
+      <Icon name="swap" /><span>Swap sides</span>
+    </button>
+    <button type="button" class="btn btn--ghost" data-action="sample">
+      <Icon name="play" /><span>Sample</span>
+    </button>
+    <button type="button" class="btn btn--ghost" data-action="clear" aria-label="Clear both texts">
+      <Icon name="trash" /><span>Clear</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

@@ -1,0 +1,179 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import { DEFAULT_READING_WPM, DEFAULT_TOP_WORDS, LIMITS, MAX_WPM, MIN_WPM } from './logic';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-word-counter"
+  data-tool="word-counter"
+  aria-labelledby="word-counter-heading"
+>
+  <h2 id="word-counter-heading" class="visually-hidden">Word and character counter</h2>
+
+  <div class="tool__options">
+    <span class="tool-word-counter__field">
+      <label class="tool-word-counter__field-label" for="word-counter-wpm">
+        Reading speed (wpm)
+      </label>
+      <input
+        id="word-counter-wpm"
+        class="field__input tool-word-counter__wpm"
+        type="number"
+        inputmode="numeric"
+        value={DEFAULT_READING_WPM}
+        min={MIN_WPM}
+        max={MAX_WPM}
+        step="10"
+        data-opt="wpm"
+      />
+    </span>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="stop-words" checked />
+      Ignore common words in Top words
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="word-counter-input">Text to count</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="word-counter-input"
+        class="field__textarea"
+        placeholder="Type or paste your text — the counts update as you type…"
+        spellcheck="false"
+        autocomplete="off"
+        data-input></textarea>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="word-counter-stats-label">Statistics</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy-stats">
+            <Icon name="copy" /><span data-label>Copy stats</span>
+          </button>
+        </div>
+      </div>
+
+      <dl class="tool-word-counter__stats" aria-labelledby="word-counter-stats-label">
+        <div class="tool-word-counter__stat">
+          <dt>Words</dt>
+          <dd data-stat="words">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Characters</dt>
+          <dd data-stat="characters">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Characters (no spaces)</dt>
+          <dd data-stat="charactersNoSpaces">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Unique words</dt>
+          <dd data-stat="uniqueWords">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Sentences</dt>
+          <dd data-stat="sentences">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Paragraphs</dt>
+          <dd data-stat="paragraphs">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Lines</dt>
+          <dd data-stat="lines">0</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Average word length</dt>
+          <dd data-stat="averageWordLength">0</dd>
+        </div>
+        <div class="tool-word-counter__stat tool-word-counter__stat--wide">
+          <dt>Longest word</dt>
+          <dd data-stat="longestWord">—</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt data-reading-label>Reading time (200 wpm)</dt>
+          <dd data-stat="readingSeconds">0 sec</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Speaking time (130 wpm)</dt>
+          <dd data-stat="speakingSeconds">0 sec</dd>
+        </div>
+        <div class="tool-word-counter__stat">
+          <dt>Size (UTF-8)</dt>
+          <dd data-stat="bytes">0 bytes</dd>
+        </div>
+      </dl>
+
+      <h3 class="tool-word-counter__subtitle" id="word-counter-limits-label">Character limits</h3>
+      <ul class="tool-word-counter__limits" aria-labelledby="word-counter-limits-label">
+        {
+          LIMITS.map((limit) => (
+            <li class="tool-word-counter__limit">
+              <span class="tool-word-counter__limit-name">
+                {limit.label} <span class="tool-word-counter__limit-max">{limit.max}</span>
+              </span>
+              <output
+                class="tool-word-counter__limit-value"
+                data-limit={limit.id}
+                aria-label={`${limit.label} characters remaining`}
+                aria-live="off"
+                data-over="false"
+              >
+                {limit.max} left
+              </output>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h3 class="tool-word-counter__subtitle" id="word-counter-top-label">Top words</h3>
+      <table class="tool-word-counter__top" aria-labelledby="word-counter-top-label">
+        <thead>
+          <tr>
+            <th scope="col">Word</th>
+            <th scope="col">Count</th>
+            <th scope="col">Share</th>
+          </tr>
+        </thead>
+        <tbody data-top>
+          {
+            Array.from({ length: DEFAULT_TOP_WORDS }, (_, index) => (
+              <tr data-top-row={index}>
+                <td data-top-word>—</td>
+                <td data-top-count />
+                <td data-top-percent />
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>
