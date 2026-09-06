@@ -1,0 +1,35 @@
+// JSON ↔ XML — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-json-to-xml {
+  // Inline controls inside a .choice label size to their content, not the row.
+  .choice .field__select,
+  .choice .field__input {
+    width: auto;
+    height: auto;
+    min-height: 2rem;
+    padding-block: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  .choice .field__input {
+    font-family: var(--font-mono);
+  }
+
+  &__name {
+    width: 8rem;
+  }
+
+  &__prefix {
+    width: 4rem;
+  }
+
+  .tool__actions {
+    justify-content: space-between;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
