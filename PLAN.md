@@ -260,6 +260,14 @@ extension and VS Code extension later as acquisition channels.
 
 ---
 
+### 8.1 Phase gate
+
+No phase is marked complete until every tool in it has **unit tests** (Vitest, `logic.test.ts`) and
+**browser tests** (Playwright e2e + axe, light/dark, desktop/mobile) and the whole suite is green in CI.
+Phase 0 baseline: 24 unit tests, 29 browser tests, Lighthouse 100/100/100/100.
+
+---
+
 ## 9. KPIs
 
 | Metric                       | 3 months             | 6 months   |

@@ -10,6 +10,16 @@ Read `ARCHITECTURE.md` and `CONTRIBUTING.md` first. `PLAN.md` is the product roa
 - **No inline `style=""`** — the CSP forbids it. Toggle classes or `data-*` attributes.
 - **Truthful copy only.** Never add usage numbers, ratings or testimonials that are not real.
 
+## Phase gate (non-negotiable)
+
+A phase (and every tool inside it) is not done until **both** test layers exist and pass:
+
+1. **Unit tests** — Vitest over every `logic.ts` (all branches, error messages, edge cases).
+2. **Browser tests** — Playwright e2e covering the tool's happy path, its error state and
+   axe accessibility (light + dark, desktop + mobile).
+
+Run `npm run validate` and `npm run test:e2e` and report the counts before claiming completion.
+
 ## Commands
 
 ```bash

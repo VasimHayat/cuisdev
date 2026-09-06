@@ -10,7 +10,7 @@
  * Runs on plain Node (>= 22.6 type-stripping) — no build step.
  */
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
 
 const CATEGORIES = ['json', 'encoding', 'generators', 'text', 'web', 'images'];
@@ -195,6 +195,31 @@ root.addEventListener('click', async (e) => {
 run();
 `,
 
+  '../../../tests/e2e/tools/${slug}.spec.ts': `import { expect, test } from '@playwright/test';
+
+test.describe('${slug} tool', () => {
+  test('transforms input live', async ({ page }) => {
+    await page.goto('/tools/${slug}/');
+    await page.getByLabel('Input').fill('abc');
+    await expect(page.getByLabel('Output')).toHaveValue('abc'); // replace with the real expectation
+  });
+
+  test('shows an error for invalid input', async ({ page }) => {
+    await page.goto('/tools/${slug}/');
+    // await page.getByLabel('Input').fill('<invalid>');
+    // await expect(page.getByRole('status')).toContainText('...');
+  });
+
+  test('clear empties both panes', async ({ page }) => {
+    await page.goto('/tools/${slug}/');
+    await page.getByLabel('Input').fill('abc');
+    await page.getByRole('button', { name: 'Clear' }).click();
+    await expect(page.getByLabel('Input')).toHaveValue('');
+    await expect(page.getByLabel('Output')).toHaveValue('');
+  });
+});
+`,
+
   'tool.scss': `// ${name} — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
 .tool-${slug} {
   // Add overrides here.
@@ -204,7 +229,9 @@ run();
 
 mkdirSync(dir, { recursive: true });
 for (const [file, content] of Object.entries(files)) {
-  writeFileSync(join(dir, file), content, 'utf8');
+  const target = join(dir, file);
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, content, 'utf8');
 }
 
 console.log(`
@@ -214,5 +241,6 @@ console.log(`
     1. Fill in meta.ts — the registry validates it at build time.
     2. Implement logic.ts and cover it in logic.test.ts   (npm run test:watch)
     3. Build the UI in Tool.astro + client.ts             (npm run dev → http://localhost:4321/tools/${slug}/)
-    4. Add an e2e smoke test in tests/e2e/ if the tool has non-trivial UI.
+    4. Fill in tests/e2e/tools/${slug}.spec.ts (created) and add '/tools/${slug}/' to tests/e2e/a11y.spec.ts.
+       Both unit and browser tests must pass before the tool is done.
 `);

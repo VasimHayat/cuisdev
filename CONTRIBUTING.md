@@ -57,6 +57,16 @@ You now have `src/tools/<slug>/`:
 - Heavy work (> ~16 ms) goes into a Web Worker (`worker.ts`) — see `src/lib/` helpers.
 - Never set inline `style=""` attributes; the CSP forbids them. Toggle classes or `data-*`.
 
+### Test requirements (every tool, every phase)
+
+| Layer   | Where                            | Must cover                                                                 |
+| ------- | -------------------------------- | -------------------------------------------------------------------------- |
+| Unit    | `src/tools/<slug>/logic.test.ts` | Every exported function, every error branch, round-trips, edge cases       |
+| Browser | `tests/e2e/tools/<slug>.spec.ts` | Happy path through the real UI, one error state, copy/clear actions        |
+| A11y    | `tests/e2e/a11y.spec.ts`         | Add the tool URL to the `pages` list (axe, light + dark, desktop + mobile) |
+
+A phase is complete only when all three pass for every tool in it.
+
 ### Definition of done
 
 - [ ] `npm run validate` passes (format, lint, type-check, unit tests, build)
