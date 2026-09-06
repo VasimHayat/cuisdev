@@ -1,0 +1,129 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-code-formatter"
+  data-tool="code-formatter"
+  aria-labelledby="code-formatter-heading"
+>
+  <h2 id="code-formatter-heading" class="visually-hidden">Code formatter and minifier</h2>
+
+  <div class="tool__options">
+    <div class="field tool-code-formatter__field">
+      <label class="field__label" for="code-formatter-language">Language</label>
+      <select id="code-formatter-language" class="field__select" data-opt="language">
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="scss">SCSS</option>
+        <option value="javascript" selected>JavaScript</option>
+        <option value="typescript">TypeScript</option>
+        <option value="json">JSON</option>
+      </select>
+    </div>
+
+    <div class="cluster cluster--sm tool-code-formatter__mode">
+      <span class="tool__pane-title" id="code-formatter-mode-label">Mode</span>
+      <fieldset class="segmented" aria-labelledby="code-formatter-mode-label" data-mode>
+        <label class="segmented__option">
+          <input type="radio" name="code-formatter-mode" value="beautify" checked />
+          <span>Beautify</span>
+        </label>
+        <label class="segmented__option">
+          <input type="radio" name="code-formatter-mode" value="minify" />
+          <span>Minify</span>
+        </label>
+      </fieldset>
+    </div>
+
+    <div class="field tool-code-formatter__field">
+      <label class="field__label" for="code-formatter-indent">Indent</label>
+      <select id="code-formatter-indent" class="field__select" data-opt="indent">
+        <option value="2" selected>2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="tab">Tabs</option>
+      </select>
+    </div>
+
+    <div class="field tool-code-formatter__field">
+      <label class="field__label" for="code-formatter-width">Print width</label>
+      <select id="code-formatter-width" class="field__select" data-opt="width">
+        <option value="80" selected>80</option>
+        <option value="100">100</option>
+        <option value="120">120</option>
+      </select>
+    </div>
+
+    <label class="choice">
+      <input type="checkbox" data-opt="quotes" />
+      Single quotes
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" checked data-opt="semi" />
+      Semicolons
+    </label>
+
+    <label class="choice">
+      <input type="checkbox" checked data-opt="commas" />
+      Trailing commas
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="code-formatter-input">Code input</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="clear">
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="code-formatter-input"
+        class="field__textarea"
+        placeholder="Paste HTML, CSS, SCSS, JavaScript, TypeScript or JSON here"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="code-formatter-output">Formatted output</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="code-formatter-output"
+        class="field__textarea"
+        placeholder="The formatted or minified code appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
