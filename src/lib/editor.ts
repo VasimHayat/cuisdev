@@ -121,8 +121,8 @@ const theme = EditorView.theme({
     boxShadow: 'var(--shadow-md)',
   },
   '.cm-matchingBracket': { backgroundColor: 'var(--color-accent-soft)', outline: 'none' },
-  '&.cm-editor[aria-readonly="true"] .cm-content': { backgroundColor: 'var(--color-code-bg)' },
-  '&.cm-editor[aria-readonly="true"]': { backgroundColor: 'var(--color-code-bg)' },
+  '&[data-readonly="true"] .cm-content': { backgroundColor: 'var(--color-code-bg)' },
+  '&[data-readonly="true"]': { backgroundColor: 'var(--color-code-bg)' },
 });
 
 /**
@@ -208,7 +208,7 @@ export function mountEditor(
       ],
     }),
   });
-  view.dom.setAttribute('aria-readonly', String(options.readOnly ?? false));
+  view.dom.setAttribute('data-readonly', String(options.readOnly ?? false));
 
   // Keep the accessible name in sync when a tool renames its label (e.g. on Swap).
   let labelObserver: MutationObserver | undefined;
@@ -249,7 +249,7 @@ export function mountEditor(
           attrsCompartment.reconfigure(EditorView.contentAttributes.of(contentAttrs())),
         ],
       });
-      view.dom.setAttribute('aria-readonly', String(readOnly));
+      view.dom.setAttribute('data-readonly', String(readOnly));
     },
     setDiagnostics(diagnostics) {
       const max = view.state.doc.length;
