@@ -1,0 +1,142 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+import { DIALECTS } from './logic';
+---
+
+<section
+  class="tool tool-sql-formatter"
+  data-tool="sql-formatter"
+  aria-labelledby="sql-formatter-heading"
+>
+  <h2 id="sql-formatter-heading" class="visually-hidden">SQL formatter</h2>
+
+  <div class="tool__options">
+    <div class="field tool-sql-formatter__field tool-sql-formatter__field--wide">
+      <label class="field__label" for="sql-formatter-dialect">Dialect</label>
+      <select id="sql-formatter-dialect" class="field__select" data-opt="dialect">
+        {
+          DIALECTS.map((dialect) => (
+            <option value={dialect.id} selected={dialect.id === 'sql'}>
+              {dialect.label}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+
+    <div class="cluster cluster--sm tool-sql-formatter__mode">
+      <span class="tool__pane-title" id="sql-formatter-mode-label">Mode</span>
+      <fieldset class="segmented" aria-labelledby="sql-formatter-mode-label" data-mode>
+        <label class="segmented__option">
+          <input type="radio" name="sql-formatter-mode" value="format" checked />
+          <span>Format</span>
+        </label>
+        <label class="segmented__option">
+          <input type="radio" name="sql-formatter-mode" value="minify" />
+          <span>Minify</span>
+        </label>
+      </fieldset>
+    </div>
+
+    <div class="field tool-sql-formatter__field">
+      <label class="field__label" for="sql-formatter-keyword-case">Keyword case</label>
+      <select id="sql-formatter-keyword-case" class="field__select" data-opt="keyword-case">
+        <option value="preserve">Preserve</option>
+        <option value="upper" selected>UPPER</option>
+        <option value="lower">lower</option>
+      </select>
+    </div>
+
+    <div class="field tool-sql-formatter__field">
+      <label class="field__label" for="sql-formatter-type-case">Data type case</label>
+      <select id="sql-formatter-type-case" class="field__select" data-opt="type-case">
+        <option value="preserve" selected>Preserve</option>
+        <option value="upper">UPPER</option>
+        <option value="lower">lower</option>
+      </select>
+    </div>
+
+    <div class="field tool-sql-formatter__field">
+      <label class="field__label" for="sql-formatter-function-case">Function case</label>
+      <select id="sql-formatter-function-case" class="field__select" data-opt="function-case">
+        <option value="preserve" selected>Preserve</option>
+        <option value="upper">UPPER</option>
+        <option value="lower">lower</option>
+      </select>
+    </div>
+
+    <div class="field tool-sql-formatter__field">
+      <label class="field__label" for="sql-formatter-indent">Indent</label>
+      <select id="sql-formatter-indent" class="field__select" data-opt="indent">
+        <option value="2" selected>2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="tab">Tabs</option>
+      </select>
+    </div>
+
+    <div class="field tool-sql-formatter__field">
+      <label class="field__label" for="sql-formatter-lines">Lines between queries</label>
+      <select id="sql-formatter-lines" class="field__select" data-opt="lines">
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="sql-formatter-input">SQL input</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="clear">
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="sql-formatter-input"
+        class="field__textarea"
+        placeholder="Paste a SQL query here, e.g. select id, name from users where active = true"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="sql-formatter-output">Formatted SQL</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="sql-formatter-output"
+        class="field__textarea"
+        placeholder="The formatted or minified query appears here"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

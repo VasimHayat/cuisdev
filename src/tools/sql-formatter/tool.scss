@@ -1,0 +1,37 @@
+// SQL Formatter — tool-specific styles.
+// Shared chrome lives in styles/components/_tool.scss.
+.tool-sql-formatter {
+  // The options row carries seven controls; keep them compact so they wrap
+  // neatly on a phone instead of pushing the panes off screen.
+  &__field {
+    flex: 0 1 auto;
+    gap: var(--space-1);
+    min-width: 7rem;
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    &--wide {
+      min-width: 11rem;
+    }
+  }
+
+  &__mode {
+    align-self: flex-end;
+  }
+
+  // Options that Minify ignores stay in place, greyed out, so switching mode
+  // never shifts the layout.
+  .field__select:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}
