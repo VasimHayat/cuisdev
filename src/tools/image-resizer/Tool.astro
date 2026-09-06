@@ -1,0 +1,268 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-image-resizer"
+  data-tool="image-resizer"
+  aria-labelledby="image-resizer-heading"
+>
+  <h2 id="image-resizer-heading" class="visually-hidden">Image resizer and cropper</h2>
+
+  <div class="tool__options" role="group" aria-label="Resize options">
+    <div class="field tool-image-resizer__field">
+      <label class="field__label" for="image-resizer-mode">Resize mode</label>
+      <select id="image-resizer-mode" class="field__select" data-opt="mode">
+        <option value="exact" selected>Exact size</option>
+        <option value="percent">Percentage</option>
+        <option value="preset">Preset</option>
+      </select>
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-width">Width (px)</label>
+      <input
+        id="image-resizer-width"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20000"
+        step="1"
+        value="1280"
+        data-opt="width"
+      />
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-height">Height (px)</label>
+      <input
+        id="image-resizer-height"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20000"
+        step="1"
+        value="720"
+        data-opt="height"
+      />
+    </div>
+
+    <label class="choice tool-image-resizer__choice">
+      <input type="checkbox" checked data-opt="lock" />
+      Lock aspect ratio
+    </label>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-percent">Scale (%)</label>
+      <input
+        id="image-resizer-percent"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="500"
+        step="1"
+        value="50"
+        disabled
+        data-opt="percent"
+      />
+    </div>
+
+    <div class="field tool-image-resizer__field">
+      <label class="field__label" for="image-resizer-preset">Preset size</label>
+      <select id="image-resizer-preset" class="field__select" disabled data-opt="preset">
+        <option value="1920x1080" selected>1920 × 1080 — Full HD</option>
+        <option value="1280x720">1280 × 720 — HD</option>
+        <option value="1080x1080">1080 × 1080 — square post</option>
+        <option value="800x600">800 × 600</option>
+        <option value="512x512">512 × 512 — app icon</option>
+        <option value="32x32">32 × 32 — favicon</option>
+        <option value="16x16">16 × 16 — favicon</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tool__options" role="group" aria-label="Crop options">
+    <div class="field tool-image-resizer__field">
+      <label class="field__label" for="image-resizer-crop">Crop shape</label>
+      <select id="image-resizer-crop" class="field__select" data-opt="crop">
+        <option value="none" selected>No crop</option>
+        <option value="1:1">Square (1:1)</option>
+        <option value="4:3">Landscape (4:3)</option>
+        <option value="16:9">Widescreen (16:9)</option>
+        <option value="3:2">Photo (3:2)</option>
+        <option value="custom">Custom (x, y, width, height)</option>
+      </select>
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-crop-x">Crop X (px)</label>
+      <input
+        id="image-resizer-crop-x"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        max="20000"
+        step="1"
+        value="0"
+        disabled
+        data-opt="crop-x"
+      />
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-crop-y">Crop Y (px)</label>
+      <input
+        id="image-resizer-crop-y"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="0"
+        max="20000"
+        step="1"
+        value="0"
+        disabled
+        data-opt="crop-y"
+      />
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-crop-width">Crop width (px)</label>
+      <input
+        id="image-resizer-crop-width"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20000"
+        step="1"
+        disabled
+        data-opt="crop-width"
+      />
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--num">
+      <label class="field__label" for="image-resizer-crop-height">Crop height (px)</label>
+      <input
+        id="image-resizer-crop-height"
+        class="field__input"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        max="20000"
+        step="1"
+        disabled
+        data-opt="crop-height"
+      />
+    </div>
+  </div>
+
+  <div class="tool__options" role="group" aria-label="Output options">
+    <div class="field tool-image-resizer__field">
+      <label class="field__label" for="image-resizer-format">Output format</label>
+      <select id="image-resizer-format" class="field__select" data-opt="format">
+        <option value="original" selected>Keep original</option>
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/webp">WebP</option>
+        <option value="image/png">PNG</option>
+      </select>
+    </div>
+
+    <div class="field tool-image-resizer__field tool-image-resizer__field--slider">
+      <label class="field__label" for="image-resizer-quality">Quality</label>
+      <div class="tool-image-resizer__slider">
+        <input
+          id="image-resizer-quality"
+          class="tool-image-resizer__range"
+          type="range"
+          min="10"
+          max="100"
+          step="1"
+          value="90"
+          data-opt="quality"
+        />
+        <span class="tool-image-resizer__value" aria-hidden="true" data-quality>90</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-image-resizer__drop" data-dropzone>
+    <Icon name="scaling" class="tool-image-resizer__drop-icon" />
+    <p class="tool-image-resizer__drop-text">
+      Drop images here — JPEG, PNG, WebP, GIF, BMP or AVIF, up to 50 MB each.
+    </p>
+    <label class="btn tool-image-resizer__pick">
+      <Icon name="upload" /><span>Choose images</span>
+      <input
+        type="file"
+        class="visually-hidden"
+        accept="image/*"
+        multiple
+        aria-label="Choose images to resize"
+        data-file
+      />
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title">Crop preview</span>
+      </div>
+      <div class="tool-image-resizer__preview">
+        <canvas
+          class="tool-image-resizer__canvas"
+          width="480"
+          height="320"
+          role="img"
+          aria-label="Preview of the first image with the crop area outlined"
+          data-canvas
+          hidden></canvas>
+        <p class="tool-image-resizer__placeholder" data-placeholder>
+          The first image you add is previewed here with the crop area outlined.
+        </p>
+      </div>
+      <div class="tool__stats" data-preview-caption aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title">Resized files</span>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download-all" disabled>
+            <Icon name="download" /><span>Download all</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear results"
+            disabled
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <div class="tool-image-resizer__results">
+        <p class="tool-image-resizer__empty" data-empty>Resized images appear here.</p>
+        <ol class="tool-image-resizer__list" data-results></ol>
+      </div>
+      <div class="tool__stats" data-totals aria-live="off"></div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status>
+      Images are resized on your device and never leave your browser.
+    </p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

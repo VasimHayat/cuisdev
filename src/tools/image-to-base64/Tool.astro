@@ -1,0 +1,207 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+
+const snippets = [
+  { key: 'base64', id: 'base64', label: 'Base64', copy: 'Copy Base64' },
+  { key: 'dataUrl', id: 'data-url', label: 'Data URL', copy: 'Copy data URL' },
+  { key: 'html', id: 'html', label: 'HTML img tag', copy: 'Copy HTML img tag' },
+  { key: 'css', id: 'css', label: 'CSS background-image', copy: 'Copy CSS background-image' },
+  { key: 'markdown', id: 'markdown', label: 'Markdown image', copy: 'Copy Markdown image' },
+];
+---
+
+<section
+  class="tool tool-image-to-base64"
+  data-tool="image-to-base64"
+  aria-labelledby="image-to-base64-heading"
+>
+  <h2 id="image-to-base64-heading" class="visually-hidden">Image to Base64 converter</h2>
+
+  <div class="tool__options">
+    <fieldset class="segmented" data-mode>
+      <legend class="visually-hidden">Direction</legend>
+      <label class="segmented__option">
+        <input type="radio" name="image-to-base64-mode" value="encode" checked />
+        <span>Encode</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="image-to-base64-mode" value="decode" />
+        <span>Decode</span>
+      </label>
+    </fieldset>
+    <p class="tool-image-to-base64__hint">
+      Encode turns images into data URLs. Decode turns a data URL or Base64 string back into a file.
+    </p>
+  </div>
+
+  <div data-panel="encode">
+    <div class="tool-image-to-base64__drop" data-dropzone>
+      <Icon name="file-image" class="tool-image-to-base64__drop-icon" />
+      <p class="tool-image-to-base64__drop-text">
+        Drop images here — PNG, JPEG, WebP, GIF, BMP, SVG, AVIF or ICO, up to 50 MB each.
+      </p>
+      <div class="tool-image-to-base64__drop-actions">
+        <label class="btn tool-image-to-base64__pick">
+          <Icon name="upload" /><span>Choose images</span>
+          <input
+            type="file"
+            class="visually-hidden"
+            accept="image/*"
+            multiple
+            aria-label="Choose images to encode"
+            data-file
+          />
+        </label>
+        <button type="button" class="btn btn--ghost" data-action="sample">
+          <Icon name="play" /><span>Sample</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tool__panes tool-image-to-base64__panes">
+      <div class="tool__pane">
+        <div class="tool__pane-header">
+          <span class="tool__pane-title">Files</span>
+          <div class="tool__pane-actions">
+            <button
+              type="button"
+              class="btn btn--ghost btn--sm"
+              data-action="download-all"
+              disabled
+            >
+              <Icon name="download" /><span>Download all</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn--ghost btn--sm"
+              data-action="clear"
+              aria-label="Clear files"
+              disabled
+            >
+              <Icon name="trash" /><span>Clear</span>
+            </button>
+          </div>
+        </div>
+        <div class="tool-image-to-base64__results">
+          <p class="tool-image-to-base64__empty" data-empty>
+            Encoded images appear here. Choose one to load its snippets.
+          </p>
+          <ol class="tool-image-to-base64__list" data-results></ol>
+        </div>
+        <div class="tool__stats" data-totals aria-live="off"></div>
+      </div>
+
+      <div class="tool-image-to-base64__snippets">
+        <div class="tool__pane-header">
+          <span class="tool__pane-title">Snippets</span>
+          <span class="tool__stats" data-selected-name></span>
+        </div>
+        <p class="tool-image-to-base64__warning" data-warning hidden></p>
+
+        {
+          snippets.map((snippet) => (
+            <div class="field tool-image-to-base64__snippet">
+              <div class="tool-image-to-base64__snippet-head">
+                <label class="field__label" for={`image-to-base64-${snippet.id}`}>
+                  {snippet.label}
+                </label>
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  data-action="copy"
+                  data-copy={snippet.key}
+                  aria-label={snippet.copy}
+                  disabled
+                >
+                  <Icon name="copy" />
+                  <span data-label>Copy</span>
+                </button>
+              </div>
+              <textarea
+                id={`image-to-base64-${snippet.id}`}
+                class="tool-image-to-base64__code"
+                readonly
+                spellcheck="false"
+                placeholder="Add an image to see this snippet"
+                data-out={snippet.key}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <div data-panel="decode" hidden>
+    <div class="tool__panes">
+      <div class="tool__pane">
+        <div class="tool__pane-header">
+          <label class="tool__pane-title" for="image-to-base64-decode-input">
+            Data URL or Base64
+          </label>
+          <div class="tool__pane-actions">
+            <button type="button" class="btn btn--ghost btn--sm" data-action="decode-sample">
+              <Icon name="play" /><span>Sample</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn--ghost btn--sm"
+              data-action="decode-clear"
+              aria-label="Clear pasted Base64"
+            >
+              <Icon name="trash" /><span>Clear</span>
+            </button>
+          </div>
+        </div>
+        <textarea
+          id="image-to-base64-decode-input"
+          class="field__textarea"
+          placeholder="data:image/png;base64,iVBORw0KGgo…"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          data-decode-input></textarea>
+      </div>
+
+      <div class="tool__pane">
+        <div class="tool__pane-header">
+          <span class="tool__pane-title">Decoded image</span>
+          <div class="tool__pane-actions">
+            <button
+              type="button"
+              class="btn btn--ghost btn--sm"
+              data-action="decode-download"
+              disabled
+            >
+              <Icon name="download" /><span>Download image</span>
+            </button>
+          </div>
+        </div>
+        <div class="tool-image-to-base64__preview">
+          <img
+            class="tool-image-to-base64__decoded"
+            alt="Decoded image preview"
+            data-decoded
+            hidden
+          />
+          <p class="tool-image-to-base64__placeholder" data-decode-placeholder>
+            Paste a data URL or Base64 string to preview the image it contains.
+          </p>
+        </div>
+        <div class="tool__stats" data-decode-stats aria-live="off"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status>
+      Images are encoded on your device and never leave your browser.
+    </p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>
