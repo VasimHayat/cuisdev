@@ -1,0 +1,173 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import { PRESETS, SAMPLE_EXPRESSION, availableTimeZones, breakdown, describeCron } from './logic';
+
+import './tool.scss';
+
+// Pre-rendered with the sample expression: the description and the field
+// breakdown do not depend on the current time, so they are correct without JS
+// and nothing shifts when the island hydrates.
+const description = describeCron(SAMPLE_EXPRESSION);
+const fields = breakdown(SAMPLE_EXPRESSION);
+const zones = availableTimeZones();
+const runRows = Array.from({ length: 10 }, (_, index) => index + 1);
+---
+
+<section
+  class="tool tool-cron-parser"
+  data-tool="cron-parser"
+  aria-labelledby="cron-parser-heading"
+>
+  <h2 id="cron-parser-heading" class="visually-hidden">Cron expression parser</h2>
+
+  <div class="tool__options">
+    <div class="field tool-cron-parser__entry">
+      <label class="field__label" for="cron-parser-input">Cron expression</label>
+      <input
+        id="cron-parser-input"
+        class="field__input tool-cron-parser__input"
+        type="text"
+        value={SAMPLE_EXPRESSION}
+        placeholder="*/15 * * * *"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        data-input
+      />
+    </div>
+    <div class="field tool-cron-parser__zone-field">
+      <label class="field__label" for="cron-parser-timezone">Time zone</label>
+      <select id="cron-parser-timezone" class="field__select" data-timezone>
+        <option value="local" selected>Local time</option>
+        {zones.map((zone) => <option value={zone}>{zone}</option>)}
+      </select>
+    </div>
+    <button
+      type="button"
+      class="btn btn--ghost btn--sm"
+      data-action="copy-expression"
+      aria-label="Copy expression"
+    >
+      <Icon name="copy" /><span data-label>Copy expression</span>
+    </button>
+    <button
+      type="button"
+      class="btn btn--ghost btn--sm"
+      data-action="clear"
+      aria-label="Clear expression"
+    >
+      <Icon name="trash" /><span>Clear</span>
+    </button>
+  </div>
+
+  <div class="tool__options tool-cron-parser__presets" role="group" aria-label="Preset expressions">
+    {
+      PRESETS.map((preset) => (
+        <button
+          type="button"
+          class="btn btn--sm"
+          data-action="preset"
+          data-expression={preset.expression}
+        >
+          {preset.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <p class="tool-cron-parser__description" data-description>{description}</p>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="cron-parser-fields-label">Field breakdown</span>
+      </div>
+      <div
+        class="tool-cron-parser__table-wrap"
+        tabindex="0"
+        role="group"
+        aria-labelledby="cron-parser-fields-label"
+      >
+        <table class="tool-cron-parser__table" aria-labelledby="cron-parser-fields-label">
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">Value</th>
+              <th scope="col">Meaning</th>
+              <th scope="col">Allowed</th>
+            </tr>
+          </thead>
+          <tbody data-fields>
+            {
+              fields.map((field) => (
+                <tr>
+                  <th scope="row">{field.name}</th>
+                  <td class="tool-cron-parser__mono">{field.value}</td>
+                  <td>{field.meaning}</td>
+                  <td class="tool-cron-parser__allowed">{field.allowed}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="cron-parser-runs-label">Next 10 runs</span>
+        <div class="tool__pane-actions">
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="copy-runs"
+            aria-label="Copy next runs"
+          >
+            <Icon name="copy" /><span data-label>Copy next runs</span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="tool-cron-parser__table-wrap"
+        tabindex="0"
+        role="group"
+        aria-labelledby="cron-parser-runs-label"
+      >
+        <table class="tool-cron-parser__table" aria-labelledby="cron-parser-runs-label">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" data-zone-heading>Local time</th>
+              <th scope="col">UTC</th>
+              <th scope="col">When</th>
+            </tr>
+          </thead>
+          <tbody data-runs>
+            {
+              runRows.map((index) => (
+                <tr>
+                  <th scope="row">{index}</th>
+                  <td class="tool-cron-parser__mono" data-run-zone>
+                    —
+                  </td>
+                  <td class="tool-cron-parser__mono" data-run-utc>
+                    —
+                  </td>
+                  <td data-run-relative>—</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>

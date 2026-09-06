@@ -1,0 +1,234 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import {
+  SAMPLE_TIMESTAMP,
+  TIME_ZONES,
+  describeDate,
+  describeTimestamp,
+  msToZonedInput,
+  parseTimestamp,
+} from './logic';
+
+import './tool.scss';
+
+// Pre-rendered in UTC (the zone the select starts on) so the page is complete
+// and correct without JavaScript, and nothing moves when the island hydrates.
+const sample = parseTimestamp(SAMPLE_TIMESTAMP);
+const rows = describeTimestamp(sample.ms, { timeZone: 'UTC' });
+const dateRows = describeDate(sample.ms);
+const sampleLocalInput = msToZonedInput(sample.ms, 'UTC');
+---
+
+<section
+  class="tool tool-timestamp-converter"
+  data-tool="timestamp-converter"
+  aria-labelledby="timestamp-converter-heading"
+>
+  <h2 id="timestamp-converter-heading" class="visually-hidden">Unix timestamp converter</h2>
+
+  <div class="tool__options">
+    <div class="field tool-timestamp-converter__zone-field">
+      <label class="field__label" for="timestamp-converter-timezone">Time zone</label>
+      <select id="timestamp-converter-timezone" class="field__select" data-timezone>
+        <option value="local">Local time</option>
+        {
+          TIME_ZONES.map((zone) => (
+            <option value={zone} selected={zone === 'UTC'}>
+              {zone}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+    <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+      <Icon name="play" /><span>Sample</span>
+    </button>
+    <button
+      type="button"
+      class="btn btn--ghost btn--sm"
+      data-action="clear"
+      aria-label="Clear all fields"
+    >
+      <Icon name="trash" /><span>Clear</span>
+    </button>
+  </div>
+
+  <div class="tool-timestamp-converter__now">
+    <span class="tool__pane-title">Current time</span>
+    <span class="tool-timestamp-converter__now-value" data-now-iso>—</span>
+    <span class="tool-timestamp-converter__now-value" data-now-seconds>—</span>
+    <button
+      type="button"
+      class="btn btn--ghost btn--sm"
+      data-action="copy-now"
+      aria-label="Copy current Unix seconds"
+    >
+      <Icon name="copy" /><span data-label>Copy</span>
+    </button>
+    <button type="button" class="btn btn--ghost btn--sm" data-action="use-now">
+      <Icon name="refresh-cw" /><span>Use now</span>
+    </button>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="timestamp-converter-from-label">
+          Timestamp to date
+        </span>
+      </div>
+
+      <div class="tool-timestamp-converter__row">
+        <div class="field tool-timestamp-converter__entry">
+          <label class="field__label" for="timestamp-converter-input">Unix timestamp</label>
+          <input
+            id="timestamp-converter-input"
+            class="field__input tool-timestamp-converter__mono-input"
+            type="text"
+            inputmode="numeric"
+            value={SAMPLE_TIMESTAMP}
+            placeholder="1767225600"
+            spellcheck="false"
+            autocomplete="off"
+            data-input
+          />
+        </div>
+        <div class="field tool-timestamp-converter__unit-field">
+          <label class="field__label" for="timestamp-converter-unit">Unit</label>
+          <select id="timestamp-converter-unit" class="field__select" data-unit>
+            <option value="auto" selected>Detect automatically</option>
+            <option value="seconds">Seconds</option>
+            <option value="milliseconds">Milliseconds</option>
+            <option value="microseconds">Microseconds</option>
+            <option value="nanoseconds">Nanoseconds</option>
+          </select>
+        </div>
+      </div>
+      <p class="tool__stats" data-detected>Read as seconds.</p>
+
+      <div class="tool-timestamp-converter__table-wrap">
+        <table
+          class="tool-timestamp-converter__table"
+          aria-labelledby="timestamp-converter-from-label"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Format</th>
+              <th scope="col">Value</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rows.map((row) => (
+                <tr>
+                  <th scope="row">{row.label}</th>
+                  <td>
+                    <span class="tool-timestamp-converter__value" data-value={row.id}>
+                      {row.value}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn--ghost btn--sm"
+                      data-action="copy-row"
+                      data-format={row.id}
+                      aria-label={`Copy ${row.label}`}
+                    >
+                      <Icon name="copy" />
+                      <span data-label>Copy</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="timestamp-converter-to-label">Date to timestamp</span>
+      </div>
+
+      <div class="field tool-timestamp-converter__entry">
+        <label class="field__label" for="timestamp-converter-datetime">
+          Date and time (in the selected zone)
+        </label>
+        <input
+          id="timestamp-converter-datetime"
+          class="field__input"
+          type="datetime-local"
+          step="1"
+          value={sampleLocalInput}
+          data-datetime
+        />
+      </div>
+
+      <div class="field tool-timestamp-converter__entry">
+        <label class="field__label" for="timestamp-converter-text">
+          Or paste an ISO 8601 / RFC 2822 date
+        </label>
+        <input
+          id="timestamp-converter-text"
+          class="field__input tool-timestamp-converter__mono-input"
+          type="text"
+          placeholder="2026-01-01T09:30:00Z"
+          spellcheck="false"
+          autocomplete="off"
+          data-date-text
+        />
+      </div>
+
+      <div class="tool-timestamp-converter__table-wrap">
+        <table
+          class="tool-timestamp-converter__table"
+          aria-labelledby="timestamp-converter-to-label"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Format</th>
+              <th scope="col">Value</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              dateRows.map((row) => (
+                <tr>
+                  <th scope="row">{row.label}</th>
+                  <td>
+                    <span class="tool-timestamp-converter__value" data-value={row.id}>
+                      {row.value}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn--ghost btn--sm"
+                      data-action="copy-row"
+                      data-format={row.id}
+                      aria-label={`Copy ${row.label} from date`}
+                    >
+                      <Icon name="copy" />
+                      <span data-label>Copy</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>

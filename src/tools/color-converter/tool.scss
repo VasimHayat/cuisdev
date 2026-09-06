@@ -1,0 +1,224 @@
+@use 'tools/mixins' as *;
+
+// Color Converter — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-color-converter {
+  // Text field that holds the CSS colour.
+  &__entry {
+    flex: 1 1 16rem;
+    gap: var(--space-1);
+    min-width: 0;
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__input {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  &__picker-field {
+    flex: 0 0 auto;
+    gap: var(--space-1);
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+  }
+
+  // Native colour swatches: keep them square and easy to hit.
+  &__color {
+    width: 3.25rem;
+    height: 2.5rem;
+    padding: 0.2rem;
+    cursor: pointer;
+  }
+
+  // Canvases carry their intrinsic size; CSS only scales them down to fit.
+  &__preview {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  &__scale {
+    display: flex;
+    gap: var(--space-2);
+    padding: 0 0 var(--space-2);
+    margin: 0;
+    overflow-x: auto;
+    list-style: none;
+  }
+
+  &__swatch {
+    display: flex;
+    flex: 0 0 5.5rem;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: center;
+  }
+
+  &__swatch-canvas {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  &__swatch-hex {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  &__table {
+    width: 100%;
+    font-size: var(--text-sm);
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    thead th {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    tbody th {
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    td:last-child {
+      width: 1%;
+      padding-top: var(--space-1);
+      padding-bottom: var(--space-1);
+      white-space: nowrap;
+    }
+  }
+
+  &__value {
+    display: block;
+    min-height: 1.5em;
+    font-family: var(--font-mono);
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+  }
+
+  &__contrast {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__contrast-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+
+    @include from('lg') {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__contrast-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  &__contrast-result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__pair {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  &__contrast-preview {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  &__ratio-label {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__ratio {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__levels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  // Verdict badges sit on the plain surface so the label itself clears AA.
+  &__badge {
+    border: 1px solid var(--color-border);
+
+    &[data-pass='true'] {
+      color: var(--color-success);
+      background: var(--color-surface);
+      border-color: var(--color-success);
+    }
+
+    &[data-pass='false'] {
+      color: var(--color-danger);
+      background: var(--color-surface);
+      border-color: var(--color-danger);
+    }
+  }
+
+  .tool__status {
+    margin: 0;
+  }
+}
