@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4321;
+const PORT = Number(process.env.PW_PORT ?? 4321);
 const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({
