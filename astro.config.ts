@@ -44,7 +44,8 @@ export default defineConfig({
         'upgrade-insecure-requests',
       ],
       scriptDirective: {
-        resources: ["'self'"],
+        // 'wasm-unsafe-eval' lets hash-wasm compile its WebAssembly modules; it does not enable JS eval.
+        resources: ["'self'", "'wasm-unsafe-eval'"],
         hashes: [themeInitHash],
       },
       styleDirective: {
