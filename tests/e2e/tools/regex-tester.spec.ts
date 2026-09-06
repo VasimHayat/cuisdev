@@ -79,7 +79,8 @@ test.describe('regex-tester tool', () => {
     await page.goto(URL);
     await pattern(page).fill('\\w+');
     await testString(page).fill('one two');
-    await settle(page);
+    // Matching runs in a worker; wait for its result rather than a fixed delay.
+    await expect(page.locator('[data-count]')).toHaveText('2 matches');
 
     const copied = await clickCopy(page, page.locator('[data-action="copy-matches"]'));
     expect(copied?.replace(/\r\n/g, '\n')).toBe('one\ntwo');

@@ -94,9 +94,33 @@ export async function lastCopied(page: Page): Promise<string | undefined> {
   return page.evaluate(() => (window as Window & { __copied?: string[] }).__copied?.at(-1));
 }
 
-/** Click a Copy button, assert the "Copied!" flash, and return the copied text. */
+/**
+ * Click a Copy button and return what was copied.
+ *
+ * The visible "Copied!" flash lasts 1.5 s, which a loaded machine can miss, so
+ * the assertion is on the clipboard itself. Call `stubClipboard(page)` before
+ * navigating; without it this falls back to waiting for the flash.
+ */
 export async function clickCopy(page: Page, button: Locator): Promise<string | undefined> {
+  const before = await page.evaluate(
+    () => (window as Window & { __copied?: string[] }).__copied?.length ?? -1,
+  );
   await button.click();
-  await expect(page.getByRole('button', { name: 'Copied!' }).first()).toBeVisible();
+
+  if (before === -1) {
+    await expect(page.getByRole('button', { name: 'Copied!' }).first()).toBeVisible();
+    return undefined;
+  }
+
+  await page.waitForFunction(
+    (n) => ((window as Window & { __copied?: string[] }).__copied?.length ?? 0) > n,
+    before,
+    { timeout: 10_000 },
+  );
   return lastCopied(page);
+}
+
+/** Assert the transient success state on a Copy button (best used right after clicking). */
+export async function expectCopyFlash(page: Page): Promise<void> {
+  await expect(page.getByRole('button', { name: 'Copied!' }).first()).toBeVisible();
 }
