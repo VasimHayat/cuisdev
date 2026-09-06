@@ -1,0 +1,114 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-image-converter"
+  data-tool="image-converter"
+  aria-labelledby="image-converter-heading"
+>
+  <h2 id="image-converter-heading" class="visually-hidden">Image format converter</h2>
+
+  <div class="tool__options">
+    <div class="field tool-image-converter__field">
+      <label class="field__label" for="image-converter-target">Convert to</label>
+      <select id="image-converter-target" class="field__select" data-opt="target">
+        <option value="image/png">PNG</option>
+        <option value="image/jpeg">JPEG</option>
+        <option value="image/webp" selected>WebP</option>
+        <option value="image/avif" data-avif>AVIF</option>
+      </select>
+    </div>
+
+    <div class="field tool-image-converter__field tool-image-converter__field--slider">
+      <label class="field__label" for="image-converter-quality">Quality</label>
+      <div class="tool-image-converter__slider">
+        <input
+          id="image-converter-quality"
+          class="tool-image-converter__range"
+          type="range"
+          min="10"
+          max="100"
+          step="1"
+          value="90"
+          data-opt="quality"
+        />
+        <span class="tool-image-converter__value" aria-hidden="true" data-quality>90</span>
+      </div>
+    </div>
+
+    <div class="field tool-image-converter__field tool-image-converter__field--color">
+      <label class="field__label" for="image-converter-background">Background colour</label>
+      <input
+        id="image-converter-background"
+        class="field__input tool-image-converter__color"
+        type="color"
+        value="#ffffff"
+        data-opt="background"
+      />
+    </div>
+
+    <p class="tool-image-converter__hint" data-hint>
+      Quality applies to JPEG, WebP and AVIF. The background colour fills transparent pixels when
+      the target has no alpha channel.
+    </p>
+  </div>
+
+  <div class="tool-image-converter__drop" data-dropzone>
+    <Icon name="refresh-cw" class="tool-image-converter__drop-icon" />
+    <p class="tool-image-converter__drop-text">
+      Drop images here — PNG, JPEG, WebP, AVIF, GIF, BMP, ICO or SVG, up to 50 MB each.
+    </p>
+    <label class="btn tool-image-converter__pick">
+      <Icon name="upload" /><span>Choose images</span>
+      <input
+        type="file"
+        class="visually-hidden"
+        accept="image/*"
+        multiple
+        aria-label="Choose images to convert"
+        data-file
+      />
+    </label>
+  </div>
+
+  <div class="tool__pane">
+    <div class="tool__pane-header">
+      <span class="tool__pane-title">Converted files</span>
+      <div class="tool__pane-actions">
+        <button type="button" class="btn btn--ghost btn--sm" data-action="download-all" disabled>
+          <Icon name="download" /><span>Download all</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn--ghost btn--sm"
+          data-action="clear"
+          aria-label="Clear results"
+          disabled
+        >
+          <Icon name="trash" /><span>Clear</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="tool-image-converter__results">
+      <p class="tool-image-converter__empty" data-empty>
+        Converted images appear here, one row per file.
+      </p>
+      <ol class="tool-image-converter__list" data-results></ol>
+    </div>
+    <div class="tool__stats" data-totals aria-live="off"></div>
+  </div>
+
+  <div class="tool__actions">
+    <p class="tool__status" role="status" aria-live="polite" data-status>
+      Images are converted on your device and never leave your browser.
+    </p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

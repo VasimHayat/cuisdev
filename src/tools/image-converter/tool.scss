@@ -1,0 +1,181 @@
+// Image Format Converter — tool-specific styles. Shared chrome: styles/components/_tool.scss.
+.tool-image-converter {
+  &__field {
+    flex: 0 1 auto;
+    gap: var(--space-1);
+    min-width: 9rem;
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    &--slider {
+      min-width: 12rem;
+    }
+
+    &--color {
+      min-width: 0;
+    }
+  }
+
+  &__slider {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: 2.5rem;
+  }
+
+  &__range {
+    flex: 1 1 auto;
+    min-width: 7rem;
+    accent-color: var(--color-accent);
+
+    &:disabled {
+      opacity: 0.45;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 3px;
+    }
+  }
+
+  &__value {
+    min-width: 2.5ch;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-align: right;
+  }
+
+  &__color {
+    width: 3.25rem;
+    height: 2.5rem;
+    padding: 0.2rem;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+  }
+
+  &__hint {
+    flex: 1 1 16rem;
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  &__drop {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-6) var(--space-4);
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  &__drop-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-accent);
+  }
+
+  &__drop-text {
+    max-width: 34rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__pick {
+    cursor: pointer;
+
+    &:focus-within {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+
+  &__results {
+    min-height: 5rem;
+  }
+
+  &__empty {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-faint);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    &[data-state='error'] {
+      border-color: var(--color-danger);
+    }
+  }
+
+  &__thumb {
+    flex: 0 0 auto;
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    background: var(--color-bg-muted);
+    border-radius: var(--radius-sm);
+  }
+
+  &__info {
+    flex: 1 1 12rem;
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  &__download {
+    flex: 0 0 auto;
+  }
+
+  .tool__pane-actions {
+    flex-wrap: wrap;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}
