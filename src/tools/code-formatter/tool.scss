@@ -1,0 +1,45 @@
+// Code Formatter & Minifier — tool-specific styles.
+// Shared chrome lives in styles/components/_tool.scss.
+.tool-code-formatter {
+  // Compact labelled selects inside the options row.
+  &__field {
+    flex: 0 1 auto;
+    gap: var(--space-1);
+    min-width: 7.5rem;
+
+    .field__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+  }
+
+  // Keep the segmented control aligned with the selects next to it.
+  &__mode {
+    align-self: flex-end;
+  }
+
+  // Options that do not apply to the current language stay in place, greyed out,
+  // so switching language never shifts the layout.
+  .field__select:disabled,
+  .choice input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .choice:has(input:disabled) {
+    color: var(--color-text-faint);
+    cursor: not-allowed;
+  }
+
+  .segmented__option input:disabled + span {
+    color: var(--color-text-faint);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}
