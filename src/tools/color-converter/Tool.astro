@@ -1,0 +1,268 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import {
+  DEFAULT_BACKGROUND_COLOR,
+  DEFAULT_TEXT_COLOR,
+  SAMPLE_COLOR,
+  contrastReport,
+  convert,
+  formatRatio,
+  parseColor,
+  shadesAndTints,
+} from './logic';
+
+import './tool.scss';
+
+// Pre-rendered from the same pure functions the client uses, so the page is
+// complete without JavaScript and nothing shifts when the island hydrates.
+const rows = convert(SAMPLE_COLOR);
+const scale = shadesAndTints(parseColor(SAMPLE_COLOR));
+const contrast = contrastReport(DEFAULT_TEXT_COLOR, DEFAULT_BACKGROUND_COLOR);
+
+const levels = [
+  { id: 'aa-normal', label: 'AA normal', pass: contrast.aaNormal },
+  { id: 'aa-large', label: 'AA large', pass: contrast.aaLarge },
+  { id: 'aaa-normal', label: 'AAA normal', pass: contrast.aaaNormal },
+  { id: 'aaa-large', label: 'AAA large', pass: contrast.aaaLarge },
+];
+---
+
+<section
+  class="tool tool-color-converter"
+  data-tool="color-converter"
+  aria-labelledby="color-converter-heading"
+>
+  <h2 id="color-converter-heading" class="visually-hidden">Color converter</h2>
+
+  <div class="tool__options">
+    <div class="field tool-color-converter__entry">
+      <label class="field__label" for="color-converter-input">CSS color</label>
+      <input
+        id="color-converter-input"
+        class="field__input tool-color-converter__input"
+        type="text"
+        value={SAMPLE_COLOR}
+        placeholder="#3b82f6, rgb(59 130 246), hsl(217 91% 60%), oklch(0.62 0.19 260), tomato…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        data-input
+      />
+    </div>
+    <div class="field tool-color-converter__picker-field">
+      <label class="field__label" for="color-converter-picker">Picker</label>
+      <input
+        id="color-converter-picker"
+        class="field__input tool-color-converter__color"
+        type="color"
+        value={SAMPLE_COLOR}
+        data-picker
+      />
+    </div>
+    <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+      <Icon name="play" /><span>Sample</span>
+    </button>
+    <button
+      type="button"
+      class="btn btn--ghost btn--sm"
+      data-action="clear"
+      aria-label="Clear color"
+    >
+      <Icon name="trash" /><span>Clear</span>
+    </button>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title">Preview</span>
+        <span class="tool__stats" data-gamut aria-live="off"></span>
+      </div>
+      <canvas
+        class="tool-color-converter__preview"
+        width="640"
+        height="180"
+        role="img"
+        aria-label={`Preview of ${SAMPLE_COLOR}`}
+        data-preview></canvas>
+
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="color-converter-scale-label">Shades &amp; tints</span>
+      </div>
+      <ul
+        class="tool-color-converter__scale"
+        aria-labelledby="color-converter-scale-label"
+        data-scale
+      >
+        {
+          scale.map((step) => (
+            <li class="tool-color-converter__swatch" data-shade={step.id}>
+              <canvas
+                class="tool-color-converter__swatch-canvas"
+                width="120"
+                height="64"
+                role="img"
+                aria-label={`${step.name}, ${step.hex}`}
+                data-shade-canvas
+              />
+              <code class="tool-color-converter__swatch-hex" data-shade-hex>
+                {step.hex}
+              </code>
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                data-action="copy-shade"
+                aria-label={`Copy ${step.name.toLowerCase()}`}
+              >
+                <Icon name="copy" />
+                <span data-label>Copy</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="color-converter-formats-label">Formats</span>
+      </div>
+      <div class="tool-color-converter__table-wrap">
+        <table class="tool-color-converter__table" aria-labelledby="color-converter-formats-label">
+          <thead>
+            <tr>
+              <th scope="col">Format</th>
+              <th scope="col">Value</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rows.map((row) => (
+                <tr data-row={row.id}>
+                  <th scope="row">{row.label}</th>
+                  <td>
+                    <span class="tool-color-converter__value" data-value={row.id}>
+                      {row.value}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn--ghost btn--sm"
+                      data-action="copy-row"
+                      data-format={row.id}
+                      aria-label={`Copy ${row.label}`}
+                    >
+                      <Icon name="copy" />
+                      <span data-label>Copy</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-color-converter__contrast">
+    <h3 class="tool__pane-title" id="color-converter-contrast-label">Contrast checker</h3>
+    <div
+      class="tool-color-converter__contrast-grid"
+      aria-labelledby="color-converter-contrast-label"
+    >
+      <div class="tool-color-converter__contrast-controls">
+        <div class="tool-color-converter__pair">
+          <div class="field tool-color-converter__entry">
+            <label class="field__label" for="color-converter-fg">Text color</label>
+            <input
+              id="color-converter-fg"
+              class="field__input tool-color-converter__input"
+              type="text"
+              value={DEFAULT_TEXT_COLOR}
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              data-fg
+            />
+          </div>
+          <div class="field tool-color-converter__picker-field">
+            <label class="field__label" for="color-converter-fg-picker">Text picker</label>
+            <input
+              id="color-converter-fg-picker"
+              class="field__input tool-color-converter__color"
+              type="color"
+              value={DEFAULT_TEXT_COLOR}
+              data-fg-picker
+            />
+          </div>
+        </div>
+        <div class="tool-color-converter__pair">
+          <div class="field tool-color-converter__entry">
+            <label class="field__label" for="color-converter-bg">Background color</label>
+            <input
+              id="color-converter-bg"
+              class="field__input tool-color-converter__input"
+              type="text"
+              value={DEFAULT_BACKGROUND_COLOR}
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              data-bg
+            />
+          </div>
+          <div class="field tool-color-converter__picker-field">
+            <label class="field__label" for="color-converter-bg-picker">Background picker</label>
+            <input
+              id="color-converter-bg-picker"
+              class="field__input tool-color-converter__color"
+              type="color"
+              value={DEFAULT_BACKGROUND_COLOR}
+              data-bg-picker
+            />
+          </div>
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm" data-action="swap-contrast">
+          <Icon name="swap" /><span>Swap text and background</span>
+        </button>
+      </div>
+
+      <div class="tool-color-converter__contrast-result">
+        <canvas
+          class="tool-color-converter__contrast-preview"
+          width="640"
+          height="120"
+          role="img"
+          aria-label="Sample text on the chosen background"
+          data-contrast-preview></canvas>
+        <p class="tool-color-converter__ratio-label">Contrast ratio</p>
+        <p class="tool-color-converter__ratio" data-ratio>{formatRatio(contrast.ratio)}</p>
+        <ul class="tool-color-converter__levels">
+          {
+            levels.map((level) => (
+              <li>
+                <span
+                  class="badge tool-color-converter__badge"
+                  data-level={level.id}
+                  data-pass={String(level.pass)}
+                >
+                  {level.label}: <span data-verdict>{level.pass ? 'Pass' : 'Fail'}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>
