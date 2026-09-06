@@ -52,8 +52,8 @@ src/
    length, FAQ count…). `pages/tools/[slug].astro` maps every tool to a route and renders its
    `Tool.astro` inside `ToolLayout`. `@astrojs/sitemap` emits `sitemap-index.xml`. `og/[slug].png.ts`
    renders a card per tool. Astro computes CSP hashes for every inline script/style.
-2. **Serve.** Cloudflare Pages serves `dist/` from the edge with `_headers` (security + caching) and
-   `_redirects` (legacy URLs).
+2. **Serve.** Any static host serves `dist/`; `_headers` (security + caching) and `_redirects`
+   (legacy URLs) are provided in the Netlify/Cloudflare format for hosts that read them.
 3. **Hydrate.** The browser runs `theme-init.js` inline before paint, then loads the tiny shared
    bundle (theme toggle, command palette) and the page's `client.ts`. Fuse.js for search is
    dynamically imported the first time the palette opens.
@@ -85,7 +85,7 @@ Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<s
 | Tool page  | ≤ 600 KB          | 60 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
 
 Budgets are measured against the uncompressed build output (the CI static server does not
-compress); Cloudflare serves the same files Brotli-compressed at roughly a third of the size. A
+compress); production hosts serve the same files Brotli-compressed at roughly a third of the size. A
 CodeMirror tool page is ~370 KB uncompressed / ~120 KB compressed, and the editor chunk is shared
 and cached across every tool that uses it. On Windows, `node scripts/lighthouse-local.ts` runs the
 same checks when `lhci` cannot clean up its temporary Chrome profile.

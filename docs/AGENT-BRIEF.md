@@ -1,4 +1,4 @@
-# Phase 1 tool-building brief
+# Tool-building brief (Phase 1 and later)
 
 You are implementing one or more tools for Cuisdev, a privacy-first developer-tools site.
 Read, in this order: `CLAUDE.md`, `CONTRIBUTING.md`, `ARCHITECTURE.md`, then the reference
@@ -8,7 +8,9 @@ implementation in `src/tools/base64/` (all six files) and `tests/e2e/tools/base6
 
 - You are in a **git worktree** on your own branch. Run `npm ci` first (node_modules are not shared).
 - **Do not add npm dependencies.** Everything you need is installed: `codemirror` + `@codemirror/*`,
-  `yaml`, `papaparse`, `fast-xml-parser`, `ajv`, `ajv-formats`, `jsonpath-plus`, `hash-wasm`, `qrcode`.
+  `yaml`, `papaparse`, `fast-xml-parser`, `ajv`, `ajv-formats`, `jsonpath-plus`, `hash-wasm`, `qrcode`,
+  `diff`, `marked`, `dompurify`, `prettier` (use `prettier/standalone` + `prettier/plugins/*`),
+  `terser`, `csso`, `sql-formatter`, `culori`, `cronstrue`, `croner`.
   If something is truly missing, implement it by hand or say so in your final report.
 - Do not edit shared files (`src/lib/*`, `src/components/*`, `src/styles/*`, `src/layouts/*`,
   `package.json`, `tests/e2e/a11y.spec.ts`, `tests/e2e/shell.spec.ts`). If a shared change is
@@ -35,7 +37,7 @@ implementation in `src/tools/base64/` (all six files) and `tests/e2e/tools/base6
    - `howTo`: 3–5 imperative steps matching the actual UI labels.
    - `example`: realistic input/output.
    - `faq`: 5–6 questions people actually Google, each answered accurately in 2–4 sentences.
-   - `keywords`: 8–12 phrases. `related`: slugs of other Phase 1 tools (they may not exist in your
+   - `keywords`: 8–12 phrases. `related`: slugs of other tools (they may not exist in your
      worktree — the registry validates `related` at build time, so **only reference tools you are
      building yourself or `base64`**; I will wire cross-links at integration).
 5. `Tool.astro` + `client.ts`: use the shared chrome (`.tool`, `.tool__options`, `.tool__panes`,
@@ -52,6 +54,34 @@ implementation in `src/tools/base64/` (all six files) and `tests/e2e/tools/base6
 9. Verify: `npx vitest run src/tools/<slug>`, `npx astro check`, `npx eslint src/tools/<slug> tests`,
    `npx stylelint "src/tools/<slug>/*.scss"`, `npx prettier --check src/tools/<slug> tests`,
    `npx astro build`, then the Playwright spec (both projects). Fix everything before committing.
+
+## Lessons from Phase 1 (read before writing specs)
+
+- **Heavy libraries load on demand.** Anything over ~50 KB (Prettier, terser, sql-formatter, marked,
+  image codecs) must be `await import(...)`-ed the first time the user needs it, with a
+  "Loading formatter…" status while it arrives. Tool-page JS budget is 600 KB uncompressed on first
+  load; lazy chunks do not count against it.
+- **Editors live in a shadow root.** Use `mountEditor` from `@/lib/editor`; never style or query
+  `.cm-*` from page CSS. In specs use the helpers only (`fillEditor`, `expectEditorValue`,
+  `expectError`, `stubClipboard` + `clickCopy`, `typeInEditor`).
+- **Copy buttons:** locate by `[data-action="copy"]` (or a stable `aria-label`), never by the visible
+  text "Copy" — it becomes "Copied!" during the flash. Call `stubClipboard(page)` before `goto`.
+- **Labels wrapping a `<select>`** take the option text into their accessible name — use
+  `getByRole('combobox', { name: /…/ })`. `getByLabel('X')` also matches `Copy X` buttons — pass
+  `{ exact: true }`.
+- **`[hidden]` vs class `display`:** the global reset now forces `[hidden] { display: none }`; do
+  not re-add per-tool workarounds.
+- **Layout shift:** anything rendered after load (async results, font-dependent controls) must not
+  change the height of what is above the fold. Give controls fixed heights, pre-render initial
+  values in `Tool.astro` when they are constants, and never let a table row grow.
+- **Rendering user HTML (Markdown preview):** sanitise with `dompurify` and render into an element
+  with `innerHTML` only after sanitising; never execute scripts; links get `rel="noopener"`.
+- **Files in specs:** `page.setInputFiles('[data-file]', { name, mimeType, buffer })` with a tiny
+  PNG generated in the test (e.g. a 2×2 canvas exported via `page.evaluate`, or a hard-coded
+  base64 PNG). Never depend on files outside the repo.
+- **Windows clipboard** returns CRLF; normalise line endings before comparing multi-line copies.
+- **Bash tool gotcha:** it turns double backslashes into single ones inside heredocs — write files
+  containing backslashes with the Write tool.
 
 ## Quality bar
 

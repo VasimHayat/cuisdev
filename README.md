@@ -16,7 +16,7 @@ uploads, no tracking cookies.
 | Language  | TypeScript (strict) — **no React**                                |
 | Styles    | SCSS, ITCSS layers, BEM naming, CSS custom properties for theming |
 | Tests     | Vitest (unit), Playwright + axe (e2e / a11y), Lighthouse CI       |
-| Hosting   | Cloudflare Pages                                                  |
+| Hosting   | Any static host (undecided)                                       |
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for how it fits together and [PLAN.md](PLAN.md) for the
 product roadmap.
@@ -60,9 +60,10 @@ search index, category page, OG image and footer links are all generated. Full g
 
 ## Deployment
 
-Pushes to `main` deploy to production and pull requests get preview URLs via
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Set the `CLOUDFLARE_API_TOKEN`
-and `CLOUDFLARE_ACCOUNT_ID` repository secrets, and create a Pages project named `cuisdev`.
+The build is a plain static site in `dist/` and runs on any static host. Hosting has not been
+chosen yet. `public/_headers` and `public/_redirects` carry the security headers, caching rules
+and legacy redirects in the format understood by Netlify- and Cloudflare-style hosts; port them
+to your host's equivalent (e.g. `vercel.json`, nginx config) if you pick something else.
 
 ## License
 

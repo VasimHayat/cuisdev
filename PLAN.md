@@ -131,11 +131,11 @@ every tool ship only the JS it needs.
 
 ### 3.4 Hosting & infrastructure
 
-| Choice                             | Reason                                                                                                                                              |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Cloudflare Pages** (recommended) | Free, global edge, custom headers (`_headers`), redirects (`_redirects`), Web Analytics, unlimited bandwidth. Vercel/Netlify are fine alternatives. |
-| GitHub Actions                     | Lint, test, build, Lighthouse CI, deploy. Preview URL per PR.                                                                                       |
-| Cloudflare DNS                     | Apex + `www`; pick one canonical host and 301 the other.                                                                                            |
+| Choice            | Reason                                                                                                                                                                                   |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Static host (TBD) | Cloudflare Pages was considered and dropped (2026-09-06). The build is a plain `dist/`; `_headers`/`_redirects` are kept in the Netlify/Cloudflare format and can be ported to any host. |
+| GitHub Actions    | Lint, test, build, Lighthouse CI. A deploy step is added once a host is chosen.                                                                                                          |
+| DNS               | Apex + `www`; pick one canonical host and 301 the other.                                                                                                                                 |
 
 ---
 
@@ -250,13 +250,13 @@ extension and VS Code extension later as acquisition channels.
 
 ## 8. Roadmap & milestones
 
-| Phase             | Duration   | Deliverables                                                                                                                                          | Exit criteria                                                            |
-| ----------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| **0. Foundation** | Week 1     | Astro scaffold, SCSS design system, layouts, header/footer/theme, tool registry + scaffolder script, CI/CD to Cloudflare Pages preview, Lighthouse CI | Empty shell scores 100/100/100/100; adding a tool takes under 10 minutes |
-| **1. Core tools** | Weeks 2–3  | JSON cluster (6) + Encode/Decode (5) + Generators (5) with content, tests, OG images; `/jsoneditor/` redirect                                         | 16 tools live on preview, all tests green                                |
-| **2. Launch**     | Week 4     | Text (5) + Web/Code (6) + Images (4), Ctrl+K palette, share-by-URL, history, PWA, blog with 4 seed guides, legal pages, Search Console                | **Public launch** at cuisdev.com; Product Hunt / Hacker News posts       |
-| **3. Growth**     | Months 2–4 | Phase 2 tools (about 15), 2 guides per week, tool chaining, browser extension                                                                         | 50K sessions/month; top 10 for 5 head terms                              |
-| **4. Monetise**   | Month 4+   | Ethical ads, then Pro (sync, workspaces, API)                                                                                                         | Revenue covers infra + content                                           |
+| Phase             | Duration   | Deliverables                                                                                                                                | Exit criteria                                                            |
+| ----------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| **0. Foundation** | Week 1     | Astro scaffold, SCSS design system, layouts, header/footer/theme, tool registry + scaffolder script, CI (lint, tests, build), Lighthouse CI | Empty shell scores 100/100/100/100; adding a tool takes under 10 minutes |
+| **1. Core tools** | Weeks 2–3  | JSON cluster (6) + Encode/Decode (5) + Generators (5) with content, tests, OG images; `/jsoneditor/` redirect                               | 16 tools live on preview, all tests green                                |
+| **2. Launch**     | Week 4     | Text (5) + Web/Code (6) + Images (4), Ctrl+K palette, share-by-URL, history, PWA, blog with 4 seed guides, legal pages, Search Console      | **Public launch** at cuisdev.com; Product Hunt / Hacker News posts       |
+| **3. Growth**     | Months 2–4 | Phase 2 tools (about 15), 2 guides per week, tool chaining, browser extension                                                               | 50K sessions/month; top 10 for 5 head terms                              |
+| **4. Monetise**   | Month 4+   | Ethical ads, then Pro (sync, workspaces, API)                                                                                               | Revenue covers infra + content                                           |
 
 ---
 
