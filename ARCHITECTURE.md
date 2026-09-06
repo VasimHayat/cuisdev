@@ -76,10 +76,16 @@ Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<s
 
 ## Performance budgets (enforced in CI by Lighthouse CI)
 
-| Page type  | JS (transfer) | CSS   | Scores                              |
-| ---------- | ------------- | ----- | ----------------------------------- |
-| Home/About | ≤ 60 KB       | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100        |
-| Tool page  | ≤ 250 KB      | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
+| Page type  | JS (uncompressed) | CSS   | Scores                              |
+| ---------- | ----------------- | ----- | ----------------------------------- |
+| Home/About | ≤ 60 KB           | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100        |
+| Tool page  | ≤ 400 KB          | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
+
+Budgets are measured against the uncompressed build output (the CI static server does not
+compress); Cloudflare serves the same files Brotli-compressed at roughly a third of the size. A
+CodeMirror tool page is ~370 KB uncompressed / ~120 KB compressed, and the editor chunk is shared
+and cached across every tool that uses it. On Windows, `node scripts/lighthouse-local.ts` runs the
+same checks when `lhci` cannot clean up its temporary Chrome profile.
 
 ## Testing pyramid
 

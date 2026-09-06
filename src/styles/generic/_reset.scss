@@ -31,6 +31,11 @@ svg {
   max-width: 100%;
 }
 
+// The rule above would otherwise defeat the UA stylesheet's `[hidden]`.
+[hidden] {
+  display: none !important;
+}
+
 input,
 button,
 textarea,

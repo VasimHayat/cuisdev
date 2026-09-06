@@ -5,9 +5,6 @@
  * Everything here is loaded lazily so the shared shell bundle stays tiny; only
  * tool pages that call `mountEditor` pay for CodeMirror (~150 KB, cached).
  */
-import { json } from '@codemirror/lang-json';
-import { xml } from '@codemirror/lang-xml';
-import { yaml } from '@codemirror/lang-yaml';
 import {
   bracketMatching,
   defaultHighlightStyle,
@@ -64,11 +61,12 @@ export interface Editor {
   destroy(): void;
 }
 
-const languageExtensions: Record<EditorLanguage, () => Extension> = {
-  json: () => json(),
-  yaml: () => yaml(),
-  xml: () => xml(),
-  text: () => [],
+/** Grammars are loaded on demand so a JSON page never downloads the YAML/XML parsers. */
+const languageLoaders: Record<EditorLanguage, () => Promise<Extension>> = {
+  json: async () => (await import('@codemirror/lang-json')).json(),
+  yaml: async () => (await import('@codemirror/lang-yaml')).yaml(),
+  xml: async () => (await import('@codemirror/lang-xml')).xml(),
+  text: () => Promise.resolve([]),
 };
 
 /** Colours come from the design tokens so light/dark switching is free. */
@@ -190,7 +188,7 @@ export function mountEditor(
           indentWithTab,
         ]),
         theme,
-        languageCompartment.of(languageExtensions[options.language ?? 'text']()),
+        languageCompartment.of([]),
         readOnlyCompartment.of([
           EditorState.readOnly.of(options.readOnly ?? false),
           EditorView.editable.of(!(options.readOnly ?? false)),
@@ -209,6 +207,17 @@ export function mountEditor(
     }),
   });
   view.dom.setAttribute('data-readonly', String(options.readOnly ?? false));
+
+  // Language grammars arrive asynchronously; ignore stale loads if the language changed again.
+  let languageRequest = 0;
+  const applyLanguage = (language: EditorLanguage): void => {
+    const request = ++languageRequest;
+    void languageLoaders[language]().then((extension) => {
+      if (request !== languageRequest) return;
+      view.dispatch({ effects: languageCompartment.reconfigure(extension) });
+    });
+  };
+  applyLanguage(options.language ?? 'text');
 
   // Keep the accessible name in sync when a tool renames its label (e.g. on Swap).
   let labelObserver: MutationObserver | undefined;
@@ -236,7 +245,7 @@ export function mountEditor(
       textarea.value = value;
     },
     setLanguage(language) {
-      view.dispatch({ effects: languageCompartment.reconfigure(languageExtensions[language]()) });
+      applyLanguage(language);
     },
     setReadOnly(readOnly) {
       options = { ...options, readOnly };
