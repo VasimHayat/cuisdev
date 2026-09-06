@@ -66,7 +66,7 @@ export default defineConfig({
       // Tools are the product; legal pages barely change.
       serialize(item): SitemapItem {
         const path = new URL(item.url).pathname;
-        const { weekly, monthly, yearly } = ChangeFreqEnum;
+        const { WEEKLY: weekly, MONTHLY: monthly, YEARLY: yearly } = ChangeFreqEnum;
         if (path === '/') return { ...item, priority: 1.0, changefreq: weekly };
         if (path.startsWith('/tools/category/'))
           return { ...item, priority: 0.7, changefreq: weekly };
