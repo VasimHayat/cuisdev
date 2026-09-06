@@ -1,0 +1,134 @@
+@use 'tools/mixins' as *;
+
+// JSON Schema Validator — results panel. Shared chrome lives in styles/components/_tool.scss.
+.tool-json-schema-validator {
+  &__results {
+    gap: var(--space-2);
+  }
+
+  &__output {
+    min-height: 5rem;
+    padding: var(--space-3);
+    font-size: var(--text-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+  }
+
+  &__empty {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__valid {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin: 0;
+    font-weight: 600;
+    color: var(--color-success);
+
+    .icon {
+      flex-shrink: 0;
+    }
+  }
+
+  &__problem {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    border-left: 3px solid var(--color-danger);
+    border-radius: var(--radius-sm);
+
+    strong {
+      color: var(--color-danger);
+    }
+
+    p {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    &[data-kind='schema'] {
+      background: var(--color-danger-soft);
+    }
+
+    &[data-kind='data'] {
+      border-left-color: var(--color-warning);
+
+      strong {
+        color: var(--color-warning);
+      }
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  &__error {
+    @include button-reset;
+    @include focus-ring;
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-2) var(--space-3);
+    align-items: center;
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    text-align: left;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+      background-color var(--duration-fast),
+      border-color var(--duration-fast);
+
+    &:hover {
+      background: var(--color-bg-muted);
+      border-color: var(--color-border-strong);
+    }
+
+    @include until('md') {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  &__path {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    overflow-wrap: anywhere;
+  }
+
+  &__message {
+    overflow-wrap: anywhere;
+
+    @include until('md') {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__keyword {
+    justify-self: end;
+  }
+
+  // These panels set display: flex/grid, which would otherwise override the
+  // user-agent `[hidden] { display: none }` rule the view switcher relies on.
+  &__valid[hidden],
+  &__problem[hidden],
+  &__list[hidden] {
+    display: none;
+  }
+
+  .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}

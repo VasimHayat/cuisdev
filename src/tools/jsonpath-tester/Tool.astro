@@ -1,0 +1,106 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-jsonpath-tester"
+  data-tool="jsonpath-tester"
+  aria-labelledby="jsonpath-tester-heading"
+>
+  <h2 id="jsonpath-tester-heading" class="visually-hidden">JSONPath Tester</h2>
+
+  <div class="tool__options tool-jsonpath-tester__query">
+    <div class="field tool-jsonpath-tester__expression">
+      <label class="field__label" for="jsonpath-tester-path">
+        JSONPath expression
+        <span class="field__hint">Start with <code>$</code> for the root</span>
+      </label>
+      <input
+        id="jsonpath-tester-path"
+        class="field__input tool-jsonpath-tester__path"
+        type="text"
+        placeholder="$.store.book[?(@.price < 10)].title"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-path
+      />
+    </div>
+
+    <fieldset class="segmented" data-result-type>
+      <legend class="visually-hidden">Result type</legend>
+      <label class="segmented__option">
+        <input type="radio" name="result-type" value="value" checked />
+        <span>Values</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="result-type" value="path" />
+        <span>Paths</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="result-type" value="pointer" />
+        <span>Pointers</span>
+      </label>
+    </fieldset>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="jsonpath-tester-input">JSON input</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="jsonpath-tester-input"
+        class="field__textarea"
+        placeholder="Paste the JSON document to query…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="jsonpath-tester-output">Result</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button type="button" class="btn btn--ghost btn--sm" data-action="download">
+            <Icon name="download" /><span>Download</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="jsonpath-tester-output"
+        class="field__textarea"
+        placeholder="Matches appear here as a JSON array"
+        readonly
+        spellcheck="false"
+        data-output></textarea>
+      <div class="tool__stats" data-output-stats aria-live="off"></div>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>

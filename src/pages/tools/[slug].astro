@@ -18,6 +18,10 @@ const components = import.meta.glob<{ default: AstroComponentFactory }>(
 );
 const Tool = components[`../../tools/${tool.slug}/Tool.astro`]?.default;
 if (!Tool) throw new Error(`Tool "${tool.slug}" has no Tool.astro`);
+
+// Per-page CSP additions must be requested here, before the layout renders <head>;
+// a call from inside Tool.astro (rendered into a slot) comes too late.
+for (const source of tool.scriptSources ?? []) Astro.csp?.insertScriptResource(source);
 ---
 
 <ToolLayout tool={tool}>

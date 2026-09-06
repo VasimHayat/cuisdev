@@ -1,0 +1,24 @@
+// JSONPath Tester — expression bar. Shared chrome lives in styles/components/_tool.scss.
+.tool-jsonpath-tester {
+  &__query {
+    align-items: flex-end;
+  }
+
+  &__expression {
+    flex: 1 1 18rem;
+    min-width: 0;
+
+    code {
+      font-size: inherit;
+    }
+  }
+
+  &__path {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .tool__status {
+    margin: 0;
+  }
+}
