@@ -67,6 +67,39 @@ You now have `src/tools/<slug>/`:
 
 A phase is complete only when all three pass for every tool in it.
 
+### Code editors (JSON, YAML, XML, code-like input)
+
+Render a plain `<textarea id="<slug>-input" class="field__textarea">` with a `<label for>`, then in
+`client.ts` upgrade it:
+
+```ts
+import { mountEditor, parseErrorOffset } from '@/lib/editor';
+const input = mountEditor(inputTextarea, { language: 'json', onChange: run });
+const output = mountEditor(outputTextarea, { language: 'json', readOnly: true });
+input.setDiagnostics([{ from, to, message }]); // highlight a parse error
+output.setValue(result);
+```
+
+The textarea stays in the DOM (hidden) and mirrors the editor's value, so `<label>`s, no-JS
+fallback and tests keep working. Simple single-line or short inputs should stay plain
+`<input>`/`<textarea>` — do not mount CodeMirror for a URL field.
+
+### Browser tests
+
+Use the helpers in `tests/e2e/helpers.ts`: `fillEditor(page, 'slug-input', text)`,
+`expectEditorValue(page, 'slug-output', /…/)`, `expectError(page, /message/)`. They work for both
+plain textareas and CodeMirror-backed inputs. Every spec runs on desktop **and** a Pixel 7 viewport
+automatically — layouts must work at 390px wide with no horizontal scrolling (a global test fails
+otherwise). The a11y suite reads `dist/sitemap-0.xml`, so new tools are covered without edits.
+
+### Mobile checklist
+
+- Panes stack vertically below 64em (`.tool__panes` does this); options wrap (`.tool__options`).
+- Touch targets ≥ 40px: use `.btn` (min-height 2.5rem), never bare icon links.
+- No fixed widths in px on containers; long output uses `overflow-wrap: anywhere` or scrolls inside
+  its own box — never the page.
+- Test with `npx playwright test tests/e2e/tools/<slug>.spec.ts --project=mobile-chrome`.
+
 ### Definition of done
 
 - [ ] `npm run validate` passes (format, lint, type-check, unit tests, build)
