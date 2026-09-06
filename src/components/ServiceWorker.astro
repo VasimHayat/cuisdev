@@ -1,0 +1,38 @@
+---
+/**
+ * Registers the offline service worker. Bundled (not inline) so the strict CSP
+ * covers it with 'self' rather than a hash.
+ */
+---
+
+<script>
+  // Only in production builds served over HTTPS or localhost.
+  if ('serviceWorker' in navigator && import.meta.env.PROD) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then(() => navigator.serviceWorker.ready)
+        .then((registration) => {
+          // This page and its assets were fetched before the worker took control,
+          // so nothing here is cached yet. Send the page plus everything it
+          // actually loaded, and one visit is enough to keep the tool working
+          // offline — markup, styles, fonts and the tool's own script.
+          const assets = performance
+            .getEntriesByType('resource')
+            .filter(
+              (entry) =>
+                entry.name.startsWith(location.origin) &&
+                /\.(?:js|css|woff2?|svg|png|webmanifest)(?:\?|$)/.test(entry.name),
+            )
+            .map((entry) => entry.name);
+          registration.active?.postMessage({
+            type: 'cache-urls',
+            urls: [location.href, ...new Set(assets)],
+          });
+        })
+        .catch(() => {
+          // Offline support is a progressive enhancement; failure is not an error.
+        });
+    });
+  }
+</script>

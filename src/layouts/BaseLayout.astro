@@ -6,6 +6,7 @@ import '@/styles/main.scss';
 import CommandPalette from '@/components/CommandPalette.astro';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
+import ServiceWorker from '@/components/ServiceWorker.astro';
 import { absolute, type JsonLd, organization, pageTitle } from '@/lib/seo';
 import { site } from '@/lib/site';
 import themeInit from '@/lib/theme-init.js?raw';
@@ -113,5 +114,6 @@ const schemas = [organization(), ...jsonLd];
       <Footer />
     </div>
     <CommandPalette />
+    <ServiceWorker />
   </body>
 </html>

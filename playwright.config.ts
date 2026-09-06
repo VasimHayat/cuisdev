@@ -25,7 +25,25 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-chrome', use: { ...devices['Pixel 7'] } },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: /offline\.spec\.ts/,
+    },
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 7'] },
+      testIgnore: /offline\.spec\.ts/,
+    },
+    {
+      // Offline emulation is per-context but Chromium's service-worker plumbing
+      // is shared, so these tests interfere with anything running beside them.
+      // They get their own project: it runs last, alone, and without parallelism.
+      name: 'offline',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /offline\.spec\.ts/,
+      fullyParallel: false,
+      dependencies: ['chromium', 'mobile-chrome'],
+    },
   ],
 });

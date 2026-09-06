@@ -90,6 +90,15 @@ CodeMirror tool page is ~370 KB uncompressed / ~120 KB compressed, and the edito
 and cached across every tool that uses it. On Windows, `node scripts/lighthouse-local.ts` runs the
 same checks when `lhci` cannot clean up its temporary Chrome profile.
 
+## Offline support
+
+`src/pages/sw.js.ts` generates a service worker at build time (its cache name carries the build
+timestamp, so a deploy invalidates the old cache). Navigations are network-first with a cached
+fallback and finally `/offline/`; hashed assets under `/_astro/`, `/icons/` and `/og/` are
+cache-first; everything else same-origin is stale-while-revalidate. Because the worker only takes
+control _after_ the first page has loaded, `ServiceWorker.astro` posts that page and the assets it
+loaded to the worker, so a single visit is enough to make a tool work offline.
+
 ## Testing pyramid
 
 - **Vitest** — `logic.ts` of every tool and `lib/*`. Coverage thresholds in `vitest.config.ts`.

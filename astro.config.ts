@@ -60,8 +60,9 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      // Image endpoints are not pages.
-      filter: (page) => !page.includes('/og/'),
+      // Image endpoints, the service worker and the offline fallback are not content.
+      filter: (page) =>
+        !page.includes('/og/') && !page.includes('/sw.js') && !page.includes('/offline/'),
       changefreq: 'weekly',
       priority: 0.7,
     }),

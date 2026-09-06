@@ -1,0 +1,33 @@
+---
+import Icon from '@/components/Icon.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="You are offline"
+  description="You are offline and this page has not been visited before. Tools you have already opened keep working without a connection."
+  noindex
+>
+  <div class="stack stack--lg offline">
+    <p class="section__eyebrow">Offline</p>
+    <h1>You are offline</h1>
+    <p class="section__lead">
+      This page has not been opened on this device before, so it is not in the offline cache. Any
+      tool you have already visited still works — they run entirely in your browser and need no
+      connection.
+    </p>
+    <div class="cluster">
+      <a class="btn btn--primary" href="/tools/">
+        <Icon name="wifi-off" /> Browse cached tools
+      </a>
+      <a class="btn btn--ghost" href="/">Home</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  .offline {
+    max-width: 40rem;
+    padding-block: var(--space-16);
+  }
+</style>
