@@ -1,0 +1,221 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import {
+  BIT_WIDTHS,
+  MAX_BASE,
+  MIN_BASE,
+  SAMPLE_DECIMAL,
+  bitLength,
+  convertAll,
+  numberToWords,
+  parseInBase,
+  twosComplement,
+} from './logic';
+
+import './tool.scss';
+
+// Pre-rendered from the sample so the page is complete without JavaScript and
+// hydration cannot shift anything.
+const DEFAULT_CUSTOM_BASE = 36;
+const DEFAULT_WIDTH = 32;
+const sample = parseInBase(SAMPLE_DECIMAL, 10);
+const rows = convertAll(sample, {}, DEFAULT_CUSTOM_BASE);
+const twos = twosComplement(sample, DEFAULT_WIDTH);
+const words = numberToWords(sample);
+const customBases = Array.from({ length: MAX_BASE - MIN_BASE + 1 }, (_, i) => MIN_BASE + i);
+---
+
+<section
+  class="tool tool-number-base-converter"
+  data-tool="number-base-converter"
+  aria-labelledby="number-base-converter-heading"
+>
+  <h2 id="number-base-converter-heading" class="visually-hidden">Number base converter</h2>
+
+  <div class="tool__options">
+    <label class="choice">
+      <input type="checkbox" data-opt="uppercase" />
+      Uppercase letters
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="group" />
+      Group digits
+    </label>
+    <div class="field tool-number-base-converter__select-field">
+      <label class="field__label" for="number-base-converter-custom-base">Custom base</label>
+      <select id="number-base-converter-custom-base" class="field__select" data-custom-base>
+        {
+          customBases.map((base) => (
+            <option value={base} selected={base === DEFAULT_CUSTOM_BASE}>
+              Base {base}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+    <div class="field tool-number-base-converter__select-field">
+      <label class="field__label" for="number-base-converter-width">Two’s complement width</label>
+      <select id="number-base-converter-width" class="field__select" data-width>
+        {
+          BIT_WIDTHS.map((bits) => (
+            <option value={bits} selected={bits === DEFAULT_WIDTH}>
+              {bits}-bit
+            </option>
+          ))
+        }
+      </select>
+    </div>
+    <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+      <Icon name="play" /><span>Sample</span>
+    </button>
+    <button
+      type="button"
+      class="btn btn--ghost btn--sm"
+      data-action="clear"
+      aria-label="Clear all fields"
+    >
+      <Icon name="trash" /><span>Clear</span>
+    </button>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title">Bases</span>
+        <span class="tool__stats">Type in any field — the others follow.</span>
+      </div>
+
+      <ul class="tool-number-base-converter__fields">
+        {
+          rows.map((row) => (
+            <li class="tool-number-base-converter__field-row">
+              <div class="field tool-number-base-converter__field">
+                <label class="field__label" for={`number-base-converter-${row.id}`}>
+                  {row.id === 'custom' ? 'Custom base value' : `${row.label} (base ${row.base})`}
+                </label>
+                <input
+                  id={`number-base-converter-${row.id}`}
+                  class="field__input tool-number-base-converter__input"
+                  type="text"
+                  value={row.value}
+                  spellcheck="false"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  data-base={row.id}
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                data-action="copy-base"
+                data-base-id={row.id}
+                aria-label={`Copy ${row.id === 'custom' ? 'custom base value' : row.label.toLowerCase()}`}
+              >
+                <Icon name="copy" />
+                <span data-label>Copy</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="number-base-converter-details-label">Details</span>
+      </div>
+      <div class="tool-number-base-converter__table-wrap">
+        <table
+          class="tool-number-base-converter__table"
+          aria-labelledby="number-base-converter-details-label"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Property</th>
+              <th scope="col">Value</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Bit length</th>
+              <td>
+                <span class="tool-number-base-converter__value" data-value="bits">
+                  {bitLength(sample)}
+                  {bitLength(sample) === 1 ? 'bit' : 'bits'}
+                </span>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th scope="row" data-twos-label>Two’s complement ({DEFAULT_WIDTH}-bit)</th>
+              <td>
+                <span class="tool-number-base-converter__value" data-value="twos-binary">
+                  {twos.binary}
+                </span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  data-action="copy-detail"
+                  data-detail="twos-binary"
+                  aria-label="Copy two’s complement binary"
+                >
+                  <Icon name="copy" />
+                  <span data-label>Copy</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Two’s complement (hex)</th>
+              <td>
+                <span class="tool-number-base-converter__value" data-value="twos-hex">
+                  {twos.hex}
+                </span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  data-action="copy-detail"
+                  data-detail="twos-hex"
+                  aria-label="Copy two’s complement hex"
+                >
+                  <Icon name="copy" />
+                  <span data-label>Copy</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">In words</th>
+              <td>
+                <span class="tool-number-base-converter__value" data-value="words">{words}</span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn--ghost btn--sm"
+                  data-action="copy-detail"
+                  data-detail="words"
+                  aria-label="Copy the number in words"
+                >
+                  <Icon name="copy" />
+                  <span data-label>Copy</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>
