@@ -17,6 +17,7 @@ uploads, no tracking cookies.
 | Styles    | SCSS, ITCSS layers, BEM naming, CSS custom properties for theming |
 | Tests     | Vitest (unit), Playwright + axe (e2e / a11y), Lighthouse CI       |
 | Hosting   | Any static host (undecided)                                       |
+| Offline   | Hand-rolled service worker (`src/pages/sw.js.ts`)                 |
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for how it fits together and [PLAN.md](PLAN.md) for the
 product roadmap.

@@ -76,10 +76,14 @@ try {
       const js = items.find((i) => i.resourceType === 'script')?.transferSize ?? 0;
       const css = items.find((i) => i.resourceType === 'stylesheet')?.transferSize ?? 0;
       const jsBudget = path.startsWith('/tools/') ? 614_400 : 61_440; // blog + marketing pages ship no tool JS
+      // A deliberately noindex page (the offline fallback) cannot score 100 for SEO.
+      const noindex = lhr.audits['is-crawlable']?.score === 0;
+      const gates = noindex
+        ? ['accessibility', 'best-practices']
+        : ['accessibility', 'best-practices', 'seo'];
       const problems: string[] = [];
       if ((cats.performance ?? 0) < 98) problems.push(`performance ${cats.performance}`);
-      for (const c of ['accessibility', 'best-practices', 'seo'])
-        if ((cats[c] ?? 0) < 100) problems.push(`${c} ${cats[c]}`);
+      for (const c of gates) if ((cats[c] ?? 0) < 100) problems.push(`${c} ${cats[c]}`);
       if (cls > 0.01) problems.push(`CLS ${cls.toFixed(3)}`);
       if (js > jsBudget) problems.push(`JS ${js} > ${jsBudget}`);
       if (css > 61_440) problems.push(`CSS ${css} > 61440`);
@@ -88,7 +92,9 @@ try {
       if (problems.length) failed = true;
     }
   } finally {
-    await chrome.kill();
+    // Chrome sometimes refuses to clean up its temp profile on Windows; that must
+    // not fail the run after the results are in.
+    await chrome.kill().catch(() => undefined);
   }
 } finally {
   server.kill();

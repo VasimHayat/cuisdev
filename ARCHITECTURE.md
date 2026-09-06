@@ -102,8 +102,11 @@ loaded to the worker, so a single visit is enough to make a tool work offline.
 ## Testing pyramid
 
 - **Vitest** — `logic.ts` of every tool and `lib/*`. Coverage thresholds in `vitest.config.ts`.
-- **Playwright** — `tests/e2e/smoke.spec.ts` (navigation, palette, theme, one happy path per tool)
-  and `tests/e2e/a11y.spec.ts` (axe, WCAG 2.2 AA, light and dark).
+- **Playwright** — `tests/e2e/shell.spec.ts` (navigation, palette, theme), `tests/e2e/tools/*.spec.ts`
+  (one spec per tool), `tests/e2e/a11y.spec.ts` (every sitemap URL: axe WCAG 2.2 AA light and dark,
+  no horizontal scroll at 390px, one `h1`, a meta description) and `tests/e2e/offline.spec.ts`.
+  The last runs in its own serial project after the others, because Chromium's offline emulation
+  interferes with anything running beside it.
 - **Lighthouse CI** — budgets above, on the built `dist/`.
 
 ## Roadmap hooks already in place

@@ -94,6 +94,12 @@ plain textareas and CodeMirror-backed inputs. Every spec runs on desktop **and**
 automatically — layouts must work at 390px wide with no horizontal scrolling (a global test fails
 otherwise). The a11y suite reads `dist/sitemap-0.xml`, so new tools are covered without edits.
 
+### Offline
+
+Every page is cached by the service worker once visited, so tools must keep working with no
+network after load: never fetch anything at runtime, and wrap lazy `import()` of heavy libraries in
+a `try/catch` that reports the failure in the status line.
+
 ### Mobile checklist
 
 - Panes stack vertically below 64em (`.tool__panes` does this); options wrap (`.tool__options`).
