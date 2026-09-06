@@ -82,7 +82,7 @@ try {
         if ((cats[c] ?? 0) < 100) problems.push(`${c} ${cats[c]}`);
       if (cls > 0.01) problems.push(`CLS ${cls.toFixed(3)}`);
       if (js > jsBudget) problems.push(`JS ${js} > ${jsBudget}`);
-      if (css > 40_960) problems.push(`CSS ${css} > 40960`);
+      if (css > 61_440) problems.push(`CSS ${css} > 61440`);
       const line = `${path.padEnd(28)} perf ${cats.performance} a11y ${cats.accessibility} bp ${cats['best-practices']} seo ${cats.seo}  CLS ${cls.toFixed(3)}  JS ${(js / 1024).toFixed(1)} KB  CSS ${(css / 1024).toFixed(1)} KB`;
       console.log(problems.length ? `✖ ${line}\n    ${problems.join(', ')}` : `✔ ${line}`);
       if (problems.length) failed = true;

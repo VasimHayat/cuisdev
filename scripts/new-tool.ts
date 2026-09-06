@@ -195,7 +195,7 @@ root.addEventListener('click', async (e) => {
 run();
 `,
 
-  '../../../tests/e2e/tools/${slug}.spec.ts': `import { expect, test } from '@playwright/test';
+  [`../../../tests/e2e/tools/${slug}.spec.ts`]: `import { expect, test } from '@playwright/test';
 
 test.describe('${slug} tool', () => {
   test('transforms input live', async ({ page }) => {

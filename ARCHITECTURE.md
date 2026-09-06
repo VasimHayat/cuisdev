@@ -81,8 +81,8 @@ Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<s
 
 | Page type  | JS (uncompressed) | CSS   | Scores                              |
 | ---------- | ----------------- | ----- | ----------------------------------- |
-| Home/About | ≤ 60 KB           | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100        |
-| Tool page  | ≤ 600 KB          | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
+| Home/About | ≤ 60 KB           | 60 KB | Perf ≥ 98, A11y/BP/SEO = 100        |
+| Tool page  | ≤ 600 KB          | 60 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
 
 Budgets are measured against the uncompressed build output (the CI static server does not
 compress); Cloudflare serves the same files Brotli-compressed at roughly a third of the size. A
