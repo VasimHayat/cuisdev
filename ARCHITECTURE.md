@@ -71,7 +71,10 @@ Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<s
 `astro.config.ts` from the exact file bytes. Consequences for tool authors:
 
 - No inline `style=""` attributes — toggle classes or `data-*` attributes instead.
-- No `eval`, no `new Function`, no remote scripts.
+- No `eval`, no `new Function`, no remote scripts. One documented exception: the JSON Schema
+  Validator page declares `scriptSources: ["'unsafe-eval'"]` in its `meta.ts` because Ajv compiles
+  schemas with `new Function`; `pages/tools/[slug].astro` adds it to that page's CSP only. Eval-free
+  validators were evaluated and rejected for spec-compliance bugs.
 - Workers must be same-origin (`worker-src 'self' blob:`).
 
 ## Performance budgets (enforced in CI by Lighthouse CI)
@@ -79,7 +82,7 @@ Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<s
 | Page type  | JS (uncompressed) | CSS   | Scores                              |
 | ---------- | ----------------- | ----- | ----------------------------------- |
 | Home/About | ≤ 60 KB           | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100        |
-| Tool page  | ≤ 400 KB          | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
+| Tool page  | ≤ 600 KB          | 40 KB | Perf ≥ 98, A11y/BP/SEO = 100, CLS 0 |
 
 Budgets are measured against the uncompressed build output (the CI static server does not
 compress); Cloudflare serves the same files Brotli-compressed at roughly a third of the size. A

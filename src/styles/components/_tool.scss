@@ -90,6 +90,11 @@
     flex-direction: column;
     gap: var(--space-2);
     min-width: 0;
+
+    // Match the CodeMirror editor height so upgrading the textarea causes no layout shift
+    .field__textarea {
+      min-height: var(--editor-min-height, 14rem);
+    }
   }
 
   &__pane-header {

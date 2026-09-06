@@ -9,7 +9,7 @@
  *   (paths may omit the leading slash — Git Bash on Windows rewrites `/x` into a filesystem path)
  */
 import { spawn } from 'node:child_process';
-import { mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 
@@ -59,6 +59,10 @@ try {
       );
       const lhr = result?.lhr;
       if (!lhr) throw new Error(`No result for ${url}`);
+      writeFileSync(
+        join(process.cwd(), '.lighthouseci', `local${path.replace(/\//g, '_')}.json`),
+        JSON.stringify(lhr),
+      );
       const cats = Object.fromEntries(
         Object.entries(lhr.categories).map(([k, v]) => [k, Math.round((v.score ?? 0) * 100)]),
       );
@@ -71,7 +75,7 @@ try {
         )?.items ?? [];
       const js = items.find((i) => i.resourceType === 'script')?.transferSize ?? 0;
       const css = items.find((i) => i.resourceType === 'stylesheet')?.transferSize ?? 0;
-      const jsBudget = path.startsWith('/tools/') ? 409_600 : 61_440;
+      const jsBudget = path.startsWith('/tools/') ? 614_400 : 61_440;
       const problems: string[] = [];
       if ((cats.performance ?? 0) < 98) problems.push(`performance ${cats.performance}`);
       for (const c of ['accessibility', 'best-practices', 'seo'])

@@ -4,10 +4,10 @@
   .choice .field__select,
   .choice .field__input {
     width: auto;
-    height: auto;
-    min-height: 2rem;
-    padding-block: var(--space-1);
+    height: 2rem;
+    padding-block: 0;
     font-size: var(--text-sm);
+    line-height: 1;
   }
 
   .choice .field__input {

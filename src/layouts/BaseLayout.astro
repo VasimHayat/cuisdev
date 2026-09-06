@@ -10,6 +10,7 @@ import { absolute, type JsonLd, organization, pageTitle } from '@/lib/seo';
 import { site } from '@/lib/site';
 import themeInit from '@/lib/theme-init.js?raw';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import monoLatin from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
 
 interface Props {
   /** Page title without the site suffix. Omit for the home page. */
@@ -49,6 +50,7 @@ const schemas = [organization(), ...jsonLd];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline set:html={themeInit} />
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoLatin} as="font" type="font/woff2" crossorigin />
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />

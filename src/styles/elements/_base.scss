@@ -10,6 +10,16 @@
   line-gap-override: 0%;
 }
 
+// Same idea for the mono face: Courier New has the same 0.6em advance width.
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New'), local('Liberation Mono'), local('Menlo');
+  size-adjust: 100%;
+  ascent-override: 102%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
 html {
   scroll-behavior: smooth;
 }

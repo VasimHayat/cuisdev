@@ -70,8 +70,8 @@ $font-sans:
   arial,
   sans-serif;
 $font-mono:
-  'JetBrains Mono Variable', ui-monospace, sfmono-regular, menlo, consolas, 'Liberation Mono',
-  monospace;
+  'JetBrains Mono Variable', 'JetBrains Mono Fallback', ui-monospace, sfmono-regular, menlo,
+  consolas, 'Liberation Mono', monospace;
 $type-scale: (
   'xs': 0.75rem,
   'sm': 0.875rem,
