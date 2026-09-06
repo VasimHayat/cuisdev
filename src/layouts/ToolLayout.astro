@@ -30,7 +30,7 @@ const category = getCategory(tool.category);
   jsonLd={toolJsonLd(tool)}
   wide
 >
-  <div class="stack stack--lg">
+  <div class="stack stack--lg" data-tool-page={tool.slug}>
     <Breadcrumbs crumbs={toolCrumbs(tool)} />
 
     <header class="tool-header">
@@ -86,3 +86,10 @@ const category = getCategory(tool.category);
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  import { recordVisit } from '@/lib/history';
+
+  const slug = document.querySelector<HTMLElement>('[data-tool-page]')?.dataset.toolPage;
+  if (slug) recordVisit(slug);
+</script>

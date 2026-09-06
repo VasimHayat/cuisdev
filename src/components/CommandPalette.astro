@@ -43,6 +43,7 @@ const index = JSON.stringify(getSearchIndex()).replaceAll('<', '\\u003c');
 <script>
   import type Fuse from 'fuse.js';
 
+  import { recentSlugs } from '@/lib/history';
   import type { SearchEntry } from '@/lib/registry';
 
   import { icons } from './icons';
@@ -69,6 +70,8 @@ const index = JSON.stringify(getSearchIndex()).replaceAll('<', '\\u003c');
     let fuse: Fuse<SearchEntry> | undefined;
     let results: SearchEntry[] = entries;
     let selected = 0;
+    /** How many leading results are "recently used" (only when the query is empty). */
+    let recentCount = 0;
 
     const escape = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 
@@ -82,9 +85,13 @@ const index = JSON.stringify(getSearchIndex()).replaceAll('<', '\\u003c');
       let html = '';
       let lastCategory = '';
       results.forEach((entry, i) => {
-        if (grouped && entry.categoryName !== lastCategory) {
-          lastCategory = entry.categoryName;
-          html += `<li class="palette__group" role="presentation">${escape(lastCategory)}</li>`;
+        if (grouped) {
+          if (i === 0 && recentCount > 0) {
+            html += `<li class="palette__group" role="presentation">Recently used</li>`;
+          } else if (i >= recentCount && entry.categoryName !== lastCategory) {
+            lastCategory = entry.categoryName;
+            html += `<li class="palette__group" role="presentation">${escape(lastCategory)}</li>`;
+          }
         }
         html += `<li role="presentation"><a class="palette__item" role="option" id="palette-opt-${i}" href="${entry.url}" aria-selected="${i === selected}" data-index="${i}">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[entry.icon]}</svg>
@@ -109,8 +116,14 @@ const index = JSON.stringify(getSearchIndex()).replaceAll('<', '\\u003c');
     async function search(query: string) {
       const q = query.trim();
       if (q === '') {
-        results = entries;
+        // Recently used tools first, then everything else.
+        const recent = recentSlugs()
+          .map((slug) => entries.find((e) => e.slug === slug))
+          .filter((e): e is SearchEntry => e !== undefined);
+        recentCount = recent.length;
+        results = [...recent, ...entries.filter((e) => !recent.includes(e))];
       } else {
+        recentCount = 0;
         fuse ??= new (await import('fuse.js')).default(entries, {
           keys: [
             { name: 'name', weight: 3 },
