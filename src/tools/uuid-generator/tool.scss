@@ -1,0 +1,75 @@
+// UUID Generator — tool-specific styles. Shared chrome lives in styles/components/_tool.scss.
+.tool-uuid-generator {
+  &__count,
+  &__format {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+
+    .field__input,
+    .field__select {
+      width: auto;
+      min-width: 6rem;
+      font-size: var(--text-sm);
+    }
+  }
+
+  &__count .field__input {
+    width: 6rem;
+    font-family: var(--font-mono);
+  }
+
+  &__inspect-input {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  &__details {
+    display: grid;
+
+    &[hidden],
+    > div[hidden] {
+      display: none;
+    }
+    gap: var(--space-2);
+    padding: var(--space-3);
+    margin: 0;
+    font-size: var(--text-sm);
+    background: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    > div {
+      display: grid;
+      grid-template-columns: 6rem minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+
+    dt {
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    dd {
+      margin: 0;
+      font-family: var(--font-mono);
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .tool__pane .tool__status {
+    margin: 0;
+  }
+
+  .tool__actions {
+    justify-content: space-between;
+  }
+
+  .tool__actions .tool__status {
+    flex: 1;
+    min-width: 12rem;
+    margin: 0;
+  }
+}

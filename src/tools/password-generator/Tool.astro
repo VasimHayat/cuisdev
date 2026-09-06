@@ -1,0 +1,209 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import {
+  DEFAULT_LENGTH,
+  DEFAULT_SYMBOLS,
+  DEFAULT_WORDS,
+  MAX_LENGTH,
+  MAX_WORDS,
+  MIN_LENGTH,
+  MIN_WORDS,
+} from './logic';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-password-generator"
+  data-tool="password-generator"
+  aria-labelledby="password-generator-heading"
+>
+  <h2 id="password-generator-heading" class="visually-hidden">Password generator</h2>
+
+  <div class="tool__options">
+    <fieldset class="segmented" data-mode>
+      <legend class="visually-hidden">Mode</legend>
+      <label class="segmented__option">
+        <input type="radio" name="password-mode" value="random" checked />
+        <span>Random characters</span>
+      </label>
+      <label class="segmented__option">
+        <input type="radio" name="password-mode" value="passphrase" />
+        <span>Passphrase</span>
+      </label>
+    </fieldset>
+  </div>
+
+  <div class="tool__options" data-panel="random">
+    <label class="tool-password-generator__number">
+      <span>Length</span>
+      <input
+        type="number"
+        class="field__input"
+        min={MIN_LENGTH}
+        max={MAX_LENGTH}
+        step="1"
+        value={DEFAULT_LENGTH}
+        inputmode="numeric"
+        data-opt="length"
+      />
+    </label>
+    <input
+      type="range"
+      class="tool-password-generator__range"
+      min={MIN_LENGTH}
+      max={MAX_LENGTH}
+      step="1"
+      value={DEFAULT_LENGTH}
+      aria-label="Length slider"
+      data-opt="length-range"
+    />
+
+    <label class="choice">
+      <input type="checkbox" data-opt="lowercase" checked />
+      Lowercase (a–z)
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="uppercase" checked />
+      Uppercase (A–Z)
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="digits" checked />
+      Digits (0–9)
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="symbols" checked />
+      Symbols
+    </label>
+    <label class="tool-password-generator__symbols" data-symbols-wrap>
+      <span>Custom symbols</span>
+      <input
+        type="text"
+        class="field__input"
+        placeholder={DEFAULT_SYMBOLS}
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-opt="symbol-set"
+      />
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="ambiguous" />
+      Exclude ambiguous (<code>0 O 1 l I |</code>)
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="require-each" checked />
+      Include every selected type
+    </label>
+  </div>
+
+  <div class="tool__options" data-panel="passphrase" hidden>
+    <label class="tool-password-generator__number">
+      <span>Words</span>
+      <input
+        type="number"
+        class="field__input"
+        min={MIN_WORDS}
+        max={MAX_WORDS}
+        step="1"
+        value={DEFAULT_WORDS}
+        inputmode="numeric"
+        data-opt="words"
+      />
+    </label>
+    <label class="tool-password-generator__separator">
+      <span>Separator</span>
+      <select class="field__select" data-opt="separator">
+        <option value="hyphen" selected>Hyphen (-)</option>
+        <option value="dot">Dot (.)</option>
+        <option value="space">Space</option>
+        <option value="underscore">Underscore (_)</option>
+        <option value="custom">Custom…</option>
+      </select>
+    </label>
+    <label class="tool-password-generator__symbols" data-custom-separator-wrap hidden>
+      <span>Custom separator</span>
+      <input
+        type="text"
+        class="field__input"
+        maxlength="8"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-opt="custom-separator"
+      />
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="capitalize" />
+      Capitalise words
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="append-number" />
+      Append a number
+    </label>
+  </div>
+
+  <div class="tool__panes tool-password-generator__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="password-generator-output" data-output-label>
+          Generated password
+        </label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="copy">
+            <Icon name="copy" /><span data-label>Copy</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear output"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="password-generator-output"
+        class="field__textarea tool-password-generator__output"
+        placeholder="Click Generate"
+        readonly
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        rows="2"
+        data-output></textarea>
+
+      <div class="tool-password-generator__strength">
+        <div
+          class="tool-password-generator__meter"
+          role="meter"
+          aria-label="Password strength"
+          aria-valuemin="0"
+          aria-valuemax="4"
+          aria-valuenow="0"
+          aria-valuetext="Nothing generated"
+          data-meter
+        >
+          <div class="tool-password-generator__meter-bar" data-meter-bar></div>
+        </div>
+        <p class="tool-password-generator__strength-text" data-strength aria-live="off"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool__actions">
+    <button type="button" class="btn btn--primary" data-action="generate">
+      <Icon name="refresh-cw" /><span>Generate</span>
+    </button>
+    <button type="button" class="btn" data-action="generate-many">
+      <Icon name="list-tree" /><span>Generate 10</span>
+    </button>
+    <p class="tool__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</section>
+
+<script>
+  import './client';
+</script>

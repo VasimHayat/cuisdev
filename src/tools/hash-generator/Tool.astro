@@ -1,0 +1,143 @@
+---
+import Icon from '@/components/Icon.astro';
+
+import { ALGORITHMS } from './logic';
+
+import './tool.scss';
+---
+
+<section
+  class="tool tool-hash-generator"
+  data-tool="hash-generator"
+  aria-labelledby="hash-generator-heading"
+>
+  <h2 id="hash-generator-heading" class="visually-hidden">Hash generator</h2>
+
+  <div class="tool__options">
+    <label class="choice">
+      <input type="checkbox" data-opt="uppercase" />
+      Uppercase
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="base64" />
+      Base64 output
+    </label>
+    <label class="choice">
+      <input type="checkbox" data-opt="hmac" />
+      HMAC
+    </label>
+    <label class="tool-hash-generator__secret" data-secret-wrap hidden>
+      <span>Secret key</span>
+      <input
+        type="text"
+        class="field__input"
+        placeholder="HMAC secret"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-opt="secret"
+      />
+    </label>
+  </div>
+
+  <div class="tool__panes">
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <label class="tool__pane-title" for="hash-generator-input">Text to hash</label>
+        <div class="tool__pane-actions">
+          <button type="button" class="btn btn--ghost btn--sm" data-action="sample">
+            <Icon name="play" /><span>Sample</span>
+          </button>
+          <label class="btn btn--ghost btn--sm tool-hash-generator__upload">
+            <Icon name="upload" /><span>File</span>
+            <input type="file" class="visually-hidden" data-file />
+          </label>
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            data-action="clear"
+            aria-label="Clear input"
+          >
+            <Icon name="trash" /><span>Clear</span>
+          </button>
+        </div>
+      </div>
+      <textarea
+        id="hash-generator-input"
+        class="field__textarea"
+        placeholder="Type or paste text, or drop a file anywhere on this tool…"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        data-input></textarea>
+      <div class="tool__stats" data-input-stats aria-live="off"></div>
+    </div>
+
+    <div class="tool__pane">
+      <div class="tool__pane-header">
+        <span class="tool__pane-title" id="hash-generator-output-label">Digests</span>
+        <span class="tool__stats" data-progress aria-live="off"></span>
+      </div>
+      <div class="tool-hash-generator__table-wrap">
+        <table class="tool-hash-generator__table" aria-labelledby="hash-generator-output-label">
+          <thead>
+            <tr>
+              <th scope="col">Algorithm</th>
+              <th scope="col">Digest</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              ALGORITHMS.map((algo) => (
+                <tr data-row={algo.id}>
+                  <th scope="row">{algo.label}</th>
+                  <td>
+                    <output
+                      class="tool-hash-generator__digest"
+                      data-digest={algo.id}
+                      aria-label={`${algo.label} digest`}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn--ghost btn--sm"
+                      data-action="copy-row"
+                      data-algo={algo.id}
+                      aria-label={`Copy ${algo.label} digest`}
+                    >
+                      <Icon name="copy" />
+                      <span data-label>Copy</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <label class="tool-hash-generator__compare">
+        <span class="tool__pane-title">Compare with expected hash</span>
+        <input
+          id="hash-generator-compare"
+          type="text"
+          class="field__input"
+          placeholder="Paste a hex or Base64 digest to verify"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          data-compare
+        />
+      </label>
+      <p class="tool-hash-generator__verdict" data-verdict role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <p class="tool__status" role="status" aria-live="polite" data-status></p>
+</section>
+
+<script>
+  import './client';
+</script>
