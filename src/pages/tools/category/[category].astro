@@ -9,7 +9,7 @@ import {
   getPopulatedCategories,
   getToolsByCategory,
 } from '@/lib/registry';
-import { breadcrumbs } from '@/lib/seo';
+import { breadcrumbs, collectionPage, toolItemList } from '@/lib/seo';
 import type { ToolCategoryId } from '@/tools/_types';
 
 export function getStaticPaths() {
@@ -29,7 +29,11 @@ const description = `${category.description} ${categoryTools.length} free ${cate
 <BaseLayout
   title={`${category.name} Tools — Free & Online`}
   description={description}
-  jsonLd={[breadcrumbs(crumbs)]}
+  jsonLd={[
+    breadcrumbs(crumbs),
+    collectionPage(`${category.name} tools`, description, categoryUrl(category.id)),
+    toolItemList(categoryTools, `${category.name} tools`),
+  ]}
 >
   <div class="stack stack--lg">
     <Breadcrumbs crumbs={crumbs} />

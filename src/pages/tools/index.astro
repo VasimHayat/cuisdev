@@ -3,9 +3,11 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import ToolCard from '@/components/ToolCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { categoryUrl, getPopulatedCategories, getToolsByCategory, tools } from '@/lib/registry';
-import { breadcrumbs } from '@/lib/seo';
+import { breadcrumbs, collectionPage, toolItemList } from '@/lib/seo';
 
 const categories = getPopulatedCategories();
+const description =
+  'Browse every free developer tool on Cuisdev: JSON, encoding, generators, text, web and image utilities. All run privately in your browser with no sign-up.';
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Tools', href: '/tools/' },
@@ -14,8 +16,12 @@ const crumbs = [
 
 <BaseLayout
   title="All Developer Tools"
-  description="Browse every free developer tool on Cuisdev: JSON, encoding, generators, text, web and image utilities. All run privately in your browser with no sign-up."
-  jsonLd={[breadcrumbs(crumbs)]}
+  description={description}
+  jsonLd={[
+    breadcrumbs(crumbs),
+    collectionPage('All developer tools', description, '/tools/'),
+    toolItemList(tools, 'All developer tools'),
+  ]}
 >
   <div class="stack stack--lg">
     <Breadcrumbs crumbs={crumbs} />

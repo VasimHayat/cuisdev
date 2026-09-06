@@ -74,6 +74,35 @@ export function toolCrumbs(tool: ToolMeta): Crumb[] {
   ];
 }
 
+/** An ordered list of tools, for the /tools/ index and category hubs. */
+export function toolItemList(list: readonly ToolMeta[], name: string): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    numberOfItems: list.length,
+    itemListElement: list.map((tool, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: tool.name,
+      description: tool.tagline,
+      url: absolute(toolUrl(tool.slug)),
+    })),
+  };
+}
+
+export function collectionPage(name: string, description: string, path: string): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    description,
+    url: absolute(path),
+    isPartOf: { '@type': 'WebSite', name: site.name, url: site.url },
+    inLanguage: site.language,
+  };
+}
+
 export function softwareApplication(tool: ToolMeta): JsonLd {
   return {
     '@context': 'https://schema.org',

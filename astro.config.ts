@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 
-import sitemap from '@astrojs/sitemap';
+import sitemap, { type SitemapItem } from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
 /**
@@ -63,8 +63,16 @@ export default defineConfig({
       // Image endpoints, the service worker and the offline fallback are not content.
       filter: (page) =>
         !page.includes('/og/') && !page.includes('/sw.js') && !page.includes('/offline/'),
-      changefreq: 'weekly',
-      priority: 0.7,
+      // Tools are the product; legal pages barely change.
+      serialize(item): SitemapItem {
+        const path = new URL(item.url).pathname;
+        if (path === '/') return { ...item, priority: 1.0, changefreq: 'weekly' };
+        if (path.startsWith('/tools/category/'))
+          return { ...item, priority: 0.7, changefreq: 'weekly' };
+        if (path.startsWith('/tools/')) return { ...item, priority: 0.9, changefreq: 'monthly' };
+        if (path.startsWith('/blog/')) return { ...item, priority: 0.6, changefreq: 'monthly' };
+        return { ...item, priority: 0.3, changefreq: 'yearly' };
+      },
     }),
   ],
 
