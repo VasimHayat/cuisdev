@@ -70,3 +70,4 @@ to your host's equivalent (e.g. `vercel.json`, nginx config) if you pick somethi
 ## License
 
 [MIT](LICENSE). The Cuisdev name and logo are not covered by the licence.
+"# cuisdev"
