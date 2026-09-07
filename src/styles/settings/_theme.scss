@@ -8,10 +8,42 @@
   }
 }
 
+/// Values that differ between light and dark beyond flat colours.
+@mixin emit-light-decor {
+  --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-alt) 100%);
+  --gradient-surface: linear-gradient(180deg, #fff 0%, var(--color-bg-subtle) 100%);
+  --gradient-hairline: linear-gradient(
+    90deg,
+    transparent,
+    rgb(15 23 42 / 0.12) 30%,
+    rgb(15 23 42 / 0.12) 70%,
+    transparent
+  );
+  --shadow-sm: 0 1px 2px var(--color-shadow);
+  --shadow-md: 0 2px 4px var(--color-shadow), 0 8px 20px var(--color-shadow);
+  --shadow-lg: 0 4px 8px var(--color-shadow), 0 24px 48px var(--color-shadow-strong);
+  --shadow-accent: 0 6px 20px rgb(3 105 161 / 0.25);
+}
+
+@mixin emit-dark-decor {
+  --gradient-surface: linear-gradient(180deg, rgb(255 255 255 / 0.04) 0%, transparent 100%);
+  --gradient-hairline: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.16) 30%,
+    rgb(255 255 255 / 0.16) 70%,
+    transparent
+  );
+  --shadow-md: 0 2px 6px var(--color-shadow), 0 12px 28px var(--color-shadow);
+  --shadow-lg: 0 8px 16px var(--color-shadow), 0 32px 64px var(--color-shadow-strong);
+  --shadow-accent: 0 6px 28px rgb(56 189 248 / 0.28);
+}
+
 :root {
   color-scheme: light;
 
   @include emit-palette(tokens.$palette-light);
+  @include emit-light-decor;
 
   // Typography
   --font-sans: #{tokens.$font-sans};
@@ -21,10 +53,12 @@
     --text-#{$name}: #{$value};
   }
 
-  --leading-tight: 1.2;
+  --leading-tight: 1.15;
   --leading-snug: 1.35;
   --leading-normal: 1.6;
   --tracking-tight: -0.02em;
+  --tracking-tighter: -0.035em;
+  --tracking-wide: 0.08em;
 
   // Spacing
   @each $name, $value in tokens.$space-scale {
@@ -35,11 +69,6 @@
   @each $name, $value in tokens.$radius-scale {
     --radius-#{$name}: #{$value};
   }
-
-  // Elevation
-  --shadow-sm: 0 1px 2px var(--color-shadow);
-  --shadow-md: 0 4px 12px var(--color-shadow);
-  --shadow-lg: 0 12px 32px var(--color-shadow-strong);
 
   // Motion
   --duration-fast: #{tokens.$duration-fast};
@@ -53,6 +82,7 @@
   --gutter: clamp(var(--space-4), 4vw, var(--space-8));
 
   // Z-index scale
+  --z-decor: -1;
   --z-header: 100;
   --z-dropdown: 200;
   --z-dialog: 1000;
@@ -63,14 +93,16 @@
   color-scheme: dark;
 
   @include emit-palette(tokens.$palette-dark);
+  @include emit-dark-decor;
 }
 
 // System preference fallback when JS has not set a theme
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
+  :root:not([data-theme='light']) {
     color-scheme: dark;
 
     @include emit-palette(tokens.$palette-dark);
+    @include emit-dark-decor;
   }
 }
 

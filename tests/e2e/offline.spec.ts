@@ -1,63 +1,65 @@
 import { expect, type Page, test } from '@playwright/test';
 
 /**
- * The site claims it keeps working without a connection. These tests prove it:
- * register the service worker, cut the network, and use a tool.
+ * The site claims it keeps working without a connection. These tests cut the
+ * network and use a tool.
+ *
+ * `page.waitForFunction` does not await an async predicate — it sees the
+ * returned Promise, which is always truthy, and resolves immediately. Anything
+ * asynchronous (the Cache API is) must be polled with `expect.poll` instead.
  */
 
-/**
- * Resolve once the worker controls this page and has finished caching it and
- * every same-origin asset it loaded (caching happens asynchronously after load).
- */
-async function waitForServiceWorker(page: Page): Promise<void> {
-  await page.waitForFunction(
-    async () => {
-      if (navigator.serviceWorker.controller === null) return false;
-      const assets = performance
-        .getEntriesByType('resource')
-        .filter(
-          (entry) =>
-            entry.name.startsWith(location.origin) &&
-            /\.(?:js|css|woff2?)(?:\?|$)/.test(entry.name),
-        )
-        .map((entry) => entry.name);
-      const found = await Promise.all(
-        [location.href, ...new Set(assets)].map((url) => caches.match(url)),
-      );
-      return found.every(Boolean);
-    },
-    null,
-    { timeout: 20_000 },
-  );
+/** Every same-origin URL the document needs in order to work on a repeat visit. */
+function collectAssets(): string[] {
+  const urls = new Set<string>([location.href]);
+  const add = (value: string | null) => {
+    if (!value) return;
+    const url = new URL(value, location.href);
+    if (url.origin === location.origin) urls.add(url.href);
+  };
+  document.querySelectorAll('script[src]').forEach((el) => add(el.getAttribute('src')));
+  document
+    .querySelectorAll('link[rel="modulepreload"], link[rel="stylesheet"]')
+    .forEach((el) => add(el.getAttribute('href')));
+  return [...urls];
 }
 
-/**
- * Cut the network. The message first wakes the worker: Chromium will not always
- * start an idle service worker once offline emulation is on, which would fail
- * the navigation before the worker could answer it from cache.
- */
-async function goOffline(page: Page): Promise<void> {
-  await page.evaluate(async () => {
-    const registration = await navigator.serviceWorker.ready;
-    registration.active?.postMessage({ type: 'ping' });
-  });
-  await page.context().setOffline(true);
+async function requiredAssets(page: Page): Promise<string[]> {
+  return page.evaluate(collectAssets);
+}
+
+/** Wait until the worker controls this page and has cached everything it needs. */
+async function waitForServiceWorker(page: Page): Promise<void> {
+  await expect
+    .poll(
+      async () => {
+        const controlled = await page.evaluate(() => navigator.serviceWorker.controller !== null);
+        if (!controlled) return false;
+        const assets = await requiredAssets(page);
+        return page.evaluate(
+          async (urls) => (await Promise.all(urls.map((url) => caches.match(url)))).every(Boolean),
+          assets,
+        );
+      },
+      { timeout: 20_000, message: 'the service worker never cached the page and its assets' },
+    )
+    .toBe(true);
 }
 
 test.describe('offline support', () => {
-  // Runs in the dedicated "offline" project (see playwright.config.ts), which is
-  // serial and runs after every other project so nothing else is in flight.
+  // Runs in the dedicated "offline" project (see playwright.config.ts): serial,
+  // and after every other project so nothing else is in flight.
   test.describe.configure({ mode: 'serial' });
 
   test.afterEach(async ({ context }) => {
     await context.setOffline(false);
   });
 
-  test('a visited tool still works with the network cut', async ({ page }) => {
+  test('a visited tool still works with the network cut', async ({ page, context }) => {
     await page.goto('/tools/base64/');
     await waitForServiceWorker(page);
-    await goOffline(page);
 
+    await context.setOffline(true);
     await page.reload();
 
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Base64');
@@ -65,11 +67,26 @@ test.describe('offline support', () => {
     await expect(page.getByLabel('Base64', { exact: true })).toHaveValue('b2ZmbGluZSB3b3Jrcw==');
   });
 
-  test('an unvisited page falls back to the offline notice', async ({ page }) => {
+  test('one visit caches the tool page and every asset it needs', async ({ page }) => {
+    await page.goto('/tools/base64/');
+    await waitForServiceWorker(page);
+
+    const assets = await requiredAssets(page);
+    expect(assets.some((url) => url.endsWith('.js'))).toBe(true);
+    expect(assets.some((url) => url.endsWith('.css'))).toBe(true);
+
+    const cachedHtml = await page.evaluate(async () => {
+      const response = await caches.match(location.href);
+      return response ? response.text() : null;
+    });
+    expect(cachedHtml).toContain('Base64 Encoder / Decoder');
+  });
+
+  test('an unvisited page falls back to the offline notice', async ({ page, context }) => {
     await page.goto('/');
     await waitForServiceWorker(page);
-    await goOffline(page);
 
+    await context.setOffline(true);
     await page.goto('/tools/json-formatter/');
 
     await expect(page.getByRole('heading', { level: 1 })).toContainText('offline');

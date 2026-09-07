@@ -100,6 +100,10 @@ Every page is cached by the service worker once visited, so tools must keep work
 network after load: never fetch anything at runtime, and wrap lazy `import()` of heavy libraries in
 a `try/catch` that reports the failure in the status line.
 
+- **`page.waitForFunction` does not await an async callback.** It sees the returned Promise, which
+  is always truthy, and resolves immediately — so any wait that touches the Cache API, `fetch` or
+  IndexedDB silently passes. Use `expect.poll(async () => …)` for those.
+
 ### Mobile checklist
 
 - Panes stack vertically below 64em (`.tool__panes` does this); options wrap (`.tool__options`).

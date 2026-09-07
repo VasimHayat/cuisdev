@@ -95,7 +95,7 @@ const index = JSON.stringify(getSearchIndex()).replaceAll('<', '\\u003c');
         }
         html += `<li role="presentation"><a class="palette__item" role="option" id="palette-opt-${i}" href="${entry.url}" aria-selected="${i === selected}" data-index="${i}">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[entry.icon]}</svg>
-          <span><span class="palette__item-title">${escape(entry.name)}</span><br><span class="palette__item-desc">${escape(entry.tagline)}</span></span>
+          <span class="palette__item-text"><span class="palette__item-title">${escape(entry.name)}</span><span class="palette__item-desc">${escape(entry.tagline)}</span></span>
         </a></li>`;
       });
       list.innerHTML = html;

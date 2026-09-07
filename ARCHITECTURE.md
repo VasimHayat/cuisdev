@@ -64,6 +64,26 @@ Tokens live in `settings/_tokens.scss` as SCSS maps and are emitted by `settings
 CSS custom properties on `:root` (light) and `:root[data-theme='dark']`. A `prefers-color-scheme`
 fallback covers no-JS. Components only ever reference `var(--color-*)`, never raw values.
 
+## Design language
+
+The look is "premium developer tool": a calm, near-black dark theme (and an equally deliberate
+light one), large display type with tight tracking, hairline borders, and colour used sparingly.
+
+- **Two accents.** `--color-accent` (cyan) carries every interactive meaning — links, focus,
+  active states. `--color-accent-alt` (violet) exists only to make `--gradient-accent`, which is
+  used on the primary button, the eyebrow rule and card hover states. Nothing is only distinguished
+  by the gradient, so it never carries meaning on its own.
+- **Atmosphere, not images.** The home hero paints two radial washes and a masked grid with pure
+  CSS on an absolutely positioned `.hero__decor` layer. It costs no requests and cannot move
+  content, so CLS stays at 0.
+- **Hairlines.** Cards, the tool surface, the header and the footer share one
+  `--gradient-hairline` edge highlight, which is what makes surfaces read as lit rather than flat.
+- **Contrast is checked, not assumed.** Every text token is verified against every surface it can
+  sit on before it is committed; the axe suite then re-checks every page in both themes. Decorative
+  tokens (`--color-glow-*`, `--color-grid-line`, `--color-hairline`) are never used behind text.
+- **Type scale** runs to `--text-6xl`; headings use `--tracking-tight` and the hero
+  `--tracking-tighter`.
+
 ## Content Security Policy
 
 Enabled via Astro's `security.csp`. Astro hashes every inline `<script>` and `<style>` it emits;

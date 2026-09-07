@@ -4,6 +4,7 @@
   @include button-reset;
   @include focus-ring;
 
+  position: relative;
   display: inline-flex;
   gap: var(--space-2);
   align-items: center;
@@ -23,11 +24,13 @@
     background-color var(--duration-fast),
     border-color var(--duration-fast),
     color var(--duration-fast),
+    box-shadow var(--duration-fast),
     transform var(--duration-fast);
 
   &:hover {
     color: var(--color-text);
     background: var(--color-bg-muted);
+    border-color: var(--color-text-faint);
   }
 
   &:active {
@@ -43,11 +46,16 @@
   &--primary {
     color: var(--color-accent-contrast);
     background: var(--color-accent);
+    background-image: var(--gradient-accent);
     border-color: transparent;
+    box-shadow: var(--shadow-accent);
 
     &:hover {
       color: var(--color-accent-contrast);
       background: var(--color-accent-hover);
+      background-image: var(--gradient-accent);
+      border-color: transparent;
+      filter: brightness(1.08);
     }
   }
 
@@ -57,6 +65,7 @@
 
     &:hover {
       background: var(--color-bg-muted);
+      border-color: transparent;
     }
   }
 
@@ -83,6 +92,7 @@
     min-height: 3rem;
     padding: var(--space-3) var(--space-6);
     font-size: var(--text-base);
+    border-radius: var(--radius-lg);
   }
 
   &--icon {

@@ -1,18 +1,16 @@
 import { $, $$, copyText, debounce, flashButton, formatBytes, setStatus } from '@/lib/dom';
 import { type Editor, mountEditor } from '@/lib/editor';
 
-import {
-  compileSchema,
-  DRAFT_LABEL,
-  errorsToJson,
-  findPathOffset,
-  inferSchemaText,
-  JsonParseError,
-  parseJson,
-  SchemaError,
-  validateData,
-  type ValidationIssue,
-} from './logic';
+import type * as LogicModule from './logic';
+import type { JsonParseError, ValidationIssue } from './logic';
+
+/**
+ * Ajv is ~190 KB and compiles schemas with `new Function`, so it is loaded as a
+ * separate chunk right after paint instead of blocking it. Everything that
+ * touches the module goes through `logic`, which is undefined until it lands.
+ */
+type Logic = typeof LogicModule;
+let logic: Logic | undefined;
 
 const SAMPLE_SCHEMA = `{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -162,6 +160,9 @@ function run(): void {
   const hasSchema = schemaText.trim() !== '';
   const hasData = dataText.trim() !== '';
 
+  // The validator chunk is still downloading; run() is called again once it lands.
+  if (!logic) return;
+
   if (!hasSchema && !hasData) {
     showView('empty');
     setStatus(status, '');
@@ -169,7 +170,7 @@ function run(): void {
   }
 
   // 1. The schema must parse and compile before anything else is meaningful.
-  let compiled: ReturnType<typeof compileSchema>;
+  let compiled: ReturnType<Logic['compileSchema']>;
   let schema: unknown;
   if (!hasSchema) {
     showView('empty');
@@ -180,14 +181,14 @@ function run(): void {
     return;
   }
   try {
-    schema = parseJson(schemaText, 'schema');
-    compiled = compileSchema(schema);
+    schema = logic.parseJson(schemaText, 'schema');
+    compiled = logic.compileSchema(schema);
   } catch (err) {
-    if (err instanceof JsonParseError) {
+    if (err instanceof logic.JsonParseError) {
       highlightParseError(schemaEditor, err);
       showProblem('schema', err.message);
       setStatus(status, err.message, 'error');
-    } else if (err instanceof SchemaError) {
+    } else if (err instanceof logic.SchemaError) {
       showProblem('schema', err.message);
       setStatus(status, `Schema error: ${err.message}`, 'error');
     } else {
@@ -195,7 +196,7 @@ function run(): void {
     }
     return;
   }
-  const draft = DRAFT_LABEL[compiled.draft];
+  const draft = logic.DRAFT_LABEL[compiled.draft];
   stats(schemaStats, schemaText, draft);
 
   // 2. Then the data.
@@ -206,9 +207,9 @@ function run(): void {
   }
   let data: unknown;
   try {
-    data = parseJson(dataText, 'data');
+    data = logic.parseJson(dataText, 'data');
   } catch (err) {
-    if (!(err instanceof JsonParseError)) throw err;
+    if (!(err instanceof logic.JsonParseError)) throw err;
     highlightParseError(dataEditor, err);
     showProblem('data', err.message);
     setStatus(status, err.message, 'error');
@@ -216,7 +217,7 @@ function run(): void {
   }
 
   // 3. Validate.
-  const result = validateData(schema, data);
+  const result = logic.validateData(schema, data);
   if (result.valid) {
     validText.textContent = `Valid — the JSON data matches the schema (${draft}).`;
     showView('valid');
@@ -237,8 +238,8 @@ const runDebounced = debounce(run, 120);
 
 function focusError(index: number): void {
   const error = currentErrors[index];
-  if (!error) return;
-  const offset = findPathOffset(dataEditor.getValue(), error.path);
+  if (!error || !logic) return;
+  const offset = logic.findPathOffset(dataEditor.getValue(), error.path);
   dataEditor.revealOffset(offset ?? 0);
 }
 
@@ -271,13 +272,14 @@ root.addEventListener('click', async (e) => {
 
     case 'generate': {
       try {
-        const generated = inferSchemaText(dataEditor.getValue());
+        if (!logic) return;
+        const generated = logic.inferSchemaText(dataEditor.getValue());
         notice =
           'Generated a draft 2020-12 schema from the JSON data — every key is required; loosen it as needed.';
         setEditorValue(schemaEditor, generated);
         run();
       } catch (err) {
-        if (!(err instanceof JsonParseError)) throw err;
+        if (!logic || !(err instanceof logic.JsonParseError)) throw err;
         highlightParseError(dataEditor, err);
         setStatus(status, `Cannot generate a schema: ${err.message}`, 'error');
       }
@@ -289,7 +291,8 @@ root.addEventListener('click', async (e) => {
         setStatus(status, 'There are no validation errors to copy.');
         return;
       }
-      const ok = await copyText(errorsToJson(currentErrors));
+      if (!logic) return;
+      const ok = await copyText(logic.errorsToJson(currentErrors));
       if (ok) flashButton(button);
       else
         setStatus(
@@ -302,4 +305,8 @@ root.addEventListener('click', async (e) => {
   }
 });
 
-run();
+setStatus(status, 'Loading the validator…');
+void import('./logic').then((module) => {
+  logic = module;
+  run();
+});

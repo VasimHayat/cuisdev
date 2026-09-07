@@ -39,7 +39,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
+
+  h1 {
+    letter-spacing: var(--tracking-tighter);
+  }
 
   &__title-row {
     display: flex;
@@ -56,16 +60,30 @@
 
 // The interactive surface
 .tool {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-4);
   background: var(--color-bg-subtle);
+  background-image: var(--gradient-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sm);
 
   @include from('md') {
     padding: var(--space-6);
+  }
+
+  // Hairline highlight along the top edge, matching .card
+  &::before {
+    position: absolute;
+    inset: -1px auto auto 0;
+    width: 100%;
+    height: 1px;
+    content: '';
+    background: var(--gradient-hairline);
+    border-radius: inherit;
   }
 
   &__options {

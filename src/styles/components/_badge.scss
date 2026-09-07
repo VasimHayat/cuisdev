@@ -16,6 +16,19 @@
     background: var(--color-accent-soft);
   }
 
+  // Badges used as links (category chips, the category on a tool page).
+  &:is(a) {
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast),
+      color var(--duration-fast);
+
+    &:hover {
+      color: var(--color-accent);
+      background: var(--color-accent-soft);
+    }
+  }
+
   &--success {
     color: var(--color-success);
     background: color-mix(in srgb, var(--color-success) 15%, transparent);

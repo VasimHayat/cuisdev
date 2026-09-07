@@ -96,20 +96,75 @@
 .section {
   padding-block: var(--space-12);
 
-  &__header {
-    margin-bottom: var(--space-6);
+  @include from('md') {
+    padding-block: var(--space-16);
   }
 
-  &__eyebrow {
-    margin-bottom: var(--space-2);
+  &__header {
+    margin-bottom: var(--space-8);
+  }
+
+  // Title on the left, "see all" on the right, sharing a baseline.
+  &__heading-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  &__more {
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: center;
     font-size: var(--text-sm);
     font-weight: 600;
     color: var(--color-accent);
+    text-decoration: none;
+    white-space: nowrap;
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      transition: transform var(--duration-fast);
+    }
+
+    &:hover {
+      text-decoration: underline;
+
+      .icon {
+        transform: translateX(2px);
+      }
+    }
+  }
+
+  &__eyebrow {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 650;
+    color: var(--color-accent);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-wide);
+
+    // Short rule that ties the eyebrow to the accent without adding an element.
+    &::before {
+      width: 1.5rem;
+      height: 2px;
+      content: '';
+      background: var(--gradient-accent);
+      border-radius: var(--radius-full);
+    }
+  }
+
+  &__title {
+    letter-spacing: var(--tracking-tight);
   }
 
   &__lead {
+    max-width: 62ch;
     margin-top: var(--space-2);
     font-size: var(--text-lg);
     color: var(--color-text-muted);

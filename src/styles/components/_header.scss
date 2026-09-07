@@ -1,12 +1,23 @@
 @use 'tools/mixins' as *;
 
 .header {
+  position: relative;
   position: sticky;
   top: 0;
   z-index: var(--z-header);
-  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 78%, transparent);
   border-bottom: 1px solid var(--color-border);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px) saturate(1.4);
+
+  // Accent hairline that fades out towards the edges.
+  &::after {
+    position: absolute;
+    inset: auto 0 -1px;
+    height: 1px;
+    content: '';
+    background: var(--gradient-hairline);
+    opacity: 0.7;
+  }
 
   &__inner {
     display: flex;
@@ -42,10 +53,14 @@
     text-decoration: none;
     border-radius: var(--radius-md);
 
-    &:hover,
-    &[aria-current='page'] {
+    &:hover {
       color: var(--color-text);
       background: var(--color-bg-muted);
+    }
+
+    &[aria-current='page'] {
+      color: var(--color-text);
+      background: var(--color-accent-soft);
     }
   }
 

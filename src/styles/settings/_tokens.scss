@@ -2,57 +2,73 @@
 // which emits them as CSS custom properties, and by tools/_mixins.scss.
 
 // ---------------------------------------------------------------------------
-// Colour palettes
+// Colour palettes.
+// Two accents: `accent` (cyan) carries interactive meaning, `accent-alt`
+// (violet) exists only to make gradients and glows. Every text colour below is
+// checked against its background for WCAG AA.
 // ---------------------------------------------------------------------------
 $palette-light: (
   'bg': #fff,
-  'bg-subtle': #f6f8fa,
-  'bg-muted': #eef1f5,
+  'bg-subtle': #f7f9fc,
+  'bg-muted': #eef2f8,
   'surface': #fff,
   'surface-raised': #fff,
-  'border': #d9dee5,
-  'border-strong': #b3bcc9,
-  'text': #0f172a,
-  'text-muted': #4b5872,
+  'border': #e2e8f0,
+  'border-strong': #aab6c8,
+  'text': #0b1220,
+  'text-muted': #46536b,
   'text-faint': #5b667a,
   'accent': #0369a1,
   'accent-hover': #075985,
   'accent-contrast': #fff,
   'accent-soft': #e0f2fe,
-  'success': #15803d,
-  'warning': #a16207,
+  'accent-alt': #6d28d9,
+  'accent-alt-soft': #ede9fe,
+  'success': #166534,
+  'warning': #854d0e,
   'danger': #b91c1c,
   'danger-soft': #fee2e2,
   'code-bg': #f6f8fa,
   'focus': #0369a1,
-  'shadow': rgb(15 23 42 / 0.08),
-  'shadow-strong': rgb(15 23 42 / 0.16),
+  'shadow': rgb(15 23 42 / 0.06),
+  'shadow-strong': rgb(15 23 42 / 0.12),
   'backdrop': rgb(15 23 42 / 0.45),
+  // Decoration only — never behind text.
+  'glow-a': rgb(56 189 248 / 0.2),
+  'glow-b': rgb(139 92 246 / 0.16),
+  'grid-line': rgb(15 23 42 / 0.05),
+  'hairline': rgb(255 255 255 / 0.7),
 );
 $palette-dark: (
-  'bg': #0b1220,
-  'bg-subtle': #0f1829,
-  'bg-muted': #162037,
-  'surface': #111a2b,
-  'surface-raised': #172136,
-  'border': #253247,
-  'border-strong': #3a4b6b,
-  'text': #e6edf7,
-  'text-muted': #a3b1c6,
-  'text-faint': #8494ad,
+  'bg': #070b14,
+  'bg-subtle': #0c121e,
+  'bg-muted': #141c2c,
+  'surface': #0f1725,
+  'surface-raised': #162032,
+  'border': #1e293b,
+  'border-strong': #35455f,
+  'text': #e8eefb,
+  'text-muted': #a6b3c9,
+  'text-faint': #8b99b0,
   'accent': #38bdf8,
   'accent-hover': #7dd3fc,
-  'accent-contrast': #06121f,
-  'accent-soft': #0f2a3f,
+  'accent-contrast': #04101c,
+  'accent-soft': #0d2a3f,
+  'accent-alt': #a78bfa,
+  'accent-alt-soft': #221a45,
   'success': #4ade80,
   'warning': #fbbf24,
   'danger': #f87171,
   'danger-soft': #3b1a1a,
-  'code-bg': #0d1526,
+  'code-bg': #0a111d,
   'focus': #38bdf8,
-  'shadow': rgb(0 0 0 / 0.35),
-  'shadow-strong': rgb(0 0 0 / 0.55),
-  'backdrop': rgb(2 6 16 / 0.65),
+  'shadow': rgb(0 0 0 / 0.4),
+  'shadow-strong': rgb(0 0 0 / 0.6),
+  'backdrop': rgb(2 6 16 / 0.7),
+  'glow-a': rgb(56 189 248 / 0.22),
+  'glow-b': rgb(139 92 246 / 0.22),
+  'grid-line': rgb(148 163 184 / 0.07),
+  'hairline': rgb(255 255 255 / 0.08),
 );
 
 // ---------------------------------------------------------------------------
@@ -82,6 +98,7 @@ $type-scale: (
   '3xl': 1.875rem,
   '4xl': 2.25rem,
   '5xl': 3rem,
+  '6xl': 3.75rem,
 );
 
 // ---------------------------------------------------------------------------

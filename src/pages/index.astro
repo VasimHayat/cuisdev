@@ -3,64 +3,93 @@ import Icon from '@/components/Icon.astro';
 import ToolCard from '@/components/ToolCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { categoryUrl, getPopulatedCategories, getToolsByCategory, tools } from '@/lib/registry';
-import { website } from '@/lib/seo';
+import { collectionPage, toolItemList, website } from '@/lib/seo';
 import { site } from '@/lib/site';
 
 const categories = getPopulatedCategories();
+
+const promises = [
+  {
+    icon: 'shield' as const,
+    title: 'Private by design',
+    body: 'Processing happens on your device. We never see what you paste.',
+  },
+  {
+    icon: 'zap' as const,
+    title: 'Instant',
+    body: 'Static pages and tiny scripts. Tools load in well under a second.',
+  },
+  {
+    icon: 'wifi-off' as const,
+    title: 'Works offline',
+    body: 'Visit a tool once and it keeps working with no connection.',
+  },
+];
 ---
 
-<BaseLayout jsonLd={[website()]}>
+<BaseLayout
+  jsonLd={[
+    website(),
+    collectionPage(site.name, site.description, '/'),
+    toolItemList(tools, 'Cuisdev developer tools'),
+  ]}
+>
   <section class="hero">
+    <div class="hero__decor" aria-hidden="true"></div>
+
+    <p class="hero__eyebrow">
+      <Icon name="sparkles" />
+      {tools.length} free tools · no sign-up
+    </p>
+
     <h1 class="hero__title">
       Developer tools that <span class="hero__accent">respect your data</span>
     </h1>
+
     <p class="hero__lead">
       {site.tagline} Format, convert, encode and generate — everything runs in your browser, nothing is
       uploaded, and there is nothing to sign up for.
     </p>
-    <div class="cluster">
+
+    <div class="hero__actions">
       <button type="button" class="btn btn--primary btn--lg" data-palette-open>
-        <Icon name="search" /> Find a tool <kbd>Ctrl K</kbd>
+        <Icon name="search" /> Find a tool <kbd class="hero__kbd">Ctrl K</kbd>
       </button>
       <a class="btn btn--lg" href="/tools/">Browse all {tools.length} tools</a>
     </div>
   </section>
 
-  <ul class="trust-strip" role="list" aria-label="Why Cuisdev">
-    <li>
-      <Icon name="shield" />
-      <div>
-        <strong>Private by design</strong>
-        <span>Processing happens on your device. We never see your data.</span>
-      </div>
-    </li>
-    <li>
-      <Icon name="zap" />
-      <div>
-        <strong>Instant</strong>
-        <span>Static pages, tiny scripts. Tools load in well under a second.</span>
-      </div>
-    </li>
-    <li>
-      <Icon name="heart" />
-      <div>
-        <strong>Free, no account</strong>
-        <span>No sign-up, no paywall, no tracking cookies. Ever.</span>
-      </div>
-    </li>
+  <ul class="promises" role="list" aria-label="Why Cuisdev">
+    {
+      promises.map((promise) => (
+        <li class="promises__item">
+          <span class="promises__icon">
+            <Icon name={promise.icon} />
+          </span>
+          <span class="promises__text">
+            <strong class="promises__title">{promise.title}</strong>
+            <span class="promises__body">{promise.body}</span>
+          </span>
+        </li>
+      ))
+    }
   </ul>
 
   {
     categories.map((category) => (
       <section class="section" aria-labelledby={`cat-${category.id}`}>
-        <div class="section__header cluster cluster--between">
-          <div>
-            <h2 id={`cat-${category.id}`}>{category.name}</h2>
-            <p class="section__lead">{category.description}</p>
+        <div class="section__header">
+          <p class="section__eyebrow">{category.shortName}</p>
+          <div class="section__heading-row">
+            <h2 class="section__title" id={`cat-${category.id}`}>
+              {category.name}
+            </h2>
+            <a class="section__more" href={categoryUrl(category.id)}>
+              All {getToolsByCategory(category.id).length} {category.shortName.toLowerCase()} tools
+              <Icon name="arrow-right" />
+            </a>
           </div>
-          <a class="btn btn--ghost" href={categoryUrl(category.id)}>
-            View all <Icon name="arrow-right" />
-          </a>
+          <p class="section__lead">{category.description}</p>
         </div>
         <div class="grid">
           {getToolsByCategory(category.id)
@@ -73,83 +102,3 @@ const categories = getPopulatedCategories();
     ))
   }
 </BaseLayout>
-
-<style lang="scss">
-  @use 'tools/mixins' as *;
-
-  .hero {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-    align-items: flex-start;
-    padding-block: var(--space-10) var(--space-12);
-
-    @include from('md') {
-      padding-block: var(--space-16);
-    }
-
-    &__title {
-      max-width: 22ch;
-    }
-
-    &__accent {
-      color: var(--color-accent);
-    }
-
-    &__lead {
-      max-width: 56ch;
-      font-size: var(--text-lg);
-      color: var(--color-text-muted);
-
-      @include from('md') {
-        font-size: var(--text-xl);
-      }
-    }
-
-    kbd {
-      margin-left: var(--space-2);
-      color: inherit;
-      background: rgb(0 0 0 / 0.25);
-      border-color: rgb(255 255 255 / 0.35);
-    }
-  }
-
-  .trust-strip {
-    display: grid;
-    gap: var(--space-4);
-    padding: var(--space-5);
-    background: var(--color-bg-subtle);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-xl);
-
-    @include from('md') {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-8);
-    }
-
-    li {
-      display: flex;
-      gap: var(--space-3);
-      align-items: flex-start;
-    }
-
-    .icon {
-      flex-shrink: 0;
-      width: 1.5rem;
-      height: 1.5rem;
-      margin-top: 0.1rem;
-      color: var(--color-accent);
-    }
-
-    div {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-
-    span {
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
-    }
-  }
-</style>

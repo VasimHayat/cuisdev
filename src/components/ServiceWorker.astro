@@ -14,21 +14,27 @@
         .then(() => navigator.serviceWorker.ready)
         .then((registration) => {
           // This page and its assets were fetched before the worker took control,
-          // so nothing here is cached yet. Send the page plus everything it
-          // actually loaded, and one visit is enough to keep the tool working
-          // offline — markup, styles, fonts and the tool's own script.
-          const assets = performance
-            .getEntriesByType('resource')
-            .filter(
-              (entry) =>
-                entry.name.startsWith(location.origin) &&
-                /\.(?:js|css|woff2?|svg|png|webmanifest)(?:\?|$)/.test(entry.name),
+          // so nothing here is cached yet. Send exactly what the document
+          // references — scripts, module preloads, stylesheets and fonts — so a
+          // single visit is enough to keep the tool working offline.
+          const urls = new Set([location.href]);
+          const add = (value: string | null | undefined) => {
+            if (!value) return;
+            const url = new URL(value, location.href);
+            if (url.origin === location.origin) urls.add(url.href);
+          };
+
+          document.querySelectorAll('script[src]').forEach((el) => add(el.getAttribute('src')));
+          document
+            .querySelectorAll(
+              'link[rel="modulepreload"], link[rel="stylesheet"], link[rel="preload"]',
             )
-            .map((entry) => entry.name);
-          registration.active?.postMessage({
-            type: 'cache-urls',
-            urls: [location.href, ...new Set(assets)],
-          });
+            .forEach((el) => add(el.getAttribute('href')));
+          for (const entry of performance.getEntriesByType('resource')) {
+            if (/\.(?:js|css|woff2?)(?:\?|$)/.test(entry.name)) add(entry.name);
+          }
+
+          registration.active?.postMessage({ type: 'cache-urls', urls: [...urls] });
         })
         .catch(() => {
           // Offline support is a progressive enhancement; failure is not an error.

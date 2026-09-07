@@ -105,6 +105,8 @@ test.describe('markdown-preview tool', () => {
     await stubClipboard(page);
     await page.goto(URL);
     await fillEditor(page, EDITOR, '# Copy me');
+    // marked/DOMPurify load lazily; wait for the render before copying.
+    await expect(page.locator('[data-preview] h1')).toHaveText('Copy me');
 
     const copied = await clickCopy(page, page.locator('[data-action="copy-html"]'));
     expect(copied?.replace(/\r\n/g, '\n')).toContain('<h1>Copy me</h1>');

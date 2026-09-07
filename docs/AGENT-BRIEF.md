@@ -83,6 +83,10 @@ implementation in `src/tools/base64/` (all six files) and `tests/e2e/tools/base6
 - **Bash tool gotcha:** it turns double backslashes into single ones inside heredocs — write files
   containing backslashes with the Write tool.
 
+- **`page.waitForFunction` does not await an async callback.** It sees the returned Promise, which
+  is always truthy, and resolves immediately — so any wait that touches the Cache API, `fetch` or
+  IndexedDB silently passes. Use `expect.poll(async () => …)` for those.
+
 ## Quality bar
 
 - No inline `style=""` (CSP). No `innerHTML` with user data (escape or use textContent).

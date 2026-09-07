@@ -1,11 +1,21 @@
 @use 'tools/mixins' as *;
 
 .footer {
-  padding-block: var(--space-12) var(--space-8);
+  position: relative;
+  padding-block: var(--space-16) var(--space-8);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   background: var(--color-bg-subtle);
   border-top: 1px solid var(--color-border);
+
+  &::before {
+    position: absolute;
+    inset: -1px 0 auto;
+    height: 1px;
+    content: '';
+    background: var(--gradient-hairline);
+    opacity: 0.7;
+  }
 
   &__grid {
     display: grid;

@@ -84,14 +84,22 @@
     }
   }
 
+  &__item-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
   &__item-title {
     font-weight: 600;
+    line-height: 1.4;
   }
 
   &__item-desc {
     @include truncate;
 
     font-size: var(--text-sm);
+    line-height: 1.4;
     color: var(--color-text-muted);
   }
 
