@@ -75,7 +75,7 @@
     "@types/csso": "^5.0.5",
     "@types/culori": "^4.0.1",
     "@types/diff": "^8.0.0",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.4.1",
     "@types/papaparse": "^5.5.2",
     "@types/qrcode": "^1.5.6",
     "@vitest/coverage-v8": "^5.0.0",
